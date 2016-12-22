@@ -33,118 +33,118 @@
 </head>
 
 <body>
-    <form action="#">
-        <button id="add-button">Add 1 pair</button>
-        Update <span id="last-update"></span>
-        Total population <span id="total-population">0</span>
-    </form>
+  <form action="#">
+    <button id="add-button">Add 1 pair</button>
+    Update <span id="last-update"></span>
+    Total population <span id="total-population">0</span>
+  </form>
 
-    <ol id="display-log"></ol>
+  <ol id="display-log"></ol>
 
-    <script>
-        const log = [];
-        const displayLog = document.getElementById('display-log');
-        const totalPopulation = document.getElementById('total-population');
-        const lastUpdate = document.getElementById('last-update');
-        const cats = [];
+  <script>
+    const log = [];
+    const displayLog = document.getElementById('display-log');
+    const totalPopulation = document.getElementById('total-population');
+    const lastUpdate = document.getElementById('last-update');
+    const cats = [];
 
-        const guid = () => {
-          const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
+    const guid = () => {
+      const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
 
-          return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
-        }
+      return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+    }
 
-        class Cat {
-          constructor(input) {
-              Object.assign(this, input);
-              this.id = guid();
-              this.gender = this.gender || 'male';
-              this.age = Math.floor(Math.random(Date.now()) * 3);
-              this.created = Date.now();
-              this.longevity = Math.floor(Math.random(Date.now()) * 17 + 4);
-              this.category = this.getCategory();
+    class Cat {
+      constructor(input) {
+        Object.assign(this, input);
+        this.id = guid();
+        this.gender = this.gender || 'male';
+        this.age = Math.floor(Math.random(Date.now()) * 3);
+        this.created = Date.now();
+        this.longevity = Math.floor(Math.random(Date.now()) * 17 + 4);
+        this.category = this.getCategory();
 
-              this.updateLog();
-          }
+        this.updateLog();
+      }
 
-          isAlive() {
-            return this.age < this.longevity;
-          }
+      isAlive() {
+        return this.age < this.longevity;
+      }
 
-          canProcreate() {
-            return this.age > 1 && this.isAlive();
-          }
+      canProcreate() {
+        return this.age > 1 && this.isAlive();
+      }
 
-          canBecomePregnant() {
-            return this.gender === 'female' && this.canProcreate();
-          }
+      canBecomePregnant() {
+        return this.gender === 'female' && this.canProcreate();
+      }
 
-          getCategory() {
-            return this.age < 1 ? this.young() : this.adult();
-          }
+      getCategory() {
+        return this.age < 1 ? this.young() : this.adult();
+      }
 
-          young() {
-            return 'kitten';
-          }
+      young() {
+        return 'kitten';
+      }
 
-          adult() {
-            return 'cat';
-          }
+      adult() {
+        return 'cat';
+      }
 
-          updateLog() {
-              const age = this.age > 0 ? `${this.age} ${this.age > 1 ? 'years' : 'year'} old` : 'new born';
-              updateLog(`Pop ${this.gender} ${this.category} (${age}, \u2625 ${this.longevity}).`);
-          }
-        }
+      updateLog() {
+        const age = this.age > 0 ? `${this.age} ${this.age > 1 ? 'years' : 'year'} old` : 'new born';
+        updateLog(`Pop ${this.gender} ${this.category} (${age}, \u2625${this.longevity}).`);
+      }
+    }
 
-        const updateGame = () => {
-          const updated = new Date().toLocaleString('fr');
-          updateLog(`game is updated ${updated}.`);
+    const updateGame = () => {
+      const updated = new Date().toLocaleString('fr');
+      updateLog(`game is updated ${updated}.`);
 
-          totalPopulation.textContent = cats.length.toString();
-          lastUpdate.textContent = updated;
-        }
+      totalPopulation.textContent = cats.length.toString();
+      lastUpdate.textContent = updated;
+    }
 
-        // Called every "tick", i.e. every 6 seconds.
-        let start;
-        let last;
-        const heartbeat = () => {
-            const now = Date.now();
-            const delta = now - last || 0;
-            last = now;
+    // Called every "tick", i.e. every 6 seconds.
+    let start;
+    let last;
+    const heartbeat = () => {
+      const now = Date.now();
+      const delta = now - last || 0;
+      last = now;
 
-            if (delta > 20) {
-                updateGame();
-            }
+      if (delta > 20) {
+        updateGame();
+      }
 
-            window.requestAnimationFrame(heartbeat);
-        };
+      window.requestAnimationFrame(heartbeat);
+    };
 
-        const updateLog = message => {
-            log.push(message);
-            const li = document.createElement('li');
-            const text = document.createTextNode(message);
-            li.appendChild(text);
-            displayLog.appendChild(li);
-        }
+    const updateLog = message => {
+      log.push(message);
+      const li = document.createElement('li');
+      const text = document.createTextNode(message);
+      li.appendChild(text);
+      displayLog.appendChild(li);
+    }
 
-        const add1pair = event => {
-            const maleCat = new Cat();
-            const femaleCat = new Cat({ gender: 'female' });
+    const add1pair = event => {
+      const maleCat = new Cat();
+      const femaleCat = new Cat({ gender: 'female' });
 
-            cats.push(maleCat);
-            cats.push(femaleCat);
-            event.preventDefault();
-        };
+      cats.push(maleCat);
+      cats.push(femaleCat);
+      event.preventDefault();
+    };
 
-        const addButton = document.getElementById('add-button');
-        addButton.addEventListener('click', add1pair, false);
+    const addButton = document.getElementById('add-button');
+    addButton.addEventListener('click', add1pair, false);
 
-        // Start the heartbeat.
-        window.requestAnimationFrame(heartbeat);
-    </script>
+    // Start the heartbeat.
+    window.requestAnimationFrame(heartbeat);
+  </script>
 </body>
 
 </html>
