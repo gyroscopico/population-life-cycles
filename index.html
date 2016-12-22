@@ -10,7 +10,8 @@
 
   <style>
     body {
-      margin:  57px 0 0;
+      margin: 57px 0 0;
+      font-size: 16px;
     }
 
     form {
@@ -21,13 +22,21 @@
       padding: 10px;
       color: #fff;
     }
+
+    span {
+      background-color: #ff0;
+      color: #000;
+      padding: 0 .25em;
+      border-radius: 8px;
+    }
   </style>
 </head>
 
 <body>
     <form action="#">
         <button id="add-button">Add 1 pair</button>
-        Population: <span id="total-population">0</span>
+        Update <span id="last-update"></span>
+        Total population <span id="total-population">0</span>
     </form>
 
     <ol id="display-log"></ol>
@@ -35,26 +44,67 @@
     <script>
         const log = [];
         const displayLog = document.getElementById('display-log');
+        const totalPopulation = document.getElementById('total-population');
+        const lastUpdate = document.getElementById('last-update');
         const cats = [];
 
+        const guid = () => {
+          const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+
+          return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+        }
+
         class Cat {
-            constructor(input) {
-                this.name = input.name;
-                this.gender = input.gender;
-                this.age = input.age;
-                this.dob = input.dob;
-                this.category = this.age < 1 ? 'kitten' : 'cat';
+          constructor(input) {
+              Object.assign(this, input);
+              this.id = guid();
+              this.gender = this.gender || 'male';
+              this.age = Math.floor(Math.random(Date.now()) * 3);
+              this.created = Date.now();
+              this.longevity = Math.floor(Math.random(Date.now()) * 17 + 4);
+              this.category = this.getCategory();
 
-                this.updateLog();
-            }
+              this.updateLog();
+          }
 
-            updateLog() {
-                updateLog(`A new ${this.category} has been added: ${this.name} (${this.gender}, ${this.age} years.)`);
-            }
+          isAlive() {
+            return this.age < this.longevity;
+          }
+
+          canProcreate() {
+            return this.age > 1 && this.isAlive();
+          }
+
+          canBecomePregnant() {
+            return this.gender === 'female' && this.canProcreate();
+          }
+
+          getCategory() {
+            return this.age < 1 ? this.young() : this.adult();
+          }
+
+          young() {
+            return 'kitten';
+          }
+
+          adult() {
+            return 'cat';
+          }
+
+          updateLog() {
+              const age = this.age > 0 ? `${this.age} ${this.age > 1 ? 'years' : 'year'} old` : 'new born';
+              updateLog(`Pop ${this.gender} ${this.category} (${age}, \u2625 ${this.longevity}).`);
+          }
         }
 
         const updateGame = () => {
-            updateLog(`game is updated ${Date.now()}.`);
+          const updated = new Date().toLocaleString('fr');
+          updateLog(`game is updated ${updated}.`);
+
+          totalPopulation.textContent = cats.length.toString();
+          lastUpdate.textContent = updated;
         }
 
         // Called every "tick", i.e. every 6 seconds.
@@ -81,19 +131,8 @@
         }
 
         const add1pair = event => {
-            const maleCat = new Cat({
-                name: `cat${Date.now()}`,
-                gender: 'male',
-                age: Math.floor(Math.random(2) * 10),
-                dob: Date.now(),
-            });
-
-            const femaleCat = new Cat({
-                name: `cat${Date.now()}`,
-                gender: 'female',
-                age: Math.floor(Math.random(2) * 10),
-                dob: Date.now(),
-            });
+            const maleCat = new Cat();
+            const femaleCat = new Cat({ gender: 'female' });
 
             cats.push(maleCat);
             cats.push(femaleCat);
