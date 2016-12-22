@@ -7,24 +7,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Population Life Cycles</title>
+
+  <style>
+    body {
+      margin:  57px 0 0;
+    }
+
+    form {
+      position: fixed;
+      top: 0;
+      background-color: rgba(0,0,0,.75);
+      width: 100%;
+      padding: 10px;
+      color: #fff;
+    }
+  </style>
 </head>
 
 <body>
     <form action="#">
         <button id="add-button">Add 1 pair</button>
+        Population: <span id="total-population">0</span>
     </form>
 
-    <div id="log"></div>
+    <ol id="display-log"></ol>
 
     <script>
         const log = [];
+        const displayLog = document.getElementById('display-log');
+        const cats = [];
+
+        class Cat {
+            constructor(input) {
+                this.name = input.name;
+                this.gender = input.gender;
+                this.age = input.age;
+                this.dob = input.dob;
+                this.category = this.age < 1 ? 'kitten' : 'cat';
+
+                this.updateLog();
+            }
+
+            updateLog() {
+                updateLog(`A new ${this.category} has been added: ${this.name} (${this.gender}, ${this.age} years.)`);
+            }
+        }
+
+        const updateGame = () => {
+            updateLog(`game is updated ${Date.now()}.`);
+        }
+
+        // Called every "tick", i.e. every 6 seconds.
+        let start;
+        let last;
+        const heartbeat = () => {
+            const now = Date.now();
+            const delta = now - last || 0;
+            last = now;
+
+            if (delta > 20) {
+                updateGame();
+            }
+
+            window.requestAnimationFrame(heartbeat);
+        };
+
+        const updateLog = message => {
+            log.push(message);
+            const li = document.createElement('li');
+            const text = document.createTextNode(message);
+            li.appendChild(text);
+            displayLog.appendChild(li);
+        }
+
+        const add1pair = event => {
+            const maleCat = new Cat({
+                name: `cat${Date.now()}`,
+                gender: 'male',
+                age: Math.floor(Math.random(2) * 10),
+                dob: Date.now(),
+            });
+
+            const femaleCat = new Cat({
+                name: `cat${Date.now()}`,
+                gender: 'female',
+                age: Math.floor(Math.random(2) * 10),
+                dob: Date.now(),
+            });
+
+            cats.push(maleCat);
+            cats.push(femaleCat);
+            event.preventDefault();
+        };
 
         const addButton = document.getElementById('add-button');
         addButton.addEventListener('click', add1pair, false);
 
-        const add1pair = () => {
-            log.push('One pair has been added.');
-        };
+        // Start the heartbeat.
+        window.requestAnimationFrame(heartbeat);
     </script>
 </body>
 
