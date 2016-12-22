@@ -23,6 +23,10 @@
       color: #fff;
     }
 
+    input[type=number] {
+      width: 50px;
+    }
+
     span {
       background-color: #ff0;
       color: #000;
@@ -34,19 +38,22 @@
 
 <body>
   <form action="#">
-    <button id="add-button">Add 1 pair</button>
+    <input type="number" id="number-mobs-to-add" value="1" />
+    <button id="add-cats">Add cats</button>
+    <button id="add-orcs">Add orcs</button>
     Update <span id="last-update"></span>
-    Total population <span id="total-population">0</span>
+    Population <span id="total-population">0</span>
   </form>
 
   <ol id="display-log"></ol>
 
   <script>
     const log = [];
+    const numberMobsToAdd = document.getElementById('number-mobs-to-add');
     const displayLog = document.getElementById('display-log');
     const totalPopulation = document.getElementById('total-population');
     const lastUpdate = document.getElementById('last-update');
-    const cats = [];
+    const mobs = [];
 
     const guid = () => {
       const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
@@ -56,17 +63,47 @@
       return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
     }
 
-    class Cat {
+    const C = {
+      MALE: 'male',
+      FEMALE: 'female',
+      YOUNG: 'pawn',
+      ADULT: 'mob',
+      MIN_AGE: 3,
+      MAX_MOB_LONGEVITY: 17,
+      MAX_ORC_LONGEVITY: 30,
+    }
+
+    class Mob {
       constructor(input) {
         Object.assign(this, input);
         this.id = guid();
-        this.gender = this.gender || 'male';
-        this.age = Math.floor(Math.random(Date.now()) * 3);
+        this.gender = this.gender || this.randomGender();
+        this.age = this.randomNumber(0, C.MIN_AGE);
         this.created = Date.now();
-        this.longevity = Math.floor(Math.random(Date.now()) * 17 + 4);
+        this.longevity = this.randomNumber(C.MIN_AGE, this.maxLongevity());
         this.category = this.getCategory();
 
         this.updateLog();
+      }
+
+      young() {
+        return C.YOUNG;
+      }
+
+      adult() {
+        return C.ADULT;
+      }
+
+      maxLongevity() {
+        return C.MAX_MOB_LONGEVITY;
+      }
+
+      randomNumber(min, max) {
+        return Math.floor(Math.random(Date.now()) * max) + min;
+      }
+
+      randomGender() {
+        return this.randomNumber(0, 90) >= 50 ? C.MALE : C.FEMALE;
       }
 
       isAlive() {
@@ -78,13 +115,20 @@
       }
 
       canBecomePregnant() {
-        return this.gender === 'female' && this.canProcreate();
+        return this.gender === C.FEMALE && this.canProcreate();
       }
 
       getCategory() {
         return this.age < 1 ? this.young() : this.adult();
       }
 
+      updateLog() {
+        const age = this.age > 0 ? `${this.age} ${this.age > 1 ? 'years' : 'year'} old` : 'newborn';
+        updateLog(`Pop ${this.gender} ${this.category} (${age}, \u2625${this.longevity}).`);
+      }
+    }
+
+    class Cat extends Mob {
       young() {
         return 'kitten';
       }
@@ -92,10 +136,19 @@
       adult() {
         return 'cat';
       }
+    }
 
-      updateLog() {
-        const age = this.age > 0 ? `${this.age} ${this.age > 1 ? 'years' : 'year'} old` : 'new born';
-        updateLog(`Pop ${this.gender} ${this.category} (${age}, \u2625${this.longevity}).`);
+    class Orc extends Mob {
+      young() {
+        return 'orc pawn';
+      }
+
+      adult() {
+        return 'orc';
+      }
+
+      maxLongevity() {
+        return C.MAX_ORC_LONGEVITY;
       }
     }
 
@@ -103,7 +156,7 @@
       const updated = new Date().toLocaleString('fr');
       updateLog(`game is updated ${updated}.`);
 
-      totalPopulation.textContent = cats.length.toString();
+      totalPopulation.textContent = mobs.length.toString();
       lastUpdate.textContent = updated;
     }
 
@@ -115,7 +168,7 @@
       const delta = now - last || 0;
       last = now;
 
-      if (delta > 20) {
+      if (delta > 30) {
         updateGame();
       }
 
@@ -130,17 +183,40 @@
       displayLog.appendChild(li);
     }
 
-    const add1pair = event => {
-      const maleCat = new Cat();
-      const femaleCat = new Cat({ gender: 'female' });
-
-      cats.push(maleCat);
-      cats.push(femaleCat);
+    const addCats = event => {
       event.preventDefault();
+
+      const toAdd = Number(numberMobsToAdd.value);
+
+      if (!toAdd ||  toAdd === 0) {
+        throw new Error(`Invalid number of mobs to add: ${toAdd}.`)
+      }
+
+      for (let i = 0; i < toAdd; i++) {
+        mobs.push(new Cat());
+      }
     };
 
-    const addButton = document.getElementById('add-button');
-    addButton.addEventListener('click', add1pair, false);
+    // todo: addOrcs is the same as addCats so they should be refactored into a single function.
+    const addOrcs = event => {
+      event.preventDefault();
+
+      const toAdd = Number(numberMobsToAdd.value);
+
+      if (!toAdd ||  toAdd === 0) {
+        throw new Error(`Invalid number of mobs to add: ${toAdd}.`)
+      }
+
+      for (let i = 0; i < toAdd; i++) {
+        mobs.push(new Orc());
+      }
+    };
+
+    const addCatsButton = document.getElementById('add-cats');
+    addCatsButton.addEventListener('click', addCats, false);
+
+    const addOrcsButton = document.getElementById('add-orcs');
+    addOrcsButton.addEventListener('click', addOrcs, false);
 
     // Start the heartbeat.
     window.requestAnimationFrame(heartbeat);
