@@ -4,7 +4,12 @@ const mobCategory = document.getElementById('mob-category');
 const displayLog = document.getElementById('display-log');
 const totalPopulation = document.getElementById('total-population');
 const lastUpdate = document.getElementById('last-update');
+
+// Currently mobs that are alive.
 const mobs = [];
+
+// Mobs that used to be alive but are now dead.
+const graveyard = [];
 
 const guid = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
@@ -31,8 +36,8 @@ const C = {
     CAT: 'Cat',
     ORC: 'Orc',
   },
-  ONE_TICK: 6000, // 6 seconds (or 6 thousand milliseconds).
-  ONE_YEAR: 
+  ONE_TICK: 6 * 1e3, // 6 seconds of real time.
+  ONE_YEAR: 6 * 1e4,  // 1 minute of real time.
 }
 
 class Mob {
@@ -58,6 +63,20 @@ class Mob {
     this.category = this.getCategory();
 
     this.updateLog();
+  }
+
+  // Try to age a mob.
+  // Return true if the mob could become older.
+  // Return false and sets the age to the longevity (i.e. dead).
+  becomeOlder(years) {
+    if (this.age + years < this.longevity) {
+      this.age = this.age + years;
+      return true;
+    }
+
+    // Cannot become older.
+    this.age = this.longevity;
+    return false;
   }
 
   young() {
