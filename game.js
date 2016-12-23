@@ -3,10 +3,10 @@ const numberMobsToAdd = document.getElementById('number-mobs-to-add');
 const mobCategory = document.getElementById('mob-category');
 const displayLog = document.getElementById('display-log');
 const totalPopulation = document.getElementById('total-population');
-const lastUpdate = document.getElementById('last-update');
+const totalGraveyard = document.getElementById('total-graveyard');
 
 // Currently mobs that are alive.
-const mobs = [];
+let mobs = [];
 
 // Mobs that used to be alive but are now dead.
 const graveyard = [];
@@ -38,6 +38,7 @@ const C = {
   },
   ONE_TICK: 6 * 1e3, // 6 seconds of real time.
   ONE_YEAR: 6 * 1e4,  // 1 minute of real time.
+  OLD_AGE: 'Old age',
 }
 
 class Mob {
@@ -58,7 +59,7 @@ class Mob {
     // A newborn mob from existing mobs who procreated is always 0 years of age.
     this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
 
-    this.created = Date.now();
+    this.spawned = now();
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
     this.category = this.getCategory();
 
@@ -158,20 +159,30 @@ class Orc extends Mob {
   }
 }
 
-const ageMobs = mobs => {
-  // todo: implement aging all mobs by one year and possibly killing them of old age?
-}
+// Return an aged population (minus the dead ones).
+const ageMobs = (mobs, years) => mobs.filter(mob => {
+  if (mob.becomeOlder(years)) {
+    return mob; // This mob is years older but still alive.
+  } else {
+    mob.timeOfDeath = now();
+    mob.causeOfDeath = C.OLD_AGE;
+    graveyard.push(mob);  // This mob just died.
+  }
+})
+
+// Return a formatted date and time string for the moment it is called. 
+const now = () => new Date().toLocaleString('en-GB');
 
 const updateUI = () => {
   totalPopulation.textContent = mobs.length.toString();
-  lastUpdate.textContent = new Date().toLocaleString('fr');
+  totalGraveyard.textContent = graveyard.length.toString();
 }
 
 // Called every "tick", see C.ONE_TICK for this length of time.
 const updateGame = () => {
-  updateLog(`One world tick has fired: ${new Date().toLocaleString('fr')}.`);
+  updateLog(`[world tick] ${now()}.`);
   updateUI();
-  ageMobs(mobs);
+  mobs = ageMobs(mobs, 1);
 }
 
 const scrollToBottom = element => {
