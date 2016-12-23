@@ -31,6 +31,7 @@ const C = {
     CAT: 'Cat',
     ORC: 'Orc',
   },
+  ONE_TICK: 6000, // 6 seconds (or 6 thousand milliseconds).
 }
 
 class Mob {
@@ -137,28 +138,51 @@ class Orc extends Mob {
   }
 }
 
-const updateGame = () => {
-  const updated = new Date().toLocaleString('fr');
-  updateLog(`game is updated ${updated}.`);
-
-  totalPopulation.textContent = mobs.length.toString();
-  lastUpdate.textContent = updated;
+const ageMobs = () => {
+  // todo: implement aging all mobs by one year and possibly killing them of old age?
 }
 
-// Called every "tick", i.e. every 6 seconds.
-let time;
-const heartbeat = () => {
+const updateUI = () => {
+  totalPopulation.textContent = mobs.length.toString();
+  lastUpdate.textContent = new Date().toLocaleString('fr');
+}
+
+// Called every "tick", see C.ONE_TICK for this length of time.
+const updateGame = () => {
+  updateLog(`One world tick has fired: ${new Date().toLocaleString('fr')}.`);
+  updateUI();
+  ageMobs();
+}
+
+// Heartbeat runs faster than the ticks and guarentees
+// an animation consistent with as smooth a framerate as possible.
+let lastTime = undefined;
+let tick = undefined;
+const heartbeat = currentTime => {
   window.requestAnimationFrame(heartbeat);
 
-  const now = new Date().getTime();
-  const delta = now - (time || now);
-  time = now;
+  // Delta is amount of time since last heartbeat,
+  // which can be fast depending on the client.
+  const delta = lastTime === undefined ? 0 : currentTime - lastTime;
+  lastTime = currentTime;
 
-  console.log(delta);
-
-  /*if (delta > 30) {
+  // Update the game every tick (regular intervals),
+  // not every heartbeat (too fast and varies based on client).
+  if (tick === undefined || tick >= C.ONE_TICK) {
+    // The heartbeat is not allowed to make any game update
+    // or any DOM operation, only other functions called by updateGame can.
     updateGame();
-  }*/
+    tick = 0; // Reset the tick.
+  }
+
+  // todo: create a separate, faster "tick" for animations (250 milliseconds, i.e. .25 of a second?)
+  // like objects moving, camera controls or handling keyboard input.
+
+  // note: for an animation, movements should be related to the delta.
+  // see http://creativejs.com/resources/requestanimationframe/
+
+  // Increment the tick by the delta.
+  tick = tick + delta;
 };
 
 const updateLog = message => {

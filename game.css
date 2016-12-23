@@ -1,25 +1,30 @@
 body {
-  margin: 57px 0 0;
   font-size: 16px;
+  margin: 0;
 }
 
-form {
-  position: fixed;
-  top: 0;
+#main-controls {
   background-color: rgba(0,0,0,.75);
-  width: 100%;
-  padding: 10px;
+  margin: 0;
+  padding: .625em;
   color: #fff;
 }
 
-input[type=number] {
-  width: 50px;
-}
-
-span {
+#main-controls span {
   background-color: #ff0;
   color: #000;
   padding: 0 .25em;
-  border-radius: 8px;
+  border-radius: .5em;
 }
 
+#number-mobs-to-add {
+  width: 50px;
+}
+
+#display-log {
+  background-color: rgba(0,0,0,.1);
+  margin: 0;
+  padding: 1em .25em 0;
+  height: 200px;
+  overflow: auto;
+}
