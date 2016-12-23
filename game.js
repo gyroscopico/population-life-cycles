@@ -35,10 +35,22 @@ const C = {
 
 class Mob {
   constructor(input) {
+    // Assign all inputs as properties (if any).
     Object.assign(this, input);
+
     this.id = guid();
     this.gender = this.gender || this.randomGender();
-    this.age = this.randomNumber(0, this.maxCreationAge());
+
+    // Was this mob spawned by a player?
+    // Note: Object.assign can give a value, if not default to true.
+    this.isCreated = this.isCreated || true;
+
+    // Is this mob born from other mobs?
+    this.isBornFromMobs = this.isBornFromMobs || false;
+
+    // A newborn mob from existing mobs who procreated is always 0 years of age.
+    this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+
     this.created = Date.now();
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
     this.category = this.getCategory();
@@ -134,18 +146,19 @@ const updateGame = () => {
 }
 
 // Called every "tick", i.e. every 6 seconds.
-let start;
-let last;
+let time;
 const heartbeat = () => {
-  const now = Date.now();
-  const delta = now - last || 0;
-  last = now;
-
-  if (delta > 30) {
-    updateGame();
-  }
-
   window.requestAnimationFrame(heartbeat);
+
+  const now = new Date().getTime();
+  const delta = now - (time || now);
+  time = now;
+
+  console.log(delta);
+
+  /*if (delta > 30) {
+    updateGame();
+  }*/
 };
 
 const updateLog = message => {
@@ -188,4 +201,4 @@ const addMobsButton = document.getElementById('add-mobs');
 addMobsButton.addEventListener('click', addMobs, false);
 
 // Start the heartbeat.
-window.requestAnimationFrame(heartbeat);
+heartbeat();
