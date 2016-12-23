@@ -154,6 +154,10 @@ const updateGame = () => {
   ageMobs();
 }
 
+const scrollToBottom = element => {
+  element.scrollTop = element.scrollHeight;
+}
+
 // Heartbeat runs faster than the ticks and guarentees
 // an animation consistent with as smooth a framerate as possible.
 let lastTime = undefined;
@@ -191,6 +195,7 @@ const updateLog = message => {
   const text = document.createTextNode(message);
   li.appendChild(text);
   displayLog.appendChild(li);
+  scrollToBottom(displayLog);
 }
 
 const addMobs = event => {
