@@ -1,0 +1,23 @@
+{
+  "globals": {
+    "Stats": true,
+    "dat": true,
+    "module": true
+  },
+  "env": {
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "extends": ["eslint:recommended"],
+  "rules": {
+    "comma-dangle" : 0,
+    "no-console": 1
+  }
+}

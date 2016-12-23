@@ -4,28 +4,15 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <title>Population Life Cycles</title>
-
-  <link rel="stylesheet" href="./game.css">
 </head>
 
 <body>
-  <form id="main-controls" action="#">
-    <input type="number" id="number-mobs-to-add" value="1" />
-    <select name="mob-category" id="mob-category">
-      <option value="Orc">Orcs</option>
-      <option value="Cat">Cats</option>
-    </select>
-    <button id="add-mobs">Add</button>
-    Population <span id="total-population">0</span>
-    Graveyard <span id="total-graveyard">0</span>
-  </form>
+  <div id="root"></div>
 
-  <ol id="display-log"></ol>
-
-  <script src="./game.js"></script>
+  <script src="./build/bundle.js"></script>
 </body>
 
 </html>
