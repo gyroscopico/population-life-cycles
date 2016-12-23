@@ -32,6 +32,7 @@ const C = {
     ORC: 'Orc',
   },
   ONE_TICK: 6000, // 6 seconds (or 6 thousand milliseconds).
+  ONE_YEAR: 
 }
 
 class Mob {
@@ -138,7 +139,7 @@ class Orc extends Mob {
   }
 }
 
-const ageMobs = () => {
+const ageMobs = mobs => {
   // todo: implement aging all mobs by one year and possibly killing them of old age?
 }
 
@@ -151,7 +152,7 @@ const updateUI = () => {
 const updateGame = () => {
   updateLog(`One world tick has fired: ${new Date().toLocaleString('fr')}.`);
   updateUI();
-  ageMobs();
+  ageMobs(mobs);
 }
 
 const scrollToBottom = element => {
