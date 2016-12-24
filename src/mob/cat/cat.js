@@ -21,4 +21,8 @@ export default class Cat extends Mob {
   maturity() {
     return C.CAT_MATURITY;
   }
+
+  maxCreationAge() {
+    return C.MAX_CAT_CREATION_AGE;
+  }
 }

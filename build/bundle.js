@@ -19863,7 +19863,8 @@
 	
 	      this.setState({
 	        mobs: population.mobs,
-	        corpses: population.corpses
+	        corpses: population.corpses,
+	        log: this.state.log.concat(population.log)
 	      });
 	    }
 	  }, {
@@ -20022,7 +20023,7 @@
 	var ADULT = exports.ADULT = 'mob';
 	
 	// Maximum age when mob is created by a player (not born from mobs).
-	var MAX_CREATION_AGE = exports.MAX_CREATION_AGE = 3;
+	var MAX_CREATION_AGE = exports.MAX_CREATION_AGE = 9;
 	
 	// Longevity is a range and dictates when a mob dies of old age.
 	var MIN_MOB_LONGEVITY = exports.MIN_MOB_LONGEVITY = 15;
@@ -20035,6 +20036,7 @@
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
 	var MAX_CAT_LONGEVITY = exports.MAX_CAT_LONGEVITY = 17;
 	var CAT_MATURITY = exports.CAT_MATURITY = 1;
+	var MAX_CAT_CREATION_AGE = exports.MAX_CAT_CREATION_AGE = 3;
 	
 	var CATEGORY = exports.CATEGORY = {
 	  CAT: 'Cat',
@@ -20044,7 +20046,7 @@
 	
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
 	var ONE_YEAR = exports.ONE_YEAR = 6 * 1e4; // 1 minute of real time.
-	var OLD_AGE = exports.OLD_AGE = 'Old age';
+	var OLD_AGE = exports.OLD_AGE = 'old age';
 	
 	var AGE_INCREMENT = exports.AGE_INCREMENT = 1;
 
@@ -20083,6 +20085,8 @@
 	
 	// Return an aged population of mobs and corpses.
 	var ageMobs = exports.ageMobs = function ageMobs(population, years) {
+	  var log = [];
+	
 	  population.mobs = population.mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
 	      return mob; // This mob is years older but still alive.
@@ -20090,10 +20094,15 @@
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
 	      population.corpses.push(mob); // This mob just died.
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ' died of ' + mob.causeOfDeath + ', aged ' + mob.age + ' \u2625' + mob.timeOfDeath + '.');
 	    }
 	  });
 	
-	  return population;
+	  return {
+	    mobs: population.mobs,
+	    corpses: population.corpses,
+	    log: log
+	  };
 	};
 
 /***/ },
@@ -20488,6 +20497,11 @@
 	    key: 'maturity',
 	    value: function maturity() {
 	      return C.CAT_MATURITY;
+	    }
+	  }, {
+	    key: 'maxCreationAge',
+	    value: function maxCreationAge() {
+	      return C.MAX_CAT_CREATION_AGE;
 	    }
 	  }]);
 	

@@ -4,7 +4,7 @@ export const YOUNG = 'pawn';
 export const ADULT = 'mob';
 
 // Maximum age when mob is created by a player (not born from mobs).
-export const MAX_CREATION_AGE = 3;
+export const MAX_CREATION_AGE = 9;
 
 // Longevity is a range and dictates when a mob dies of old age.
 export const MIN_MOB_LONGEVITY = 15;
@@ -17,6 +17,7 @@ export const MATURITY = 3;
 export const MIN_CAT_LONGEVITY = 4;
 export const MAX_CAT_LONGEVITY = 17;
 export const CAT_MATURITY = 1;
+export const MAX_CAT_CREATION_AGE = 3;
 
 export const CATEGORY = {
   CAT: 'Cat',
@@ -26,6 +27,6 @@ export const CATEGORY = {
 
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.
 export const ONE_YEAR = 6 * 1e4;  // 1 minute of real time.
-export const OLD_AGE = 'Old age';
+export const OLD_AGE = 'old age';
 
 export const AGE_INCREMENT = 1;

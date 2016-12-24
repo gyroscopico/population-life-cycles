@@ -63,6 +63,7 @@ export default class App extends Component {
     this.setState({
       mobs: population.mobs,
       corpses: population.corpses,
+      log: this.state.log.concat(population.log),
     });
   }
 
