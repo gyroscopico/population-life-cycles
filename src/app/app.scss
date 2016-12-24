@@ -23,7 +23,7 @@ body {
 }
 
 #main-controls {
-  position: absolute;
+  position: fixed;
   bottom: 120px;
   right: 0;
   background-color: $transparent-75;
@@ -70,7 +70,7 @@ select {
   padding: .625em;
   height: 100px;
   overflow: auto;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
@@ -78,7 +78,7 @@ select {
 }
 
 .center {
-  position: absolute;
+  position: fixed;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -40%);
