@@ -6,6 +6,7 @@ import Cat from './cat/cat';
 export const addMobs = (event, mobs) => {
   event.preventDefault();
 
+  const log = [];
   const toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
   const category = event.currentTarget['mob-category'].value;
 
@@ -18,20 +19,29 @@ export const addMobs = (event, mobs) => {
   }
 
   for (let i = 0; i < toAdd; i++) {
+    let newMob;
+
     switch (category) {
       case C.CATEGORY.CAT:
-        mobs.push(new Cat());
+        newMob = new Cat();
         break;
       case C.CATEGORY.ORC:
-        mobs.push(new Orc());
+        newMob = new Orc();
         break;
       case C.CATEGORY.GOBLIN:
-        mobs.push(new Goblin());
+        newMob = new Goblin();
         break;
       default:
         throw new Error(`Unexpected mob category: ${category}.`);
     }
+
+    const age = newMob.age >= newMob.maturity() ? `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';
+    mobs.push(newMob);
+    log.push(`[pop] ${newMob.gender} ${newMob.category} (${age}, \u2625${newMob.longevity}).`);
   }
 
-  return mobs;
+  return {
+    mobs,
+    log,
+  };
 };

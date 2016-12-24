@@ -19806,13 +19806,13 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      // Mobs that used to be alive but are now dead.
-	      this.corpses = [];
-	
 	      // Keep track of all log messages.
 	      this.setState({
 	        // Mobs that are currently alive.
 	        mobs: [],
+	
+	        // Mobs that used to be alive but are now dead.
+	        corpses: [],
 	
 	        // In heartbeat, lastTime keeps track of the last time the function was run.
 	        lastTime: undefined,
@@ -19853,9 +19853,17 @@
 	      // Log another tick in the world.
 	      this.updateLog('[world-tick] ' + (0, _now.now)() + '.');
 	
-	      // Age all mobs by 1 year.
+	      // Age all mobs by 1 year, returns both the mobs and the corpses.
+	      var population = {
+	        mobs: this.state.mobs,
+	        corpses: this.state.corpses
+	      };
+	
+	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
+	
 	      this.setState({
-	        mobs: (0, _ageMobs.ageMobs)(this.state.mobs, C.AGE_INCREMENT, this.corpses)
+	        mobs: population.mobs,
+	        corpses: population.corpses
 	      });
 	    }
 	  }, {
@@ -19911,7 +19919,8 @@
 	      mobsStillAlive = (0, _addMobs.addMobs)(event, mobsStillAlive);
 	
 	      this.setState({
-	        mobs: mobsStillAlive
+	        mobs: mobsStillAlive.mobs,
+	        log: this.state.log.concat(mobsStillAlive.log)
 	      });
 	    }
 	  }, {
@@ -19928,7 +19937,7 @@
 	      });
 	
 	      var mobsLabel = this.state.mobs.length > 1 ? 'mobs' : 'mob';
-	      var corpsesLabel = this.corpses.length > 1 ? 'corpses' : 'corpse';
+	      var corpsesLabel = this.state.corpses.length > 1 ? 'corpses' : 'corpse';
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -19978,7 +19987,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { id: 'total-corpses', className: 'big-number' },
-	              this.corpses.length.toString()
+	              this.state.corpses.length.toString()
 	            ),
 	            ' ',
 	            corpsesLabel
@@ -20072,17 +20081,19 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	// Return an aged population of mobs (minus the dead ones).
-	var ageMobs = exports.ageMobs = function ageMobs(mobs, years, corpses) {
-	  return mobs.filter(function (mob) {
+	// Return an aged population of mobs and corpses.
+	var ageMobs = exports.ageMobs = function ageMobs(population, years) {
+	  population.mobs = population.mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
 	      return mob; // This mob is years older but still alive.
 	    } else {
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
-	      corpses.push(mob); // This mob just died.
+	      population.corpses.push(mob); // This mob just died.
 	    }
 	  });
+	
+	  return population;
 	};
 
 /***/ },
@@ -20119,6 +20130,7 @@
 	var addMobs = exports.addMobs = function addMobs(event, mobs) {
 	  event.preventDefault();
 	
+	  var log = [];
 	  var toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
 	  var category = event.currentTarget['mob-category'].value;
 	
@@ -20131,22 +20143,31 @@
 	  }
 	
 	  for (var i = 0; i < toAdd; i++) {
+	    var newMob = void 0;
+	
 	    switch (category) {
 	      case C.CATEGORY.CAT:
-	        mobs.push(new _cat2.default());
+	        newMob = new _cat2.default();
 	        break;
 	      case C.CATEGORY.ORC:
-	        mobs.push(new _orc2.default());
+	        newMob = new _orc2.default();
 	        break;
 	      case C.CATEGORY.GOBLIN:
-	        mobs.push(new _goblin2.default());
+	        newMob = new _goblin2.default();
 	        break;
 	      default:
 	        throw new Error('Unexpected mob category: ' + category + '.');
 	    }
+	
+	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
+	    mobs.push(newMob);
+	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
 	  }
 	
-	  return mobs;
+	  return {
+	    mobs: mobs,
+	    log: log
+	  };
 	};
 
 /***/ },

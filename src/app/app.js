@@ -10,13 +10,13 @@ import './app.scss';
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
-    // Mobs that used to be alive but are now dead.
-    this.corpses = [];
-
     // Keep track of all log messages.
     this.setState({
       // Mobs that are currently alive.
       mobs: [],
+
+      // Mobs that used to be alive but are now dead.
+      corpses: [],
 
       // In heartbeat, lastTime keeps track of the last time the function was run.
       lastTime: undefined,
@@ -52,9 +52,17 @@ export default class App extends Component {
     // Log another tick in the world.
     this.updateLog(`[world-tick] ${now()}.`);
 
-    // Age all mobs by 1 year.
+    // Age all mobs by 1 year, returns both the mobs and the corpses.
+    let population = {
+      mobs: this.state.mobs,
+      corpses: this.state.corpses,
+    };
+
+    population = ageMobs(population, C.AGE_INCREMENT);
+
     this.setState({
-      mobs: ageMobs(this.state.mobs, C.AGE_INCREMENT, this.corpses),
+      mobs: population.mobs,
+      corpses: population.corpses,
     });
   }
 
@@ -105,7 +113,8 @@ export default class App extends Component {
     mobsStillAlive = addMobs(event, mobsStillAlive);
 
     this.setState({
-      mobs: mobsStillAlive,
+      mobs: mobsStillAlive.mobs,
+      log: this.state.log.concat(mobsStillAlive.log),
     });
   }
 
@@ -117,7 +126,7 @@ export default class App extends Component {
     });
 
     const mobsLabel = this.state.mobs.length > 1 ? 'mobs' : 'mob';
-    const corpsesLabel = this.corpses.length > 1 ? 'corpses' : 'corpse';
+    const corpsesLabel = this.state.corpses.length > 1 ? 'corpses' : 'corpse';
 
     return (
       <div>
@@ -139,7 +148,7 @@ export default class App extends Component {
           </li>
           <li>
             <span id="total-corpses" className="big-number">
-              {this.corpses.length.toString()}
+              {this.state.corpses.length.toString()}
             </span> {corpsesLabel}
           </li>
         </ul>
