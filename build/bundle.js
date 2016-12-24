@@ -20094,7 +20094,7 @@
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
 	      population.corpses.push(mob); // This mob just died.
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ' died of ' + mob.causeOfDeath + ', aged ' + mob.age + ' \u2625' + mob.timeOfDeath + '.');
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ' died of ' + mob.causeOfDeath + ', aged ' + mob.age + ', spawned ' + mob.spawned + ' - \u2625' + mob.timeOfDeath + '.');
 	    }
 	  });
 	
