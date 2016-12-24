@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 
 import * as C from '../constants';
 import { now } from '../utils/now';
 import { ageMobs } from '../mob/age-mobs';
 import { addMobs } from '../mob/add-mobs';
+import { scrollToBottom } from '../utils/scroll-to-bottom';
 import './app.scss';
 
 // Main starting point of the game.
@@ -34,6 +35,13 @@ export default class App extends Component {
 
   componentDidMount() {
     this.heartbeat(); // Start the heartbeat.
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Has log changed?
+    if (this.state.log.length !== prevState.log.length) {
+      scrollToBottom(this.refs.logWindow);
+    }
   }
 
   // Called every "tick", see C.ONE_TICK for this length of time.
@@ -106,7 +114,7 @@ export default class App extends Component {
           </ul>
         </form>
 
-        <ol className="scrollable-window">
+        <ol className="scrollable-window" ref="logWindow">
           {logMessages}
         </ol>
       </div>
