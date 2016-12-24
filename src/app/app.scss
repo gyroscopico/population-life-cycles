@@ -1,3 +1,10 @@
+// Colours.
+$transparent-10: rgba(0,0,0,.1);
+$transparent-75: rgba(0,0,0,.75);
+$gold-m: #fc0;  // gold medium.
+$gold-d: #960;  // gold dark
+
+// Main style.
 body {
   font-size: 16px;
   line-height: 1.5em;
@@ -8,19 +15,18 @@ body {
   position: absolute;
   bottom: 120px;
   right: 0;
-  background-color: rgba(0,0,0,.75);
+  background-color: $transparent-75;
   margin: 0;
   padding: .625em;
-  color: #fff;
 }
 
 .big-number {
-  background-color: #fc0;
+  background-color: $gold-m;
   padding: 0 .5em;
   border-radius: .25em;
   font-size: 1.5em;
   vertical-align: middle;
-  color: #960;
+  color: $gold-d;
 }
 
 #number-mobs-to-add,
@@ -41,8 +47,12 @@ select {
   cursor: pointer;
 }
 
+input[type=submit] {
+  min-width: 44px;
+}
+
 .scrollable-window {
-  background-color: rgba(0,0,0,.1);
+  background-color: $transparent-10;
   margin: 0;
   padding: .625em;
   height: 100px;

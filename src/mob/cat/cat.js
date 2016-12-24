@@ -1,3 +1,4 @@
+import * as C from '../../constants';
 import Mob from '../mob';
 
 export default class Cat extends Mob {
@@ -7,5 +8,17 @@ export default class Cat extends Mob {
 
   adult() {
     return 'cat';
+  }
+
+  minLongevity() {
+    return C.MIN_CAT_LONGEVITY;
+  }
+
+  maxLongevity() {
+    return C.MAX_CAT_LONGEVITY;
+  }
+
+  maturity() {
+    return C.CAT_MATURITY;
   }
 }

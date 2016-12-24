@@ -1,5 +1,6 @@
 import * as C from '../constants';
 import Orc from './orc/orc';
+import Goblin from './goblin/goblin';
 import Cat from './cat/cat';
 
 export const addMobs = (event, mobs) => {
@@ -23,6 +24,9 @@ export const addMobs = (event, mobs) => {
         break;
       case C.CATEGORY.ORC:
         mobs.push(new Orc());
+        break;
+      case C.CATEGORY.GOBLIN:
+        mobs.push(new Goblin());
         break;
       default:
         throw new Error(`Unexpected mob category: ${category}.`);

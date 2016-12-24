@@ -12,7 +12,7 @@ export default class Mob {
 
     // Was this mob spawned by a player?
     // Note: Object.assign can give a value, if not default to true.
-    this.isCreated = this.isCreated || true;
+    this.isCreatedByPlayer = this.isCreatedByPlayer || true;
 
     // Is this mob born from other mobs?
     this.isBornFromMobs = this.isBornFromMobs || false;
@@ -31,6 +31,7 @@ export default class Mob {
   becomeOlder(years) {
     if (this.age + years < this.longevity) {
       this.age = this.age + years;
+      this.category = this.getCategory();
       return true;
     }
 
@@ -59,6 +60,10 @@ export default class Mob {
     return C.MAX_MOB_LONGEVITY;
   }
 
+  maturity() {
+    return C.MATURITY;
+  }
+
   // Random integer number included in a range from min to max (both inclusive).
   randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -73,7 +78,7 @@ export default class Mob {
   }
 
   canProcreate() {
-    return this.age > 1 && this.isAlive();
+    return this.age >= this.maturity() && this.isAlive();
   }
 
   canBecomePregnant() {
@@ -81,6 +86,6 @@ export default class Mob {
   }
 
   getCategory() {
-    return this.age < 1 ? this.young() : this.adult();
+    return this.age < this.maturity() ? this.young() : this.adult();
   }
 }

@@ -16,15 +16,16 @@ export default class App extends Component {
     // Mobs that used to be alive but are now dead.
     this.corpses = [];
 
-    // In heartbeat, tick measures if enough time has elapsed since the last tick.
-    // Note: the very first tick is triggered when tick has its initial default value of undefined.
-    this.tick = undefined;
-
     // Keep track of all log messages.
     this.setState({
       // In heartbeat, lastTime keeps track of the last time the function was run.
       lastTime: undefined,
+      // In heartbeat, tick measures if enough time has elapsed since the last tick.
+      tick: 0,
+      // Keep track of all messages that should be logged and displayed.
       log: [],
+      // Flag the game world has just started ticking.
+      isFirstInstant: true,
     });
 
     // Functions of the game.
@@ -72,11 +73,14 @@ export default class App extends Component {
 
     // Update the game every tick (regular intervals),
     // not every heartbeat (too fast and varies based on client).
-    if (this.tick === undefined || this.tick >= C.ONE_TICK) {
+    if (this.state.isFirstInstant || this.state.tick >= C.ONE_TICK) {
       // The heartbeat is not allowed to make any game update
       // or any DOM operation, only other functions called by updateGame can.
       this.updateGame();
-      this.tick = 0; // Reset the tick.
+      this.setState({
+        tick: 0,  // Reset the tick.
+        isFirstInstant: false,
+      })
     }
 
     // todo: create a separate, faster "tick" for animations (250 milliseconds, i.e. .25 of a second?)
@@ -86,7 +90,9 @@ export default class App extends Component {
     // see http://creativejs.com/resources/requestanimationframe/
 
     // Increment the tick by the delta.
-    this.tick = this.tick + delta;
+    this.setState({
+      tick: this.state.tick + delta,
+    })
   }
 
   submitForm(event) {
@@ -105,8 +111,9 @@ export default class App extends Component {
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
           <input type="number" id="number-mobs-to-add" defaultValue="1" min="1" max="100" />
           <select name="mob-category" id="mob-category">
-            <option value="Orc">Orcs</option>
             <option value="Cat">Cats</option>
+            <option value="Orc">Orcs</option>
+            <option value="Goblin">Goblins</option>
           </select>
           <input type="submit" value="Add" />
         </form>
