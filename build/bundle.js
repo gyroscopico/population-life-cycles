@@ -19917,6 +19917,9 @@
 	        );
 	      });
 	
+	      var mobsLabel = this.mobs.length > 1 ? 'mobs' : 'mob';
+	      var corpsesLabel = this.corpses.length > 1 ? 'corpses' : 'corpse';
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -19956,7 +19959,8 @@
 	              { id: 'total-mobs', className: 'big-number' },
 	              this.mobs.length.toString()
 	            ),
-	            ' mobs'
+	            ' ',
+	            mobsLabel
 	          ),
 	          _react2.default.createElement(
 	            'li',
@@ -19966,7 +19970,8 @@
 	              { id: 'total-corpses', className: 'big-number' },
 	              this.corpses.length.toString()
 	            ),
-	            ' corpses'
+	            ' ',
+	            corpsesLabel
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -20504,7 +20509,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n#main-controls {\n  position: absolute;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: absolute;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 2em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n#main-controls {\n  position: absolute;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: absolute;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 2em; }\n", ""]);
 	
 	// exports
 

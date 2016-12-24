@@ -106,6 +106,9 @@ export default class App extends Component {
       return <li key={key}>{message}</li>
     });
 
+    const mobsLabel = this.mobs.length > 1 ? 'mobs' : 'mob';
+    const corpsesLabel = this.corpses.length > 1 ? 'corpses' : 'corpse';
+
     return (
       <div>
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
@@ -122,12 +125,12 @@ export default class App extends Component {
           <li>
             <span id="total-mobs" className="big-number">
               {this.mobs.length.toString()}
-            </span> mobs
+            </span> {mobsLabel}
           </li>
           <li>
             <span id="total-corpses" className="big-number">
               {this.corpses.length.toString()}
-            </span> corpses
+            </span> {corpsesLabel}
           </li>
         </ul>
 
