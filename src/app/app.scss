@@ -4,6 +4,9 @@ body {
 }
 
 #main-controls {
+  position: absolute;
+  bottom: 120px;
+  right: 0;
   background-color: rgba(0,0,0,.75);
   margin: 0;
   padding: .625em;
@@ -12,8 +15,7 @@ body {
 
 #total-population,
 #total-graveyard {
-  background-color: #ff0;
-  color: #000;
+  background-color: #fc0;
   padding: 0 .25em;
   border-radius: .5em;
 }
@@ -48,13 +50,20 @@ select {
   right: 0;
 }
 
+.center {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+}
+
 .horizontal {
   margin: 0;
   padding: 0;
-  float: right;
 
   li {
     float: left;
     margin-left: .5em;
+    text-align: center;
   }
 }

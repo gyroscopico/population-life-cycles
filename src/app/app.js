@@ -16,15 +16,14 @@ export default class App extends Component {
     // Mobs that used to be alive but are now dead.
     this.graveyard = [];
 
-    // In heartbeat, lastTime keeps track of the last time the function was run.
-    this.lastTime = undefined;
-
     // In heartbeat, tick measures if enough time has elapsed since the last tick.
     // Note: the very first tick is triggered when tick has its initial default value of undefined.
     this.tick = undefined;
 
     // Keep track of all log messages.
     this.setState({
+      // In heartbeat, lastTime keeps track of the last time the function was run.
+      lastTime: undefined,
       log: [],
     });
 
@@ -66,8 +65,10 @@ export default class App extends Component {
 
     // Delta is amount of time since last heartbeat,
     // which can be fast depending on the client.
-    const delta = this.lastTime === undefined ? 0 : currentTime - this.lastTime;
-    this.lastTime = currentTime;
+    const delta = this.state.lastTime === undefined ? 0 : currentTime - this.state.lastTime;
+    this.setState({
+      lastTime: currentTime,
+    })
 
     // Update the game every tick (regular intervals),
     // not every heartbeat (too fast and varies based on client).
@@ -108,11 +109,12 @@ export default class App extends Component {
             <option value="Cat">Cats</option>
           </select>
           <input type="submit" value="Add" />
-          <ul className="horizontal">
-            <li>Population <span id="total-population">{this.mobs.length.toString()}</span></li>
-            <li>Graveyard <span id="total-graveyard">{this.graveyard.length.toString()}</span></li>
-          </ul>
         </form>
+
+        <ul className="horizontal center">
+          <li>Population <span id="total-population">{this.mobs.length.toString()}</span></li>
+          <li>Graveyard <span id="total-graveyard">{this.graveyard.length.toString()}</span></li>
+        </ul>
 
         <ol className="scrollable-window" ref="logWindow">
           {logMessages}

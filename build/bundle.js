@@ -19812,15 +19812,14 @@
 	      // Mobs that used to be alive but are now dead.
 	      this.graveyard = [];
 	
-	      // In heartbeat, lastTime keeps track of the last time the function was run.
-	      this.lastTime = undefined;
-	
 	      // In heartbeat, tick measures if enough time has elapsed since the last tick.
 	      // Note: the very first tick is triggered when tick has its initial default value of undefined.
 	      this.tick = undefined;
 	
 	      // Keep track of all log messages.
 	      this.setState({
+	        // In heartbeat, lastTime keeps track of the last time the function was run.
+	        lastTime: undefined,
 	        log: []
 	      });
 	
@@ -19871,8 +19870,10 @@
 	
 	      // Delta is amount of time since last heartbeat,
 	      // which can be fast depending on the client.
-	      var delta = this.lastTime === undefined ? 0 : currentTime - this.lastTime;
-	      this.lastTime = currentTime;
+	      var delta = this.state.lastTime === undefined ? 0 : currentTime - this.state.lastTime;
+	      this.setState({
+	        lastTime: currentTime
+	      });
 	
 	      // Update the game every tick (regular intervals),
 	      // not every heartbeat (too fast and varies based on client).
@@ -19931,29 +19932,29 @@
 	              'Cats'
 	            )
 	          ),
-	          _react2.default.createElement('input', { type: 'submit', value: 'Add' }),
+	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
+	        ),
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'horizontal center' },
 	          _react2.default.createElement(
-	            'ul',
-	            { className: 'horizontal' },
+	            'li',
+	            null,
+	            'Population ',
 	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Population ',
-	              _react2.default.createElement(
-	                'span',
-	                { id: 'total-population' },
-	                this.mobs.length.toString()
-	              )
-	            ),
+	              'span',
+	              { id: 'total-population' },
+	              this.mobs.length.toString()
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            'Graveyard ',
 	            _react2.default.createElement(
-	              'li',
-	              null,
-	              'Graveyard ',
-	              _react2.default.createElement(
-	                'span',
-	                { id: 'total-graveyard' },
-	                this.graveyard.length.toString()
-	              )
+	              'span',
+	              { id: 'total-graveyard' },
+	              this.graveyard.length.toString()
 	            )
 	          )
 	        ),
@@ -20403,7 +20404,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  margin: 0; }\n\n#main-controls {\n  background-color: rgba(0, 0, 0, 0.75);\n  margin: 0;\n  padding: .625em;\n  color: #fff; }\n\n#total-population,\n#total-graveyard {\n  background-color: #ff0;\n  color: #000;\n  padding: 0 .25em;\n  border-radius: .5em; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\n#number-mobs-to-add {\n  width: 50px; }\n\nli {\n  list-style-type: none; }\n\ninput[type=submit],\nselect {\n  cursor: pointer; }\n\n.scrollable-window {\n  background-color: rgba(0, 0, 0, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.horizontal {\n  margin: 0;\n  padding: 0;\n  float: right; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-size: 16px;\n  margin: 0; }\n\n#main-controls {\n  position: absolute;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.75);\n  margin: 0;\n  padding: .625em;\n  color: #fff; }\n\n#total-population,\n#total-graveyard {\n  background-color: #fc0;\n  padding: 0 .25em;\n  border-radius: .5em; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\n#number-mobs-to-add {\n  width: 50px; }\n\nli {\n  list-style-type: none; }\n\ninput[type=submit],\nselect {\n  cursor: pointer; }\n\n.scrollable-window {\n  background-color: rgba(0, 0, 0, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.center {\n  position: absolute;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center; }\n", ""]);
 	
 	// exports
 
