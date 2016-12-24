@@ -1,14 +1,25 @@
-// Colours.
-$transparent-10: rgba(0,0,0,.1);
-$transparent-75: rgba(0,0,0,.75);
-$gold-m: #fc0;  // gold medium.
-$gold-d: #960;  // gold dark
+// Semi transparent backgrounds (based on $black).
+$transparent-10: rgba(51,23,13,.1);
+$transparent-75: rgba(51,23,13,.75);
+
+// Colour scheme: http://www.colorcombos.com/color-schemes/189/ColorCombo189.html
+$gold-m: #FEBF10;  // gold medium.
+$gold-d: #C87533;  // gold dark
+$green-m: #F3F3CC;  // green medium.
+$green-d: #9EB847;  // green dark.
+$white: #F9F7ED;
+$black: #33170D;  // rgb 51,23,13
+
+// Dimensions.
+$min-size: 44px;
 
 // Main style.
 body {
   font-size: 16px;
   line-height: 1.5em;
   margin: 0;
+  background-color: $white;
+  color: $black;
 }
 
 #main-controls {
@@ -21,11 +32,19 @@ body {
 }
 
 .big-number {
-  background-color: $gold-m;
   padding: 0 .5em;
   border-radius: .25em;
   font-size: 1.5em;
   vertical-align: middle;
+}
+
+#total-mobs {
+  background-color: $green-m;
+  color: $green-d;
+}
+
+#total-corpses {
+  background-color: $gold-m;
   color: $gold-d;
 }
 
@@ -34,21 +53,14 @@ body {
   margin: 0 .5em 0 0;
 }
 
-#number-mobs-to-add {
-  width: 50px;
-}
-
 li {
   list-style-type: none;
 }
 
-input[type=submit],
+input,
 select {
   cursor: pointer;
-}
-
-input[type=submit] {
-  min-width: 44px;
+  min-width: $min-size;
 }
 
 .scrollable-window {
