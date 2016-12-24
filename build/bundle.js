@@ -19916,12 +19916,29 @@
 	  }, {
 	    key: 'submitForm',
 	    value: function submitForm(event) {
-	      var mobsStillAlive = this.state.mobs;
-	      mobsStillAlive = (0, _addMobs.addMobs)(event, mobsStillAlive);
+	      // Validate the number of mobs to add.
+	      var toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
+	      if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
+	        throw new Error(C.ERROR.INVALID_NUMBER_OF_MOBS + ': ' + toAdd + '.');
+	      }
+	
+	      // Validate the category of the mobs to add.
+	      var category = event.currentTarget['mob-category'].value;
+	      if (!category) {
+	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
+	      }
+	
+	      var input = {
+	        toAdd: toAdd,
+	        category: category
+	      };
+	
+	      // Add a given number of mobs.
+	      var newMobs = (0, _addMobs.addMobs)(event, input);
 	
 	      this.setState({
-	        mobs: mobsStillAlive.mobs,
-	        log: this.state.log.concat(mobsStillAlive.log)
+	        mobs: this.state.mobs.concat(newMobs.mobs),
+	        log: this.state.log.concat(newMobs.log)
 	      });
 	    }
 	  }, {
@@ -20049,6 +20066,12 @@
 	var OLD_AGE = exports.OLD_AGE = 'old age';
 	
 	var AGE_INCREMENT = exports.AGE_INCREMENT = 1;
+	
+	// List all error messages.
+	var ERROR = exports.ERROR = {
+	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
+	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category'
+	};
 
 /***/ },
 /* 161 */
@@ -20094,7 +20117,7 @@
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
 	      population.corpses.push(mob); // This mob just died.
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ' died of ' + mob.causeOfDeath + ', aged ' + mob.age + ', spawned ' + mob.spawned + ' - \u2625' + mob.timeOfDeath + '.');
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died of ' + mob.causeOfDeath + '. Spawned ' + mob.spawned + ' - \u2625' + mob.timeOfDeath + '.');
 	    }
 	  });
 	
@@ -20136,20 +20159,13 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	var addMobs = exports.addMobs = function addMobs(event, mobs) {
+	var addMobs = exports.addMobs = function addMobs(event, input) {
 	  event.preventDefault();
 	
+	  var mobs = [];
 	  var log = [];
-	  var toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
-	  var category = event.currentTarget['mob-category'].value;
-	
-	  if (!toAdd || toAdd === 0) {
-	    throw new Error('Invalid number of mobs to add: ' + toAdd + '.');
-	  }
-	
-	  if (!category) {
-	    throw new Error('Invalid mob category: ' + category + '.');
-	  }
+	  var toAdd = input.toAdd;
+	  var category = input.category;
 	
 	  for (var i = 0; i < toAdd; i++) {
 	    var newMob = void 0;
@@ -20165,7 +20181,7 @@
 	        newMob = new _goblin2.default();
 	        break;
 	      default:
-	        throw new Error('Unexpected mob category: ' + category + '.');
+	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
 	    }
 	
 	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';

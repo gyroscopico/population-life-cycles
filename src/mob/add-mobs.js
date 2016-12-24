@@ -3,20 +3,13 @@ import Orc from './orc/orc';
 import Goblin from './goblin/goblin';
 import Cat from './cat/cat';
 
-export const addMobs = (event, mobs) => {
+export const addMobs = (event, input) => {
   event.preventDefault();
 
+  const mobs = [];
   const log = [];
-  const toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
-  const category = event.currentTarget['mob-category'].value;
-
-  if (!toAdd ||  toAdd === 0) {
-    throw new Error(`Invalid number of mobs to add: ${toAdd}.`);
-  }
-
-  if (!category) {
-    throw new Error(`Invalid mob category: ${category}.`);
-  }
+  const toAdd = input.toAdd;
+  const category = input.category;
 
   for (let i = 0; i < toAdd; i++) {
     let newMob;
@@ -32,7 +25,7 @@ export const addMobs = (event, mobs) => {
         newMob = new Goblin();
         break;
       default:
-        throw new Error(`Unexpected mob category: ${category}.`);
+        throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
     }
 
     const age = newMob.age >= newMob.maturity() ? `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';

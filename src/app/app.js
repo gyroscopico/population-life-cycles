@@ -110,12 +110,29 @@ export default class App extends Component {
   }
 
   submitForm(event) {
-    let mobsStillAlive = this.state.mobs;
-    mobsStillAlive = addMobs(event, mobsStillAlive);
+    // Validate the number of mobs to add.
+    const toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
+    if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
+      throw new Error(`${C.ERROR.INVALID_NUMBER_OF_MOBS}: ${toAdd}.`);
+    }
+
+    // Validate the category of the mobs to add.
+    const category = event.currentTarget['mob-category'].value
+    if (!category) {
+      throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
+    }
+
+    const input = {
+      toAdd,
+      category,
+    };
+
+    // Add a given number of mobs.
+    const newMobs = addMobs(event, input);
 
     this.setState({
-      mobs: mobsStillAlive.mobs,
-      log: this.state.log.concat(mobsStillAlive.log),
+      mobs: this.state.mobs.concat(newMobs.mobs),
+      log: this.state.log.concat(newMobs.log),
     });
   }
 

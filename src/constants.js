@@ -30,3 +30,9 @@ export const ONE_YEAR = 6 * 1e4;  // 1 minute of real time.
 export const OLD_AGE = 'old age';
 
 export const AGE_INCREMENT = 1;
+
+// List all error messages.
+export const ERROR = {
+  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
+  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
+};
