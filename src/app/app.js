@@ -10,20 +10,23 @@ import './app.scss';
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
-    // Mobs that are currently alive.
-    this.mobs = [];
-
     // Mobs that used to be alive but are now dead.
     this.corpses = [];
 
     // Keep track of all log messages.
     this.setState({
+      // Mobs that are currently alive.
+      mobs: [],
+
       // In heartbeat, lastTime keeps track of the last time the function was run.
       lastTime: undefined,
+
       // In heartbeat, tick measures if enough time has elapsed since the last tick.
       tick: 0,
+
       // Keep track of all messages that should be logged and displayed.
       log: [],
+
       // Flag the game world has just started ticking.
       isFirstInstant: true,
     });
@@ -50,7 +53,9 @@ export default class App extends Component {
     this.updateLog(`[world-tick] ${now()}.`);
 
     // Age all mobs by 1 year.
-    this.mobs = ageMobs(this.mobs, 1, this.corpses);
+    this.setState({
+      mobs: ageMobs(this.state.mobs, C.AGE_INCREMENT, this.corpses),
+    });
   }
 
   updateLog(message) {
@@ -96,7 +101,12 @@ export default class App extends Component {
   }
 
   submitForm(event) {
-    addMobs(event, this.mobs);
+    let mobsStillAlive = this.state.mobs;
+    mobsStillAlive = addMobs(event, mobsStillAlive);
+
+    this.setState({
+      mobs: mobsStillAlive,
+    });
   }
 
   render() {
@@ -106,7 +116,7 @@ export default class App extends Component {
       return <li key={key}>{message}</li>
     });
 
-    const mobsLabel = this.mobs.length > 1 ? 'mobs' : 'mob';
+    const mobsLabel = this.state.mobs.length > 1 ? 'mobs' : 'mob';
     const corpsesLabel = this.corpses.length > 1 ? 'corpses' : 'corpse';
 
     return (
@@ -124,7 +134,7 @@ export default class App extends Component {
         <ul className="horizontal center">
           <li>
             <span id="total-mobs" className="big-number">
-              {this.mobs.length.toString()}
+              {this.state.mobs.length.toString()}
             </span> {mobsLabel}
           </li>
           <li>

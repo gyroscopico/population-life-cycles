@@ -32,4 +32,6 @@ export const addMobs = (event, mobs) => {
         throw new Error(`Unexpected mob category: ${category}.`);
     }
   }
+
+  return mobs;
 };

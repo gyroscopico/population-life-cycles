@@ -27,3 +27,5 @@ export const CATEGORY = {
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.
 export const ONE_YEAR = 6 * 1e4;  // 1 minute of real time.
 export const OLD_AGE = 'Old age';
+
+export const AGE_INCREMENT = 1;
