@@ -1,5 +1,6 @@
 body {
   font-size: 16px;
+  line-height: 1.5em;
   margin: 0;
 }
 
@@ -13,11 +14,13 @@ body {
   color: #fff;
 }
 
-#total-population,
-#total-graveyard {
+.big-number {
   background-color: #fc0;
-  padding: 0 .25em;
-  border-radius: .5em;
+  padding: 0 .5em;
+  border-radius: .25em;
+  font-size: 1.5em;
+  vertical-align: middle;
+  color: #960;
 }
 
 #number-mobs-to-add,
@@ -48,6 +51,7 @@ select {
   bottom: 0;
   left: 0;
   right: 0;
+  border-top: solid 1px;
 }
 
 .center {
@@ -65,5 +69,6 @@ select {
     float: left;
     margin-left: .5em;
     text-align: center;
+    line-height: 2em;
   }
 }

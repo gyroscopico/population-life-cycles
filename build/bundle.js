@@ -19773,15 +19773,15 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(165);
 	
-	var _ageMobs = __webpack_require__(162);
+	var _ageMobs = __webpack_require__(167);
 	
-	var _addMobs = __webpack_require__(163);
+	var _addMobs = __webpack_require__(168);
 	
-	var _scrollToBottom = __webpack_require__(172);
+	var _scrollToBottom = __webpack_require__(166);
 	
-	__webpack_require__(168);
+	__webpack_require__(171);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -19810,7 +19810,7 @@
 	      this.mobs = [];
 	
 	      // Mobs that used to be alive but are now dead.
-	      this.graveyard = [];
+	      this.corpses = [];
 	
 	      // In heartbeat, tick measures if enough time has elapsed since the last tick.
 	      // Note: the very first tick is triggered when tick has its initial default value of undefined.
@@ -19847,10 +19847,10 @@
 	    key: 'updateGame',
 	    value: function updateGame() {
 	      // Log another tick in the world.
-	      this.updateLog('[world tick] ' + (0, _now.now)() + '.');
+	      this.updateLog('[world-tick] ' + (0, _now.now)() + '.');
 	
 	      // Age all mobs by 1 year.
-	      this.mobs = (0, _ageMobs.ageMobs)(this.mobs, 1, this.graveyard);
+	      this.mobs = (0, _ageMobs.ageMobs)(this.mobs, 1, this.corpses);
 	    }
 	  }, {
 	    key: 'updateLog',
@@ -19917,7 +19917,7 @@
 	        _react2.default.createElement(
 	          'form',
 	          { id: 'main-controls', action: '#', onSubmit: this.submitForm },
-	          _react2.default.createElement('input', { type: 'number', id: 'number-mobs-to-add', defaultValue: '1' }),
+	          _react2.default.createElement('input', { type: 'number', id: 'number-mobs-to-add', defaultValue: '1', min: '1', max: '100' }),
 	          _react2.default.createElement(
 	            'select',
 	            { name: 'mob-category', id: 'mob-category' },
@@ -19940,22 +19940,22 @@
 	          _react2.default.createElement(
 	            'li',
 	            null,
-	            'Population ',
 	            _react2.default.createElement(
 	              'span',
-	              { id: 'total-population' },
+	              { id: 'total-mobs', className: 'big-number' },
 	              this.mobs.length.toString()
-	            )
+	            ),
+	            ' mobs'
 	          ),
 	          _react2.default.createElement(
 	            'li',
 	            null,
-	            'Graveyard ',
 	            _react2.default.createElement(
 	              'span',
-	              { id: 'total-graveyard' },
-	              this.graveyard.length.toString()
-	            )
+	              { id: 'total-corpses', className: 'big-number' },
+	              this.corpses.length.toString()
+	            ),
+	            ' corpses'
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -20005,17 +20005,53 @@
 
 /***/ },
 /* 161 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Return a formatted date and time string for the moment it is called. 
-	var now = exports.now = function now() {
-	  return new Date().toLocaleString('en-GB');
-	};
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _mob = __webpack_require__(162);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Cat = function (_Mob) {
+	  _inherits(Cat, _Mob);
+	
+	  function Cat() {
+	    _classCallCheck(this, Cat);
+	
+	    return _possibleConstructorReturn(this, (Cat.__proto__ || Object.getPrototypeOf(Cat)).apply(this, arguments));
+	  }
+	
+	  _createClass(Cat, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'kitten';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'cat';
+	    }
+	  }]);
+	
+	  return Cat;
+	}(_mob2.default);
+	
+	exports.default = Cat;
 
 /***/ },
 /* 162 */
@@ -20026,93 +20062,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ageMobs = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _now = __webpack_require__(161);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Return an aged population (minus the dead ones).
-	var ageMobs = exports.ageMobs = function ageMobs(mobs, years, graveyard) {
-	  return mobs.filter(function (mob) {
-	    if (mob.becomeOlder(years)) {
-	      return mob; // This mob is years older but still alive.
-	    } else {
-	      mob.timeOfDeath = (0, _now.now)();
-	      mob.causeOfDeath = C.OLD_AGE;
-	      graveyard.push(mob); // This mob just died.
-	    }
-	  });
-	};
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.addMobs = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _orc = __webpack_require__(164);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _cat = __webpack_require__(167);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var addMobs = exports.addMobs = function addMobs(event, mobs) {
-	  event.preventDefault();
-	
-	  var toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
-	  var category = event.currentTarget['mob-category'].value;
-	
-	  if (!toAdd || toAdd === 0) {
-	    throw new Error('Invalid number of mobs to add: ' + toAdd + '.');
-	  }
-	
-	  if (!category) {
-	    throw new Error('Invalid mob category: ' + category + '.');
-	  }
-	
-	  for (var i = 0; i < toAdd; i++) {
-	    switch (category) {
-	      case C.CATEGORY.CAT:
-	        mobs.push(new _cat2.default());
-	        break;
-	      case C.CATEGORY.ORC:
-	        mobs.push(new _orc2.default());
-	        break;
-	      default:
-	        throw new Error('Unexpected mob category: ' + category + '.');
-	    }
-	  }
-	};
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -20120,75 +20069,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(165);
+	var _guid = __webpack_require__(164);
 	
-	var _mob2 = _interopRequireDefault(_mob);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Orc = function (_Mob) {
-	  _inherits(Orc, _Mob);
-	
-	  function Orc() {
-	    _classCallCheck(this, Orc);
-	
-	    return _possibleConstructorReturn(this, (Orc.__proto__ || Object.getPrototypeOf(Orc)).apply(this, arguments));
-	  }
-	
-	  _createClass(Orc, [{
-	    key: 'young',
-	    value: function young() {
-	      return 'orc pawn';
-	    }
-	  }, {
-	    key: 'adult',
-	    value: function adult() {
-	      return 'orc';
-	    }
-	  }, {
-	    key: 'minLongevity',
-	    value: function minLongevity() {
-	      return C.MIN_ORC_LONGEVITY;
-	    }
-	  }, {
-	    key: 'maxLongevity',
-	    value: function maxLongevity() {
-	      return C.MAX_ORC_LONGEVITY;
-	    }
-	  }]);
-	
-	  return Orc;
-	}(_mob2.default);
-	
-	exports.default = Orc;
-
-/***/ },
-/* 165 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _guid = __webpack_require__(166);
-	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(165);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20302,7 +20185,73 @@
 	exports.default = Mob;
 
 /***/ },
-/* 166 */
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _mob = __webpack_require__(162);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Orc = function (_Mob) {
+	  _inherits(Orc, _Mob);
+	
+	  function Orc() {
+	    _classCallCheck(this, Orc);
+	
+	    return _possibleConstructorReturn(this, (Orc.__proto__ || Object.getPrototypeOf(Orc)).apply(this, arguments));
+	  }
+	
+	  _createClass(Orc, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'orc pawn';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'orc';
+	    }
+	  }, {
+	    key: 'minLongevity',
+	    value: function minLongevity() {
+	      return C.MIN_ORC_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maxLongevity',
+	    value: function maxLongevity() {
+	      return C.MAX_ORC_LONGEVITY;
+	    }
+	  }]);
+	
+	  return Orc;
+	}(_mob2.default);
+	
+	exports.default = Orc;
+
+/***/ },
+/* 164 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20320,6 +20269,33 @@
 	};
 
 /***/ },
+/* 165 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a formatted date and time string for the moment it is called. 
+	var now = exports.now = function now() {
+	  return new Date().toLocaleString('en-GB');
+	};
+
+/***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var scrollToBottom = exports.scrollToBottom = function scrollToBottom(element) {
+	  element.scrollTop = element.scrollHeight;
+	};
+
+/***/ },
 /* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -20328,58 +20304,97 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.ageMobs = undefined;
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _constants = __webpack_require__(160);
 	
-	var _mob = __webpack_require__(165);
+	var C = _interopRequireWildcard(_constants);
 	
-	var _mob2 = _interopRequireDefault(_mob);
+	var _now = __webpack_require__(165);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Cat = function (_Mob) {
-	  _inherits(Cat, _Mob);
-	
-	  function Cat() {
-	    _classCallCheck(this, Cat);
-	
-	    return _possibleConstructorReturn(this, (Cat.__proto__ || Object.getPrototypeOf(Cat)).apply(this, arguments));
-	  }
-	
-	  _createClass(Cat, [{
-	    key: 'young',
-	    value: function young() {
-	      return 'kitten';
+	// Return an aged population of mobs (minus the dead ones).
+	var ageMobs = exports.ageMobs = function ageMobs(mobs, years, corpses) {
+	  return mobs.filter(function (mob) {
+	    if (mob.becomeOlder(years)) {
+	      return mob; // This mob is years older but still alive.
+	    } else {
+	      mob.timeOfDeath = (0, _now.now)();
+	      mob.causeOfDeath = C.OLD_AGE;
+	      corpses.push(mob); // This mob just died.
 	    }
-	  }, {
-	    key: 'adult',
-	    value: function adult() {
-	      return 'cat';
-	    }
-	  }]);
-	
-	  return Cat;
-	}(_mob2.default);
-	
-	exports.default = Cat;
+	  });
+	};
 
 /***/ },
 /* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.addMobs = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _orc = __webpack_require__(163);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _cat = __webpack_require__(161);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var addMobs = exports.addMobs = function addMobs(event, mobs) {
+	  event.preventDefault();
+	
+	  var toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
+	  var category = event.currentTarget['mob-category'].value;
+	
+	  if (!toAdd || toAdd === 0) {
+	    throw new Error('Invalid number of mobs to add: ' + toAdd + '.');
+	  }
+	
+	  if (!category) {
+	    throw new Error('Invalid mob category: ' + category + '.');
+	  }
+	
+	  for (var i = 0; i < toAdd; i++) {
+	    switch (category) {
+	      case C.CATEGORY.CAT:
+	        mobs.push(new _cat2.default());
+	        break;
+	      case C.CATEGORY.ORC:
+	        mobs.push(new _orc2.default());
+	        break;
+	      default:
+	        throw new Error('Unexpected mob category: ' + category + '.');
+	    }
+	  }
+	};
+
+/***/ },
+/* 169 */,
+/* 170 */,
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(169);
+	var content = __webpack_require__(172);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(171)(content, {});
+	var update = __webpack_require__(174)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20396,21 +20411,21 @@
 	}
 
 /***/ },
-/* 169 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(170)();
+	exports = module.exports = __webpack_require__(173)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  margin: 0; }\n\n#main-controls {\n  position: absolute;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.75);\n  margin: 0;\n  padding: .625em;\n  color: #fff; }\n\n#total-population,\n#total-graveyard {\n  background-color: #fc0;\n  padding: 0 .25em;\n  border-radius: .5em; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\n#number-mobs-to-add {\n  width: 50px; }\n\nli {\n  list-style-type: none; }\n\ninput[type=submit],\nselect {\n  cursor: pointer; }\n\n.scrollable-window {\n  background-color: rgba(0, 0, 0, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0; }\n\n.center {\n  position: absolute;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center; }\n", ""]);
+	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0; }\n\n#main-controls {\n  position: absolute;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.75);\n  margin: 0;\n  padding: .625em;\n  color: #fff; }\n\n.big-number {\n  background-color: #fc0;\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  color: #960; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\n#number-mobs-to-add {\n  width: 50px; }\n\nli {\n  list-style-type: none; }\n\ninput[type=submit],\nselect {\n  cursor: pointer; }\n\n.scrollable-window {\n  background-color: rgba(0, 0, 0, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: absolute;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 2em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 170 */
+/* 173 */
 /***/ function(module, exports) {
 
 	/*
@@ -20466,7 +20481,7 @@
 
 
 /***/ },
-/* 171 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -20718,19 +20733,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 172 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var scrollToBottom = exports.scrollToBottom = function scrollToBottom(element) {
-	  element.scrollTop = element.scrollHeight;
-	};
 
 /***/ }
 /******/ ]);
