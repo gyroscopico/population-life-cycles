@@ -5,6 +5,7 @@ import { now } from '../utils/now';
 import { ageMobs } from '../mob/age-mobs';
 import { addMobs } from '../mob/add-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
+import { updateCanvas } from '../update-canvas/update-canvas';
 import './app.scss';
 
 // Main starting point of the game.
@@ -65,11 +66,17 @@ export default class App extends Component {
       corpses: population.corpses,
       log: this.state.log.concat(population.log),
     });
+
+    // Update the visual virtual world on the 2D canvas.
+    updateCanvas({
+      canvas: this.refs.canvas,
+      mobs: this.state.mobs,
+    });
   }
 
   updateLog(message) {
     this.setState({
-      log: this.state.log.concat([ message ]),
+      log: this.state.log.concat(message),
     })
   }
 
@@ -90,7 +97,7 @@ export default class App extends Component {
       this.updateLog(`[world-tick] ${now()}.`);
       this.setState({
         isFirstInstant: false,
-      })
+      });
     }
 
     // Update the game every tick (regular intervals),
@@ -113,7 +120,7 @@ export default class App extends Component {
     // Increment the tick by the delta.
     this.setState({
       tick: this.state.tick + delta,
-    })
+    });
   }
 
   submitForm(event) {

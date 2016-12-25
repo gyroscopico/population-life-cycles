@@ -19781,6 +19781,8 @@
 	
 	var _scrollToBottom = __webpack_require__(169);
 	
+	var _updateCanvas = __webpack_require__(175);
+	
 	__webpack_require__(170);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -19866,12 +19868,18 @@
 	        corpses: population.corpses,
 	        log: this.state.log.concat(population.log)
 	      });
+	
+	      // Update the visual virtual world on the 2D canvas.
+	      (0, _updateCanvas.updateCanvas)({
+	        canvas: this.refs.canvas,
+	        mobs: this.state.mobs
+	      });
 	    }
 	  }, {
 	    key: 'updateLog',
 	    value: function updateLog(message) {
 	      this.setState({
-	        log: this.state.log.concat([message])
+	        log: this.state.log.concat(message)
 	      });
 	    }
 	
@@ -20581,7 +20589,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ncanvas {\n  position: fixed;\n  bottom: 120px;\n  width: 100%;\n  height: 100%; }\n\n#main-controls {\n  position: fixed;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ncanvas {\n  position: fixed;\n  bottom: 120px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
@@ -20895,6 +20903,30 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 174 */,
+/* 175 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
+	  var canvas = input.canvas,
+	      mobs = input.mobs;
+	
+	
+	  var ctx = canvas.getContext('2d');
+	
+	  // todo: implement displayed squares for each mob. Each mob will need a position.
+	  // todo: responsive canvas (not using css though).
+	
+	  ctx.fillStyle = 'green';
+	  ctx.fillRect(1, 1, mobs.length, mobs.length);
+	};
 
 /***/ }
 /******/ ]);
