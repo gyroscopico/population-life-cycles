@@ -6,7 +6,7 @@ export const COLOR = {
 
   GREEN_L: '#C4FFCC',
   GREEN_M: '#5FFD67',
-  GREEN_D: '#45E34D',
+  GREEN_D: '#009701',
 
   BLUE_L: '#C5FFFF',
   BLUE_M: '#46AFE3',
