@@ -20793,9 +20793,11 @@
 	      corpses = input.corpses;
 	
 	  // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
-	  // todo: mobs moving around.
+	  // todo: mobs moving around (no collision).
+	  // todo: mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 	  // todo: responsive canvas (not using css though).
 	  // todo: how do I navigate a world that is bigger than the viewport?
+	  // todo: corpse decay; after a while, the corpses disappear off the game (including from the corpse array).
 	
 	  corpses.map(function (corpse) {
 	    return drawDisc({
