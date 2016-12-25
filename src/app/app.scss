@@ -1,6 +1,6 @@
 // Semi transparent backgrounds (based on $black).
-$transparent-10: rgba(51,23,13,.1);
-$transparent-75: rgba(51,23,13,.75);
+$transparent-10: rgba(51, 23, 13, .1);
+$transparent-75: rgba(51, 23, 13, .75);
 
 // Colour scheme: http://www.colorcombos.com/color-schemes/189/ColorCombo189.html
 $gold-m: #FEBF10;  // gold medium.
@@ -8,7 +8,7 @@ $gold-d: #C87533;  // gold dark
 $green-m: #F3F3CC;  // green medium.
 $green-d: #9EB847;  // green dark.
 $white: #F9F7ED;
-$black: #33170D;  // rgb 51,23,13
+$black: #33170D;  // rgb 51, 23, 13
 
 // Dimensions.
 $min-size: 44px;
@@ -20,11 +20,6 @@ body {
   margin: 0;
   background-color: $white;
   color: $black;
-}
-
-canvas {
-  position: fixed;
-  bottom: 120px;
 }
 
 #main-controls {

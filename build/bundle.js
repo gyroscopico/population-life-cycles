@@ -19781,9 +19781,9 @@
 	
 	var _scrollToBottom = __webpack_require__(169);
 	
-	var _updateCanvas = __webpack_require__(175);
+	var _updateCanvas = __webpack_require__(170);
 	
-	__webpack_require__(170);
+	__webpack_require__(171);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -19837,6 +19837,8 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.heartbeat(); // Start the heartbeat.
+	
+	      this.context = this.refs.canvas.getContext('2d');
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -19872,7 +19874,9 @@
 	      // Update the visual virtual world on the 2D canvas.
 	      (0, _updateCanvas.updateCanvas)({
 	        canvas: this.refs.canvas,
-	        mobs: this.state.mobs
+	        context: this.context,
+	        mobs: this.state.mobs,
+	        corpses: this.state.corpses
 	      });
 	    }
 	  }, {
@@ -19974,7 +19978,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('canvas', { id: 'canvas', ref: 'canvas' }),
+	        _react2.default.createElement('canvas', {
+	          id: 'canvas', ref: 'canvas',
+	          className: 'center',
+	          width: '300', height: '300'
+	        }),
 	        _react2.default.createElement(
 	          'form',
 	          { id: 'main-controls', action: '#', onSubmit: this.submitForm },
@@ -20304,6 +20312,11 @@
 	    // A newborn mob from existing mobs who procreated is always 0 years of age.
 	    this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
 	
+	    this.position = this.position || {
+	      x: this.randomNumber(0, 290),
+	      y: this.randomNumber(0, 290)
+	    };
+	
 	    this.spawned = (0, _now.now)();
 	    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
 	    this.category = this.getCategory();
@@ -20556,15 +20569,44 @@
 
 /***/ },
 /* 170 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
+	  var canvas = input.canvas,
+	      context = input.context,
+	      mobs = input.mobs,
+	      corpses = input.corpses;
+	
+	  // todo: when a mob dies, it should no longer be on the canvas.
+	  // todo: responsive canvas (not using css though).
+	
+	  context.fillStyle = '#F3F3CC';
+	  corpses.map(function (corpse) {
+	    return context.fillRect(corpse.position.x, corpse.position.y, 10, 10);
+	  });
+	
+	  context.fillStyle = '#9EB847';
+	  mobs.map(function (mob) {
+	    return context.fillRect(mob.position.x, mob.position.y, 10, 10);
+	  });
+	};
+
+/***/ },
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(171);
+	var content = __webpack_require__(172);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(173)(content, {});
+	var update = __webpack_require__(174)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20581,21 +20623,21 @@
 	}
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(172)();
+	exports = module.exports = __webpack_require__(173)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ncanvas {\n  position: fixed;\n  bottom: 120px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n#main-controls {\n  position: fixed;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports) {
 
 	/*
@@ -20651,7 +20693,7 @@
 
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -20903,30 +20945,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 174 */,
-/* 175 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
-	  var canvas = input.canvas,
-	      mobs = input.mobs;
-	
-	
-	  var ctx = canvas.getContext('2d');
-	
-	  // todo: implement displayed squares for each mob. Each mob will need a position.
-	  // todo: responsive canvas (not using css though).
-	
-	  ctx.fillStyle = 'green';
-	  ctx.fillRect(1, 1, mobs.length, mobs.length);
-	};
 
 /***/ }
 /******/ ]);

@@ -20,6 +20,11 @@ export default class Mob {
     // A newborn mob from existing mobs who procreated is always 0 years of age.
     this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
 
+    this.position = this.position || {
+      x: this.randomNumber(0, 290),
+      y: this.randomNumber(0, 290),
+    };
+
     this.spawned = now();
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
     this.category = this.getCategory();
