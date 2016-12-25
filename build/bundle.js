@@ -19822,6 +19822,10 @@
 	        // In heartbeat, tick measures if enough time has elapsed since the last tick.
 	        tick: 0,
 	
+	        // In heartbeat, frame rate measures of enough time has elapsed since the last frame
+	        // for a smooth animation (ex: 24 frames per second).
+	        frameRate: 0,
+	
 	        // Keep track of all messages that should be logged and displayed.
 	        log: [],
 	
@@ -19852,8 +19856,8 @@
 	    // Called every "tick", see C.ONE_TICK for this length of time.
 	
 	  }, {
-	    key: 'updateGame',
-	    value: function updateGame() {
+	    key: 'updateGameLogic',
+	    value: function updateGameLogic() {
 	      // Log another tick in the world.
 	      this.updateLog('[world-tick] ' + (0, _now.now)() + '.');
 	
@@ -19887,6 +19891,14 @@
 	      });
 	    }
 	
+	    // Called 24 times per second, as per the constant C.FRAME_RATE
+	
+	  }, {
+	    key: 'updateAnimation',
+	    value: function updateAnimation() {
+	      console.log('animation update');
+	    }
+	
 	    // Heartbeat runs faster than the ticks and guarentees
 	    // an animation consistent with as smooth a framerate as possible.
 	
@@ -19914,21 +19926,25 @@
 	      // not every heartbeat (too fast and varies based on client).
 	      if (this.state.tick >= C.ONE_TICK) {
 	        // The heartbeat is not allowed to make any game update
-	        // or any DOM operation, only other functions called by updateGame can.
-	        this.updateGame();
+	        // or any DOM operation, only other functions called by updateGameLogic or updateAnimation can.
+	        this.updateGameLogic();
 	        this.setState({
 	          tick: 0 });
 	      }
 	
-	      // todo: create a separate, faster "tick" for animations (250 milliseconds, i.e. .25 of a second?)
-	      // like objects moving, camera controls or handling keyboard input.
+	      // Frame rate is used for moving sprites, camera controls or handling keyboard input.
+	      // Note: for an animation, movements should be related to the delta.
+	      // See http://creativejs.com/resources/requestanimationframe/
+	      if (this.state.frameRate >= C.FRAME_RATE) {
+	        this.updateAnimation();
+	        this.setState({
+	          frameRate: 0 });
+	      }
 	
-	      // note: for an animation, movements should be related to the delta.
-	      // see http://creativejs.com/resources/requestanimationframe/
-	
-	      // Increment the tick by the delta.
+	      // Increment the tick and frame rate by the delta.
 	      this.setState({
-	        tick: this.state.tick + delta
+	        tick: this.state.tick + delta,
+	        frameRate: this.state.frameRate + delta
 	      });
 	    }
 	  }, {
@@ -20068,21 +20084,29 @@
 	});
 	// Colour scheme. See scss too.
 	var COLOR = exports.COLOR = {
-	  GOLD_L: '#FCCD5F',
+	  GOLD_L: '#FFFFC5',
 	  GOLD_M: '#E3B446',
 	  GOLD_D: '#C99A2C',
 	
-	  GREEN_L: '#5FFCC5',
-	  GREEN_M: '#46E3AC',
-	  GREEN_D: '#2CC992',
+	  GREEN_L: '#C4FFCC',
+	  GREEN_M: '#5FFD67',
+	  GREEN_D: '#45E34D',
 	
-	  BLUE_L: '#5FC8FC',
+	  BLUE_L: '#C5FFFF',
 	  BLUE_M: '#46AFE3',
 	  BLUE_D: '#2C95C9',
 	
-	  RED_L: '#FC5F5F',
+	  RED_L: '#FFDEDE',
 	  RED_M: '#E34646',
 	  RED_D: '#C92C2C',
+	
+	  PURPLE_L: '#FFC5FF',
+	  PURPLE_M: '#9C46E3',
+	  PURPLE_D: '#822CC9',
+	
+	  PINK_L: '#FFE4FF',
+	  PINK_M: '#F265B0',
+	  PINK_D: '#D84B96',
 	
 	  WHITE: '#F9F7ED',
 	  BLACK: '#33170D'
@@ -20109,13 +20133,17 @@
 	var MAX_CAT_LONGEVITY = exports.MAX_CAT_LONGEVITY = 17;
 	var CAT_MATURITY = exports.CAT_MATURITY = 2;
 	var MAX_CAT_CREATION_AGE = exports.MAX_CAT_CREATION_AGE = 3;
-	var YOUNG_CAT_SIZE = exports.YOUNG_CAT_SIZE = 4;
-	var ADULT_CAT_SIZE = exports.ADULT_CAT_SIZE = 6; // young size of 4 * 1.5
+	var YOUNG_CAT_SIZE = exports.YOUNG_CAT_SIZE = 2;
+	var ADULT_CAT_SIZE = exports.ADULT_CAT_SIZE = 3; // young size * 1.5
+	var DEAD_CAT_COLOR = exports.DEAD_CAT_COLOR = COLOR.BLUE_L;
+	var YOUNG_CAT_COLOR = exports.YOUNG_CAT_COLOR = COLOR.BLUE_M;
 	var ADULT_CAT_COLOR = exports.ADULT_CAT_COLOR = COLOR.BLUE_D;
 	
 	// Goblin default values vary from the standard mobs.
-	var YOUNG_GOBLIN_SIZE = exports.YOUNG_GOBLIN_SIZE = 8;
-	var ADULT_GOBLIN_SIZE = exports.ADULT_GOBLIN_SIZE = 12; // young size of 8 * 1.5
+	var YOUNG_GOBLIN_SIZE = exports.YOUNG_GOBLIN_SIZE = 4;
+	var ADULT_GOBLIN_SIZE = exports.ADULT_GOBLIN_SIZE = 6; // young size * 1.5
+	var DEAD_GOBLIN_COLOR = exports.DEAD_GOBLIN_COLOR = COLOR.GREEN_L;
+	var YOUNG_GOBLIN_COLOR = exports.YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 	var ADULT_GOBLIN_COLOR = exports.ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 	
 	// Mob categories.
@@ -20143,12 +20171,12 @@
 	};
 	
 	// Default mob size when young or adult.
-	var YOUNG_SIZE = exports.YOUNG_SIZE = 10;
-	var ADULT_SIZE = exports.ADULT_SIZE = 15; // young size of 10 * 1.5
+	var YOUNG_SIZE = exports.YOUNG_SIZE = 6;
+	var ADULT_SIZE = exports.ADULT_SIZE = 9; // young size * 1.5
 	
 	// Default mob color when young or adult.
-	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.WHITE;
-	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.RED_M;
+	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
+	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
 	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
 
 /***/ },
@@ -20425,11 +20453,6 @@
 	      return this.isMature() ? this.getAdultSize() : this.getYoungSize();
 	    }
 	  }, {
-	    key: 'getDeadColor',
-	    value: function getDeadColor() {
-	      return C.DEAD_COLOR;
-	    }
-	  }, {
 	    key: 'getYoungColor',
 	    value: function getYoungColor() {
 	      return C.YOUNG_COLOR;
@@ -20438,6 +20461,11 @@
 	    key: 'getAdultColor',
 	    value: function getAdultColor() {
 	      return C.ADULT_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_COLOR;
 	    }
 	  }, {
 	    key: 'getColor',
@@ -20591,9 +20619,19 @@
 	      return C.ADULT_GOBLIN_SIZE;
 	    }
 	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_GOBLIN_COLOR;
+	    }
+	  }, {
 	    key: 'getAdultColor',
 	    value: function getAdultColor() {
 	      return C.ADULT_GOBLIN_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_GOBLIN_COLOR;
 	    }
 	  }]);
 	
@@ -20682,9 +20720,19 @@
 	      return C.ADULT_CAT_SIZE;
 	    }
 	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_CAT_COLOR;
+	    }
+	  }, {
 	    key: 'getAdultColor',
 	    value: function getAdultColor() {
 	      return C.ADULT_CAT_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_CAT_COLOR;
 	    }
 	  }]);
 	

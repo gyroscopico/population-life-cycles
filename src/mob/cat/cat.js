@@ -34,7 +34,15 @@ export default class Cat extends Mob {
     return C.ADULT_CAT_SIZE;
   }
 
+  getYoungColor() {
+    return C.YOUNG_CAT_COLOR;
+  }
+
   getAdultColor() {
     return C.ADULT_CAT_COLOR;
+  }
+
+  getDeadColor() {
+    return C.DEAD_CAT_COLOR;
   }
 }

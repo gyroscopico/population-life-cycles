@@ -25,6 +25,10 @@ export default class App extends Component {
       // In heartbeat, tick measures if enough time has elapsed since the last tick.
       tick: 0,
 
+      // In heartbeat, frame rate measures of enough time has elapsed since the last frame
+      // for a smooth animation (ex: 24 frames per second).
+      frameRate: 0,
+
       // Keep track of all messages that should be logged and displayed.
       log: [],
 
@@ -51,7 +55,7 @@ export default class App extends Component {
   }
 
   // Called every "tick", see C.ONE_TICK for this length of time.
-  updateGame() {
+  updateGameLogic() {
     // Log another tick in the world.
     this.updateLog(`[world-tick] ${now()}.`);
 
@@ -84,6 +88,11 @@ export default class App extends Component {
     })
   }
 
+  // Called 24 times per second, as per the constant C.FRAME_RATE
+  updateAnimation() {
+    console.log('animation update');
+  }
+
   // Heartbeat runs faster than the ticks and guarentees
   // an animation consistent with as smooth a framerate as possible.
   heartbeat(currentTime) {
@@ -108,22 +117,27 @@ export default class App extends Component {
     // not every heartbeat (too fast and varies based on client).
     if (this.state.tick >= C.ONE_TICK) {
       // The heartbeat is not allowed to make any game update
-      // or any DOM operation, only other functions called by updateGame can.
-      this.updateGame();
+      // or any DOM operation, only other functions called by updateGameLogic or updateAnimation can.
+      this.updateGameLogic();
       this.setState({
         tick: 0,  // Reset the tick.
       });
     }
 
-    // todo: create a separate, faster "tick" for animations (250 milliseconds, i.e. .25 of a second?)
-    // like objects moving, camera controls or handling keyboard input.
+    // Frame rate is used for moving sprites, camera controls or handling keyboard input.
+    // Note: for an animation, movements should be related to the delta.
+    // See http://creativejs.com/resources/requestanimationframe/
+    if (this.state.frameRate >= C.FRAME_RATE) {
+      this.updateAnimation();
+      this.setState({
+        frameRate: 0, // Reset the frame rate.
+      })
+    }
 
-    // note: for an animation, movements should be related to the delta.
-    // see http://creativejs.com/resources/requestanimationframe/
-
-    // Increment the tick by the delta.
+    // Increment the tick and frame rate by the delta.
     this.setState({
       tick: this.state.tick + delta,
+      frameRate: this.state.frameRate + delta,
     });
   }
 

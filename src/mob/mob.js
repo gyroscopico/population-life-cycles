@@ -69,16 +69,16 @@ export default class Mob {
     return this.isMature() ? this.getAdultSize() : this.getYoungSize();
   }
 
-  getDeadColor() {
-    return C.DEAD_COLOR;
-  }
-
   getYoungColor() {
     return C.YOUNG_COLOR;
   }
 
   getAdultColor() {
     return C.ADULT_COLOR;
+  }
+
+  getDeadColor() {
+    return C.DEAD_COLOR;
   }
 
   getColor() {
