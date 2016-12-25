@@ -20835,7 +20835,7 @@
 	
 	
 	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI, false);
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
 	  context.fillStyle = fillStyle;
 	  context.fill();
 	  context.closePath();
