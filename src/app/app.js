@@ -85,16 +85,23 @@ export default class App extends Component {
       lastTime: currentTime,
     })
 
+    // First instant tick.
+    if (this.state.isFirstInstant) {
+      this.updateLog(`[world-tick] ${now()}.`);
+      this.setState({
+        isFirstInstant: false,
+      })
+    }
+
     // Update the game every tick (regular intervals),
     // not every heartbeat (too fast and varies based on client).
-    if (this.state.isFirstInstant || this.state.tick >= C.ONE_TICK) {
+    if (this.state.tick >= C.ONE_TICK) {
       // The heartbeat is not allowed to make any game update
       // or any DOM operation, only other functions called by updateGame can.
       this.updateGame();
       this.setState({
         tick: 0,  // Reset the tick.
-        isFirstInstant: false,
-      })
+      });
     }
 
     // todo: create a separate, faster "tick" for animations (250 milliseconds, i.e. .25 of a second?)
@@ -148,6 +155,7 @@ export default class App extends Component {
 
     return (
       <div>
+        <canvas id="canvas" ref="canvas"></canvas>
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
           <input type="number" id="number-mobs-to-add" defaultValue="1" min="1" max="100" />
           <select name="mob-category" id="mob-category">
