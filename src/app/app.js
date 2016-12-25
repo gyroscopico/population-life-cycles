@@ -65,20 +65,12 @@ export default class App extends Component {
       corpses: this.state.corpses,
     };
 
+    // All mobs are getting older.
     population = ageMobs(population, C.AGE_INCREMENT);
-
     this.setState({
       mobs: population.mobs,
       corpses: population.corpses,
       log: this.state.log.concat(population.log),
-    });
-
-    // Update the visual virtual world on the 2D canvas.
-    updateCanvas({
-      canvas: this.refs.canvas,
-      context: this.context,
-      mobs: this.state.mobs,
-      corpses: this.state.corpses,
     });
   }
 
@@ -88,9 +80,15 @@ export default class App extends Component {
     })
   }
 
-  // Called 24 times per second, as per the constant C.FRAME_RATE
+  // Update the visual virtual world on the 2D canvas.
+  // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
-    console.log('animation update');
+    updateCanvas({
+      canvas: this.refs.canvas,
+      context: this.context,
+      mobs: this.state.mobs,
+      corpses: this.state.corpses,
+    });
   }
 
   // Heartbeat runs faster than the ticks and guarentees

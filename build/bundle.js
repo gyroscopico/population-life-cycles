@@ -19867,20 +19867,12 @@
 	        corpses: this.state.corpses
 	      };
 	
+	      // All mobs are getting older.
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
-	
 	      this.setState({
 	        mobs: population.mobs,
 	        corpses: population.corpses,
 	        log: this.state.log.concat(population.log)
-	      });
-	
-	      // Update the visual virtual world on the 2D canvas.
-	      (0, _updateCanvas.updateCanvas)({
-	        canvas: this.refs.canvas,
-	        context: this.context,
-	        mobs: this.state.mobs,
-	        corpses: this.state.corpses
 	      });
 	    }
 	  }, {
@@ -19891,12 +19883,18 @@
 	      });
 	    }
 	
-	    // Called 24 times per second, as per the constant C.FRAME_RATE
+	    // Update the visual virtual world on the 2D canvas.
+	    // Note: called 24 times per second, as per the constant C.FRAME_RATE
 	
 	  }, {
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
-	      console.log('animation update');
+	      (0, _updateCanvas.updateCanvas)({
+	        canvas: this.refs.canvas,
+	        context: this.context,
+	        mobs: this.state.mobs,
+	        corpses: this.state.corpses
+	      });
 	    }
 	
 	    // Heartbeat runs faster than the ticks and guarentees
@@ -20792,7 +20790,6 @@
 	      mobs = input.mobs,
 	      corpses = input.corpses;
 	
-	  // todo: when mobs are added, they appear right away on the canvas, not every 6 seconds.
 	  // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
 	  // todo: mobs moving around (no collision).
 	  // todo: mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.

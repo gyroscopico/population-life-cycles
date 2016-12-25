@@ -24,7 +24,6 @@ export const updateCanvas = input => {
     corpses,
   } = input;
 
-  // todo: when mobs are added, they appear right away on the canvas, not every 6 seconds.
   // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
   // todo: mobs moving around (no collision).
   // todo: mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
