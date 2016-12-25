@@ -20010,7 +20010,16 @@
 	        ),
 	        _react2.default.createElement(
 	          'ul',
-	          { className: 'horizontal center' },
+	          { id: 'header', className: 'horizontal' },
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              'h1',
+	              null,
+	              'Population Game'
+	            )
+	          ),
 	          _react2.default.createElement(
 	            'li',
 	            null,
@@ -20057,6 +20066,29 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	// Colour scheme. See scss too.
+	var COLOR = exports.COLOR = {
+	  GOLD_L: '#FCCD5F',
+	  GOLD_M: '#E3B446',
+	  GOLD_D: '#C99A2C',
+	
+	  GREEN_L: '#5FFCC5',
+	  GREEN_M: '#46E3AC',
+	  GREEN_D: '#2CC992',
+	
+	  BLUE_L: '#5FC8FC',
+	  BLUE_M: '#46AFE3',
+	  BLUE_D: '#2C95C9',
+	
+	  RED_L: '#FC5F5F',
+	  RED_M: '#E34646',
+	  RED_D: '#C92C2C',
+	
+	  WHITE: '#F9F7ED',
+	  BLACK: '#33170D'
+	};
+	
+	// Keys.
 	var MALE = exports.MALE = 'male';
 	var FEMALE = exports.FEMALE = 'female';
 	var YOUNG = exports.YOUNG = 'pawn';
@@ -20070,22 +20102,36 @@
 	var MAX_MOB_LONGEVITY = exports.MAX_MOB_LONGEVITY = 30;
 	
 	// At what age does a young become an adult who can procreate?
-	var MATURITY = exports.MATURITY = 3;
+	var MATURITY = exports.MATURITY = 12;
 	
 	// Cats default values vary from the standard mobs.
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
 	var MAX_CAT_LONGEVITY = exports.MAX_CAT_LONGEVITY = 17;
-	var CAT_MATURITY = exports.CAT_MATURITY = 1;
+	var CAT_MATURITY = exports.CAT_MATURITY = 2;
 	var MAX_CAT_CREATION_AGE = exports.MAX_CAT_CREATION_AGE = 3;
+	var YOUNG_CAT_SIZE = exports.YOUNG_CAT_SIZE = 4;
+	var ADULT_CAT_SIZE = exports.ADULT_CAT_SIZE = 6; // young size of 4 * 1.5
+	var ADULT_CAT_COLOR = exports.ADULT_CAT_COLOR = COLOR.BLUE_D;
 	
+	// Goblin default values vary from the standard mobs.
+	var YOUNG_GOBLIN_SIZE = exports.YOUNG_GOBLIN_SIZE = 8;
+	var ADULT_GOBLIN_SIZE = exports.ADULT_GOBLIN_SIZE = 12; // young size of 8 * 1.5
+	var ADULT_GOBLIN_COLOR = exports.ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
+	
+	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
 	  CAT: 'Cat',
 	  ORC: 'Orc',
 	  GOBLIN: 'Goblin'
 	};
 	
+	// Animation time measurement (ex: mob movements, pop mobs on screen).
+	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 24; // 24 frames per second.
+	
+	// Game logic time measurement (ex: ageing of mobs).
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
-	var ONE_YEAR = exports.ONE_YEAR = 6 * 1e4; // 1 minute of real time.
+	
+	// Causes of death.
 	var OLD_AGE = exports.OLD_AGE = 'old age';
 	
 	var AGE_INCREMENT = exports.AGE_INCREMENT = 1;
@@ -20095,6 +20141,15 @@
 	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
 	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category'
 	};
+	
+	// Default mob size when young or adult.
+	var YOUNG_SIZE = exports.YOUNG_SIZE = 10;
+	var ADULT_SIZE = exports.ADULT_SIZE = 15; // young size of 10 * 1.5
+	
+	// Default mob color when young or adult.
+	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.WHITE;
+	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.RED_M;
+	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
 
 /***/ },
 /* 161 */
@@ -20317,6 +20372,9 @@
 	      y: this.randomNumber(0, 290)
 	    };
 	
+	    this.size = this.getSize();
+	    this.color = this.getColor();
+	
 	    this.spawned = (0, _now.now)();
 	    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
 	    this.category = this.getCategory();
@@ -20333,6 +20391,7 @@
 	      if (this.age + years < this.longevity) {
 	        this.age = this.age + years;
 	        this.category = this.getCategory();
+	        this.size = this.getSize();
 	        return true;
 	      }
 	
@@ -20349,6 +20408,45 @@
 	    key: 'adult',
 	    value: function adult() {
 	      return C.ADULT;
+	    }
+	  }, {
+	    key: 'getYoungSize',
+	    value: function getYoungSize() {
+	      return C.YOUNG_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultSize',
+	    value: function getAdultSize() {
+	      return C.ADULT_SIZE;
+	    }
+	  }, {
+	    key: 'getSize',
+	    value: function getSize() {
+	      return this.isMature() ? this.getAdultSize() : this.getYoungSize();
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_COLOR;
+	    }
+	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_COLOR;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_COLOR;
+	    }
+	  }, {
+	    key: 'getColor',
+	    value: function getColor() {
+	      if (!this.isAlive()) {
+	        return this.getDeadColor();
+	      }
+	
+	      return this.isMature() ? this.getAdultColor() : this.getYoungColor();
 	    }
 	  }, {
 	    key: 'maxCreationAge',
@@ -20389,9 +20487,14 @@
 	      return this.age < this.longevity;
 	    }
 	  }, {
+	    key: 'isMature',
+	    value: function isMature() {
+	      return this.age >= this.maturity();
+	    }
+	  }, {
 	    key: 'canProcreate',
 	    value: function canProcreate() {
-	      return this.age >= this.maturity() && this.isAlive();
+	      return this.isMature() && this.isAlive();
 	    }
 	  }, {
 	    key: 'canBecomePregnant',
@@ -20440,11 +20543,17 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
 	var _mob = __webpack_require__(165);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20470,6 +20579,21 @@
 	    key: 'adult',
 	    value: function adult() {
 	      return 'goblin';
+	    }
+	  }, {
+	    key: 'getYoungSize',
+	    value: function getYoungSize() {
+	      return C.YOUNG_GOBLIN_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultSize',
+	    value: function getAdultSize() {
+	      return C.ADULT_GOBLIN_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_GOBLIN_COLOR;
 	    }
 	  }]);
 	
@@ -20547,6 +20671,21 @@
 	    value: function maxCreationAge() {
 	      return C.MAX_CAT_CREATION_AGE;
 	    }
+	  }, {
+	    key: 'getYoungSize',
+	    value: function getYoungSize() {
+	      return C.YOUNG_CAT_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultSize',
+	    value: function getAdultSize() {
+	      return C.ADULT_CAT_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_CAT_COLOR;
+	    }
 	  }]);
 	
 	  return Cat;
@@ -20569,30 +20708,65 @@
 
 /***/ },
 /* 170 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.updateCanvas = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var drawDisc = function drawDisc(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI, false);
+	  context.fillStyle = fillStyle;
+	  context.fill();
+	  context.closePath();
+	};
+	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var canvas = input.canvas,
 	      context = input.context,
 	      mobs = input.mobs,
 	      corpses = input.corpses;
 	
-	  // todo: when a mob dies, it should no longer be on the canvas.
+	  // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
+	  // todo: mobs moving around.
 	  // todo: responsive canvas (not using css though).
+	  // todo: how do I navigate a world that is bigger than the viewport?
 	
-	  context.fillStyle = '#F3F3CC';
 	  corpses.map(function (corpse) {
-	    return context.fillRect(corpse.position.x, corpse.position.y, 10, 10);
+	    return drawDisc({
+	      context: context,
+	      x: corpse.position.x,
+	      y: corpse.position.y,
+	      radius: corpse.getSize(),
+	      fillStyle: corpse.getColor()
+	    });
 	  });
 	
-	  context.fillStyle = '#9EB847';
 	  mobs.map(function (mob) {
-	    return context.fillRect(mob.position.x, mob.position.y, 10, 10);
+	    return drawDisc({
+	      context: context,
+	      x: mob.position.x,
+	      y: mob.position.y,
+	      radius: mob.getSize(),
+	      fillStyle: mob.getColor()
+	    });
 	  });
 	};
 
@@ -20631,7 +20805,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-size: 16px;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n#main-controls {\n  position: fixed;\n  bottom: 120px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n.big-number {\n  padding: 0 .5em;\n  border-radius: .25em;\n  font-size: 1.5em;\n  vertical-align: middle;\n  border: solid 1px; }\n\n#total-mobs {\n  background-color: #F3F3CC;\n  color: #9EB847; }\n\n#total-corpses {\n  background-color: #FEBF10;\n  color: #C87533; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  border: solid 1px #33170D;\n  box-shadow: 10px 10px 33px -12px rgba(51, 23, 13, 0.75); }\n\n#main-controls {\n  position: fixed;\n  bottom: 115px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle;\n  background-color: #F9F7ED; }\n\n#total-mobs {\n  color: #2CC992; }\n\n#total-corpses {\n  color: #C99A2C; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px;\n  font-family: verdana, sans-serif;\n  font-size: 12px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 

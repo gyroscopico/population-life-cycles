@@ -25,4 +25,16 @@ export default class Cat extends Mob {
   maxCreationAge() {
     return C.MAX_CAT_CREATION_AGE;
   }
+
+  getYoungSize() {
+    return C.YOUNG_CAT_SIZE;
+  }
+
+  getAdultSize() {
+    return C.ADULT_CAT_SIZE;
+  }
+
+  getAdultColor() {
+    return C.ADULT_CAT_COLOR;
+  }
 }

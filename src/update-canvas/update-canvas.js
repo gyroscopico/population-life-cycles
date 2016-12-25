@@ -1,3 +1,21 @@
+import * as C from '../constants';
+
+const drawDisc = input => {
+  const {
+    context,
+    x,
+    y,
+    radius,
+    fillStyle,
+  } = input;
+
+  context.beginPath();
+  context.arc(x, y, radius, 0, 2 * Math.PI, false);
+  context.fillStyle = fillStyle;
+  context.fill();
+  context.closePath();
+}
+
 export const updateCanvas = input => {
   const {
     canvas,
@@ -6,12 +24,24 @@ export const updateCanvas = input => {
     corpses,
   } = input;
 
-  // todo: when a mob dies, it should no longer be on the canvas.
+  // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
+  // todo: mobs moving around.
   // todo: responsive canvas (not using css though).
+  // todo: how do I navigate a world that is bigger than the viewport?
 
-  context.fillStyle = '#F3F3CC';
-  corpses.map(corpse => context.fillRect(corpse.position.x, corpse.position.y, 10, 10));
+  corpses.map(corpse => drawDisc({
+    context,
+    x: corpse.position.x,
+    y: corpse.position.y,
+    radius: corpse.getSize(),
+    fillStyle: corpse.getColor(),
+  }));
 
-  context.fillStyle = '#9EB847';
-  mobs.map(mob => context.fillRect(mob.position.x, mob.position.y, 10, 10));
+  mobs.map(mob => drawDisc({
+    context,
+    x: mob.position.x,
+    y: mob.position.y,
+    radius: mob.getSize(),
+    fillStyle: mob.getColor(),
+  }));
 };

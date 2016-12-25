@@ -181,7 +181,8 @@ export default class App extends Component {
           <input type="submit" value="Add" />
         </form>
 
-        <ul className="horizontal center">
+        <ul id="header" className="horizontal">
+          <li><h1>Population Game</h1></li>
           <li>
             <span id="total-mobs" className="big-number">
               {this.state.mobs.length.toString()}

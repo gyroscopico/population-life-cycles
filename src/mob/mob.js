@@ -25,6 +25,9 @@ export default class Mob {
       y: this.randomNumber(0, 290),
     };
 
+    this.size = this.getSize();
+    this.color = this.getColor();
+
     this.spawned = now();
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
     this.category = this.getCategory();
@@ -37,6 +40,7 @@ export default class Mob {
     if (this.age + years < this.longevity) {
       this.age = this.age + years;
       this.category = this.getCategory();
+      this.size = this.getSize();
       return true;
     }
 
@@ -51,6 +55,38 @@ export default class Mob {
 
   adult() {
     return C.ADULT;
+  }
+
+  getYoungSize() {
+    return C.YOUNG_SIZE;
+  }
+
+  getAdultSize() {
+    return C.ADULT_SIZE;
+  }
+
+  getSize() {
+    return this.isMature() ? this.getAdultSize() : this.getYoungSize();
+  }
+
+  getDeadColor() {
+    return C.DEAD_COLOR;
+  }
+
+  getYoungColor() {
+    return C.YOUNG_COLOR;
+  }
+
+  getAdultColor() {
+    return C.ADULT_COLOR;
+  }
+
+  getColor() {
+    if (!this.isAlive()) {
+      return this.getDeadColor();
+    }
+
+    return this.isMature() ? this.getAdultColor() : this.getYoungColor();
   }
 
   maxCreationAge() {
@@ -82,8 +118,12 @@ export default class Mob {
     return this.age < this.longevity;
   }
 
+  isMature() {
+    return this.age >= this.maturity();
+  }
+
   canProcreate() {
-    return this.age >= this.maturity() && this.isAlive();
+    return this.isMature() && this.isAlive();
   }
 
   canBecomePregnant() {
