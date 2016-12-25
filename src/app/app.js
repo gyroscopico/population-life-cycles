@@ -45,6 +45,8 @@ export default class App extends Component {
     this.heartbeat(); // Start the heartbeat.
 
     this.context = this.refs.canvas.getContext('2d');
+    this.context.canvas.width  = window.innerWidth;
+    this.context.canvas.height = window.innerHeight - C.HEADER_HEIGHT;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -155,6 +157,8 @@ export default class App extends Component {
     const input = {
       toAdd,
       category,
+      canvasWidth: this.context.canvas.width,
+      canvasHeight: this.context.canvas.height,
     };
 
     // Add a given number of mobs.
@@ -178,17 +182,13 @@ export default class App extends Component {
 
     return (
       <div>
-        <canvas
-          id="canvas" ref="canvas"
-          className="center"
-          width="300" height="300"
-        />
+        <canvas id="canvas" ref="canvas" />
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
           <input type="number" id="number-mobs-to-add" defaultValue="1" min="1" max="100" />
           <select name="mob-category" id="mob-category">
             <option value="Cat">Cats</option>
-            <option value="Orc">Orcs</option>
             <option value="Goblin">Goblins</option>
+            <option value="Orc">Orcs</option>
           </select>
           <input type="submit" value="Add" />
         </form>

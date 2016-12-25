@@ -1,13 +1,15 @@
 import * as C from '../constants';
 import { guid } from '../utils/guid';
 import { now } from '../utils/now';
+import BaseClass from '../base-class/base-class';
 
-export default class Mob {
+export default class Mob extends BaseClass {
   constructor(input) {
+    super(input);
+
     // Assign all inputs as properties (if any).
     Object.assign(this, input);
 
-    this.id = guid();
     this.gender = this.gender || this.randomGender();
 
     // Was this mob spawned by a player?
@@ -21,14 +23,13 @@ export default class Mob {
     this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
 
     this.position = this.position || {
-      x: this.randomNumber(0, 290),
-      y: this.randomNumber(0, 290),
+      x: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
+      y: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2),
     };
 
     this.size = this.getSize();
     this.color = this.getColor();
 
-    this.spawned = now();
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
     this.category = this.getCategory();
   }

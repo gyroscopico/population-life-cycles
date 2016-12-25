@@ -8,21 +8,26 @@ export const addMobs = (event, input) => {
 
   const mobs = [];
   const log = [];
-  const toAdd = input.toAdd;
-  const category = input.category;
+
+  const {
+    toAdd,
+    category,
+    canvasWidth,
+    canvasHeight,
+  } = input;
 
   for (let i = 0; i < toAdd; i++) {
     let newMob;
 
     switch (category) {
       case C.CATEGORY.CAT:
-        newMob = new Cat();
+        newMob = new Cat({ canvasWidth, canvasHeight });
         break;
       case C.CATEGORY.ORC:
-        newMob = new Orc();
+        newMob = new Orc({ canvasWidth, canvasHeight });
         break;
       case C.CATEGORY.GOBLIN:
-        newMob = new Goblin();
+        newMob = new Goblin({ canvasWidth, canvasHeight });
         break;
       default:
         throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);

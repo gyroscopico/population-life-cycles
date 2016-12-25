@@ -19779,11 +19779,11 @@
 	
 	var _addMobs = __webpack_require__(163);
 	
-	var _scrollToBottom = __webpack_require__(169);
+	var _scrollToBottom = __webpack_require__(170);
 	
-	var _updateCanvas = __webpack_require__(170);
+	var _updateCanvas = __webpack_require__(171);
 	
-	__webpack_require__(171);
+	__webpack_require__(172);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -19843,6 +19843,8 @@
 	      this.heartbeat(); // Start the heartbeat.
 	
 	      this.context = this.refs.canvas.getContext('2d');
+	      this.context.canvas.width = window.innerWidth;
+	      this.context.canvas.height = window.innerHeight - C.HEADER_HEIGHT;
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -19962,7 +19964,9 @@
 	
 	      var input = {
 	        toAdd: toAdd,
-	        category: category
+	        category: category,
+	        canvasWidth: this.context.canvas.width,
+	        canvasHeight: this.context.canvas.height
 	      };
 	
 	      // Add a given number of mobs.
@@ -19992,11 +19996,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('canvas', {
-	          id: 'canvas', ref: 'canvas',
-	          className: 'center',
-	          width: '300', height: '300'
-	        }),
+	        _react2.default.createElement('canvas', { id: 'canvas', ref: 'canvas' }),
 	        _react2.default.createElement(
 	          'form',
 	          { id: 'main-controls', action: '#', onSubmit: this.submitForm },
@@ -20011,13 +20011,13 @@
 	            ),
 	            _react2.default.createElement(
 	              'option',
-	              { value: 'Orc' },
-	              'Orcs'
+	              { value: 'Goblin' },
+	              'Goblins'
 	            ),
 	            _react2.default.createElement(
 	              'option',
-	              { value: 'Goblin' },
-	              'Goblins'
+	              { value: 'Orc' },
+	              'Orcs'
 	            )
 	          ),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
@@ -20121,7 +20121,7 @@
 	
 	// Longevity is a range and dictates when a mob dies of old age.
 	var MIN_MOB_LONGEVITY = exports.MIN_MOB_LONGEVITY = 15;
-	var MAX_MOB_LONGEVITY = exports.MAX_MOB_LONGEVITY = 30;
+	var MAX_MOB_LONGEVITY = exports.MAX_MOB_LONGEVITY = 45;
 	
 	// At what age does a young become an adult who can procreate?
 	var MATURITY = exports.MATURITY = 12;
@@ -20147,8 +20147,8 @@
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
 	  CAT: 'Cat',
-	  ORC: 'Orc',
-	  GOBLIN: 'Goblin'
+	  GOBLIN: 'Goblin',
+	  ORC: 'Orc'
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -20158,7 +20158,7 @@
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
 	
 	// Causes of death.
-	var OLD_AGE = exports.OLD_AGE = 'old age';
+	var OLD_AGE = exports.OLD_AGE = 'of old age';
 	
 	var AGE_INCREMENT = exports.AGE_INCREMENT = 1;
 	
@@ -20176,6 +20176,12 @@
 	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
 	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
 	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
+	
+	// World.
+	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
+	var CANVAS_WIDTH = exports.CANVAS_WIDTH = 280;
+	var CANVAS_HEIGHT = exports.CANVAS_HEIGHT = 320;
+	var WORLD_TILE_SIZE = exports.WORLD_TILE_SIZE = 20;
 
 /***/ },
 /* 161 */
@@ -20221,7 +20227,7 @@
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
 	      population.corpses.push(mob); // This mob just died.
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died of ' + mob.causeOfDeath + '. Spawned ' + mob.spawned + ' - \u2625' + mob.timeOfDeath + '.');
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
 	    }
 	  });
 	
@@ -20251,11 +20257,11 @@
 	
 	var _orc2 = _interopRequireDefault(_orc);
 	
-	var _goblin = __webpack_require__(167);
+	var _goblin = __webpack_require__(168);
 	
 	var _goblin2 = _interopRequireDefault(_goblin);
 	
-	var _cat = __webpack_require__(168);
+	var _cat = __webpack_require__(169);
 	
 	var _cat2 = _interopRequireDefault(_cat);
 	
@@ -20268,21 +20274,25 @@
 	
 	  var mobs = [];
 	  var log = [];
-	  var toAdd = input.toAdd;
-	  var category = input.category;
+	
+	  var toAdd = input.toAdd,
+	      category = input.category,
+	      canvasWidth = input.canvasWidth,
+	      canvasHeight = input.canvasHeight;
+	
 	
 	  for (var i = 0; i < toAdd; i++) {
 	    var newMob = void 0;
 	
 	    switch (category) {
 	      case C.CATEGORY.CAT:
-	        newMob = new _cat2.default();
+	        newMob = new _cat2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
 	        break;
 	      case C.CATEGORY.ORC:
-	        newMob = new _orc2.default();
+	        newMob = new _orc2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
 	        break;
 	      case C.CATEGORY.GOBLIN:
-	        newMob = new _goblin2.default();
+	        newMob = new _goblin2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
 	        break;
 	      default:
 	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
@@ -20369,41 +20379,54 @@
 	
 	var _now = __webpack_require__(161);
 	
+	var _baseClass = __webpack_require__(167);
+	
+	var _baseClass2 = _interopRequireDefault(_baseClass);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Mob = function () {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Mob = function (_BaseClass) {
+	  _inherits(Mob, _BaseClass);
+	
 	  function Mob(input) {
 	    _classCallCheck(this, Mob);
 	
 	    // Assign all inputs as properties (if any).
-	    Object.assign(this, input);
+	    var _this = _possibleConstructorReturn(this, (Mob.__proto__ || Object.getPrototypeOf(Mob)).call(this, input));
 	
-	    this.id = (0, _guid.guid)();
-	    this.gender = this.gender || this.randomGender();
+	    Object.assign(_this, input);
+	
+	    _this.gender = _this.gender || _this.randomGender();
 	
 	    // Was this mob spawned by a player?
 	    // Note: Object.assign can give a value, if not default to true.
-	    this.isCreatedByPlayer = this.isCreatedByPlayer || true;
+	    _this.isCreatedByPlayer = _this.isCreatedByPlayer || true;
 	
 	    // Is this mob born from other mobs?
-	    this.isBornFromMobs = this.isBornFromMobs || false;
+	    _this.isBornFromMobs = _this.isBornFromMobs || false;
 	
 	    // A newborn mob from existing mobs who procreated is always 0 years of age.
-	    this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+	    _this.age = _this.isBornFromMobs ? 0 : _this.randomNumber(0, _this.maxCreationAge());
 	
-	    this.position = this.position || {
-	      x: this.randomNumber(0, 290),
-	      y: this.randomNumber(0, 290)
+	    _this.position = _this.position || {
+	      x: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
+	      y: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2)
 	    };
 	
-	    this.size = this.getSize();
-	    this.color = this.getColor();
+	    _this.size = _this.getSize();
+	    _this.color = _this.getColor();
 	
-	    this.spawned = (0, _now.now)();
-	    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
-	    this.category = this.getCategory();
+	    _this.longevity = _this.randomNumber(_this.minLongevity(), _this.maxLongevity());
+	    _this.category = _this.getCategory();
+	    return _this;
 	  }
 	
 	  // Try to age a mob.
@@ -20535,7 +20558,7 @@
 	  }]);
 	
 	  return Mob;
-	}();
+	}(_baseClass2.default);
 	
 	exports.default = Mob;
 
@@ -20559,6 +20582,40 @@
 
 /***/ },
 /* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _guid = __webpack_require__(166);
+	
+	var _now = __webpack_require__(161);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var BaseClass = function BaseClass(input) {
+	  _classCallCheck(this, BaseClass);
+	
+	  // Assign all inputs as properties (if any).
+	  Object.assign(this, input);
+	
+	  this.id = (0, _guid.guid)();
+	  this.spawned = (0, _now.now)();
+	};
+	
+	exports.default = BaseClass;
+
+/***/ },
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20639,7 +20696,7 @@
 	exports.default = Goblin;
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20740,7 +20797,7 @@
 	exports.default = Cat;
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20753,7 +20810,7 @@
 	};
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20790,16 +20847,6 @@
 	      mobs = input.mobs,
 	      corpses = input.corpses;
 	
-	  // todo: mobs not spawning on top of each other (world with available or taken coordinates?).
-	  // todo: mobs moving around (no collision).
-	  // todo: mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
-	  // todo: gzip the bundle with https://www.npmjs.com/package/compression-webpack-plugin
-	  // todo: responsive canvas (not using css though).
-	  // todo: how do I navigate a world that is bigger than the viewport?
-	  // todo: corpse decay; after a while, the corpses disappear off the game (including from the corpse array).
-	  // todo: log; older log messages should be removed from the web UI to save memory. Possibly archive them in localStorage but never delete data from everywhere.
-	  // todo: use localStorage to get some persistence locally in the browser and load previous data.
-	  // todo: use online data store like https://firebase.google.com/ to store data.
 	
 	  corpses.map(function (corpse) {
 	    return drawDisc({
@@ -20823,16 +20870,16 @@
 	};
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(172);
+	var content = __webpack_require__(173);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(174)(content, {});
+	var update = __webpack_require__(175)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20849,21 +20896,21 @@
 	}
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(173)();
+	exports = module.exports = __webpack_require__(174)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  border: solid 1px #33170D;\n  box-shadow: 10px 10px 33px -12px rgba(51, 23, 13, 0.75); }\n\n#main-controls {\n  position: fixed;\n  bottom: 115px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.1);\n  margin: 0;\n  padding: .625em;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  border-top: solid 1px;\n  font-family: verdana, sans-serif;\n  font-size: 12px; }\n\n.center {\n  position: fixed;\n  top: 40%;\n  left: 50%;\n  transform: translate(-50%, -40%); }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports) {
 
 	/*
@@ -20919,7 +20966,7 @@
 
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

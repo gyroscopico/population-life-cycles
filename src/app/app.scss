@@ -1,5 +1,5 @@
 // Semi transparent backgrounds (based on $black).
-$transparent-10: rgba(51, 23, 13, .1);
+$transparent-20: rgba(51, 23, 13, .2);
 $transparent-75: rgba(51, 23, 13, .75);
 
 // Colour scheme: http://www.hexcolortool.com/#2cc992
@@ -63,17 +63,19 @@ h1 {
 }
 
 canvas {
-  border: solid 1px $black;
-  box-shadow: 10px 10px 33px -12px $transparent-75;
+  position: fixed;
+  top: 49px;
 }
 
 #main-controls {
   position: fixed;
-  bottom: 115px;
+  bottom: 114px;
   right: 0;
   background-color: $transparent-75;
   margin: 0;
   padding: .625em;
+  width: 244px;
+  text-align: right;
 }
 
 #header {
@@ -117,25 +119,18 @@ select {
 }
 
 .scrollable-window {
-  background-color: $transparent-10;
+  background-color: $transparent-20;
   margin: 0;
   padding: .625em;
+  width: 250px;
   height: 100px;
   overflow: auto;
   position: fixed;
   bottom: 0;
-  left: 0;
   right: 0;
-  border-top: solid 1px;
   font-family: verdana, sans-serif;
-  font-size: 12px;
-}
-
-.center {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -40%);
+  font-size: 11px;
+  line-height: 15px;
 }
 
 .horizontal {

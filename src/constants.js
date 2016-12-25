@@ -39,7 +39,7 @@ export const MAX_CREATION_AGE = 9;
 
 // Longevity is a range and dictates when a mob dies of old age.
 export const MIN_MOB_LONGEVITY = 15;
-export const MAX_MOB_LONGEVITY = 30;
+export const MAX_MOB_LONGEVITY = 45;
 
 // At what age does a young become an adult who can procreate?
 export const MATURITY = 12;
@@ -65,8 +65,8 @@ export const ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 // Mob categories.
 export const CATEGORY = {
   CAT: 'Cat',
-  ORC: 'Orc',
   GOBLIN: 'Goblin',
+  ORC: 'Orc',
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -76,7 +76,7 @@ export const FRAME_RATE = 1e3 / 24; // 24 frames per second.
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.
 
 // Causes of death.
-export const OLD_AGE = 'old age';
+export const OLD_AGE = 'of old age';
 
 export const AGE_INCREMENT = 1;
 
@@ -94,3 +94,9 @@ export const ADULT_SIZE = 9; // young size * 1.5
 export const DEAD_COLOR = COLOR.GOLD_L;
 export const YOUNG_COLOR = COLOR.GOLD_M;
 export const ADULT_COLOR = COLOR.GOLD_D;
+
+// World.
+export const HEADER_HEIGHT = 49;
+export const CANVAS_WIDTH = 280;
+export const CANVAS_HEIGHT = 320;
+export const WORLD_TILE_SIZE = 20;
