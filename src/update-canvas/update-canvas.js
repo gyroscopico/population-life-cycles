@@ -35,10 +35,10 @@ export const updateCanvas = input => {
   } = input;
 
   corpses
-    .filter(corpse => corpse.changed === undefined || corpse.changed)
+    .filter(corpse => corpse.changed)
     .map(corpse => paint(context, corpse));
 
   mobs
-    .filter(mob => mob.changed === undefined || mob.changed)
+    .filter(mob => mob.changed)
     .map(mob => paint(context, mob));
 };

@@ -55,3 +55,8 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 - log; older log messages should be removed from the web UI to save memory. Possibly archive them in localStorage but never delete data from everywhere.
 - use localStorage to get some persistence locally in the browser and load previous data.
 - use online data store like https://firebase.google.com/ to store data.
+
+## Version history
+
+- 1.1.0: whole screen world, excluding header.
+- 1.0.0: basic version with a central square world.

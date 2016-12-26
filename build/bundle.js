@@ -20416,6 +20416,9 @@
 	    // Category is related to age (young vs adult), so category should be defined after age.
 	    _this.category = _this._getCategory();
 	
+	    // Initial state of changed is true because I want to display the mob.
+	    _this.changed = true;
+	
 	    // Position, size and color are properties used on canvas.
 	    _this.position = _this.position || {
 	      x: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
@@ -20883,13 +20886,13 @@
 	
 	
 	  corpses.filter(function (corpse) {
-	    return corpse.changed === undefined || corpse.changed;
+	    return corpse.changed;
 	  }).map(function (corpse) {
 	    return paint(context, corpse);
 	  });
 	
 	  mobs.filter(function (mob) {
-	    return mob.changed === undefined || mob.changed;
+	    return mob.changed;
 	  }).map(function (mob) {
 	    return paint(context, mob);
 	  });

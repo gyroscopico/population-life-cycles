@@ -25,6 +25,9 @@ export default class Mob extends BaseClass {
     // Category is related to age (young vs adult), so category should be defined after age.
     this.category = this._getCategory();
 
+    // Initial state of changed is true because I want to display the mob.
+    this.changed = true;
+
     // Position, size and color are properties used on canvas.
     this.position = this.position || {
       x: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
