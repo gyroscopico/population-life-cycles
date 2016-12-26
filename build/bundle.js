@@ -20199,6 +20199,9 @@
 	
 	// World.
 	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
+	var CONTROLS_WIDTH = exports.CONTROLS_WIDTH = 264;
+	var CONTROLS_HEIGHT = exports.CONTROLS_HEIGHT = 54;
+	var SCROLLABLE_WINDOW_HEIGHT = exports.SCROLLABLE_WINDOW_HEIGHT = 114;
 	
 	// World tiles.
 	var TILE_SIZE = exports.TILE_SIZE = 30;
@@ -21170,10 +21173,16 @@
 	      var tiles = [];
 	      var fullTile = C.TILE_SIZE;
 	      var halfTile = fullTile / 2;
+	      var limitX = this.width - C.CONTROLS_WIDTH;
+	      var limitY = this.height - C.CONTROLS_HEIGHT - C.SCROLLABLE_WINDOW_HEIGHT;
 	
 	      for (var x = 0; x <= this.width + halfTile; x = x + fullTile) {
 	        for (var y = 0; y <= this.height + halfTile; y = y + fullTile) {
-	          tiles.push(new _tile2.default({ x: x, y: y }));
+	          if (x > limitX && y > limitY) {
+	            continue;
+	          } else {
+	            tiles.push(new _tile2.default({ x: x, y: y }));
+	          }
 	        }
 	      }
 	
