@@ -20374,7 +20374,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(167);
+	var _baseClass = __webpack_require__(166);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -20588,24 +20588,6 @@
 
 /***/ },
 /* 166 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var s4 = function s4() {
-	  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-	};
-	
-	// Return a global unique id.
-	var guid = exports.guid = function guid() {
-	  return "" + s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
-	};
-
-/***/ },
-/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20618,7 +20600,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _guid = __webpack_require__(166);
+	var _guid = __webpack_require__(167);
 	
 	var _now = __webpack_require__(161);
 	
@@ -20637,6 +20619,24 @@
 	};
 	
 	exports.default = BaseClass;
+
+/***/ },
+/* 167 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var s4 = function s4() {
+	  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	};
+	
+	// Return a global unique id.
+	var guid = exports.guid = function guid() {
+	  return "" + s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+	};
 
 /***/ },
 /* 168 */
