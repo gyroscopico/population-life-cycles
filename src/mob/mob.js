@@ -30,8 +30,8 @@ export default class Mob extends BaseClass {
 
     // Position, size and color are properties used on canvas.
     this.position = this.position || {
-      x: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
-      y: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2),
+      x: this.randomNumber(C.TILE_SIZE / 2, (this.canvasWidth || C.CANVAS_WIDTH) - C.TILE_SIZE / 2),
+      y: this.randomNumber(C.TILE_SIZE / 2, (this.canvasHeight || C.CANVAS_HEIGHT) - C.TILE_SIZE / 2),
     };
     this.size = this._getSize();
     this.color = this._getColor();

@@ -19783,6 +19783,10 @@
 	
 	var _updateCanvas = __webpack_require__(171);
 	
+	var _world = __webpack_require__(178);
+	
+	var _world2 = _interopRequireDefault(_world);
+	
 	__webpack_require__(172);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -19816,6 +19820,9 @@
 	        // Mobs that used to be alive but are now dead.
 	        corpses: [],
 	
+	        // World models all environment parameters (not mobs).
+	        world: new _world2.default({ window: window }),
+	
 	        // In heartbeat, lastTime keeps track of the last time the function was run.
 	        lastTime: undefined,
 	
@@ -19843,8 +19850,8 @@
 	      this.heartbeat(); // Start the heartbeat.
 	
 	      this.context = this.refs.canvas.getContext('2d');
-	      this.context.canvas.width = window.innerWidth;
-	      this.context.canvas.height = window.innerHeight - C.HEADER_HEIGHT;
+	      this.context.canvas.width = this.state.world.width;
+	      this.context.canvas.height = this.state.world.height;
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -19893,8 +19900,9 @@
 	    value: function updateAnimation() {
 	      (0, _updateCanvas.updateCanvas)({
 	        context: this.context,
-	        mobs: this.state.mobs,
-	        corpses: this.state.corpses
+	        world: this.state.world,
+	        corpses: this.state.corpses,
+	        mobs: this.state.mobs
 	      });
 	    }
 	
@@ -19999,14 +20007,14 @@
 	        _react2.default.createElement(
 	          'form',
 	          { id: 'main-controls', action: '#', onSubmit: this.submitForm },
-	          _react2.default.createElement('input', { type: 'number', id: 'number-mobs-to-add', defaultValue: '1', min: '1', max: '100' }),
+	          _react2.default.createElement('input', { type: 'number', id: 'number-mobs-to-add', defaultValue: '9', min: '1', max: '100' }),
 	          _react2.default.createElement(
 	            'select',
 	            { name: 'mob-category', id: 'mob-category' },
 	            _react2.default.createElement(
 	              'option',
-	              { value: 'Cat' },
-	              'Cats'
+	              { value: 'Orc' },
+	              'Orcs'
 	            ),
 	            _react2.default.createElement(
 	              'option',
@@ -20015,8 +20023,8 @@
 	            ),
 	            _react2.default.createElement(
 	              'option',
-	              { value: 'Orc' },
-	              'Orcs'
+	              { value: 'Cat' },
+	              'Cats'
 	            )
 	          ),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
@@ -20180,7 +20188,10 @@
 	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
 	var CANVAS_WIDTH = exports.CANVAS_WIDTH = 280;
 	var CANVAS_HEIGHT = exports.CANVAS_HEIGHT = 320;
-	var WORLD_TILE_SIZE = exports.WORLD_TILE_SIZE = 20;
+	
+	// World tiles.
+	var TILE_SIZE = exports.TILE_SIZE = 20;
+	var TILE_COLOR = exports.TILE_COLOR = COLOR.PURPLE_L;
 
 /***/ },
 /* 161 */
@@ -20421,8 +20432,8 @@
 	
 	    // Position, size and color are properties used on canvas.
 	    _this.position = _this.position || {
-	      x: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
-	      y: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2)
+	      x: _this.randomNumber(C.TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.TILE_SIZE / 2),
+	      y: _this.randomNumber(C.TILE_SIZE / 2, (_this.canvasHeight || C.CANVAS_HEIGHT) - C.TILE_SIZE / 2)
 	    };
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
@@ -20599,15 +20610,9 @@
 	  value: true
 	});
 	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
 	var _guid = __webpack_require__(167);
 	
 	var _now = __webpack_require__(161);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20847,54 +20852,33 @@
 	});
 	exports.updateCanvas = undefined;
 	
-	var _constants = __webpack_require__(160);
+	var _paintMob = __webpack_require__(180);
 	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var drawDisc = function drawDisc(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI);
-	  context.fillStyle = fillStyle;
-	  context.fill();
-	  context.closePath();
-	};
-	
-	var paint = function paint(context, mob) {
-	  mob.changed = false; // Changed to false to prevent repainting the same change.
-	  drawDisc({
-	    context: context,
-	    x: mob.position.x,
-	    y: mob.position.y,
-	    radius: mob.size,
-	    fillStyle: mob.color
-	  });
-	};
+	var _paintTile = __webpack_require__(181);
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
-	      mobs = input.mobs,
-	      corpses = input.corpses;
+	      world = input.world,
+	      corpses = input.corpses,
+	      mobs = input.mobs;
 	
+	
+	  world.tiles.filter(function (tile) {
+	    return tile.changed;
+	  }).map(function (tile) {
+	    return (0, _paintTile.paintTile)(context, tile);
+	  });
 	
 	  corpses.filter(function (corpse) {
 	    return corpse.changed;
 	  }).map(function (corpse) {
-	    return paint(context, corpse);
+	    return (0, _paintMob.paintMob)(context, corpse);
 	  });
 	
 	  mobs.filter(function (mob) {
 	    return mob.changed;
 	  }).map(function (mob) {
-	    return paint(context, mob);
+	    return (0, _paintMob.paintMob)(context, mob);
 	  });
 	};
 
@@ -20933,7 +20917,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput[type=submit] {\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase; }\n  input[type=submit]:hover {\n    color: #009701; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
@@ -21247,6 +21231,205 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 176 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var drawDisc = exports.drawDisc = function drawDisc(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.fillStyle = fillStyle;
+	  context.fill();
+	  context.closePath();
+	};
+
+/***/ },
+/* 177 */,
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _baseClass = __webpack_require__(166);
+	
+	var _baseClass2 = _interopRequireDefault(_baseClass);
+	
+	var _tile = __webpack_require__(179);
+	
+	var _tile2 = _interopRequireDefault(_tile);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var World = function (_BaseClass) {
+	  _inherits(World, _BaseClass);
+	
+	  function World(input) {
+	    _classCallCheck(this, World);
+	
+	    // Total world canvas width and height in pixels.
+	    var _this = _possibleConstructorReturn(this, (World.__proto__ || Object.getPrototypeOf(World)).call(this, input));
+	
+	    _this.width = window.innerWidth;
+	    _this.height = window.innerHeight - C.HEADER_HEIGHT; // height minus the header.
+	
+	    // Array of tile objects.
+	    _this.tiles = _this._fillWorldWithTiles();
+	    return _this;
+	  }
+	
+	  _createClass(World, [{
+	    key: '_fillWorldWithTiles',
+	    value: function _fillWorldWithTiles() {
+	      var tiles = [];
+	      var fullTile = C.TILE_SIZE;
+	      var halfTile = fullTile / 2;
+	
+	      for (var x = halfTile; x <= this.width - halfTile; x = x + fullTile) {
+	        for (var y = halfTile; y <= this.height - halfTile; y = y + fullTile) {
+	          tiles.push(new _tile2.default({ x: x, y: y }));
+	        }
+	      }
+	
+	      return tiles;
+	    }
+	  }]);
+	
+	  return World;
+	}(_baseClass2.default);
+	
+	exports.default = World;
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _baseClass = __webpack_require__(166);
+	
+	var _baseClass2 = _interopRequireDefault(_baseClass);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Tile = function (_BaseClass) {
+	  _inherits(Tile, _BaseClass);
+	
+	  function Tile(input) {
+	    _classCallCheck(this, Tile);
+	
+	    // Initial state of changed is true because
+	    // I want to display the tile at least once.
+	    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, input));
+	
+	    _this.changed = true;
+	
+	    // Full size on one side.
+	    _this.size = _this.size || C.TILE_SIZE;
+	    _this.radius = _this.size / 2;
+	
+	    _this.color = _this.color || C.TILE_COLOR;
+	    return _this;
+	  }
+	
+	  return Tile;
+	}(_baseClass2.default);
+	
+	exports.default = Tile;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintMob = undefined;
+	
+	var _drawDisc = __webpack_require__(176);
+	
+	var paintMob = exports.paintMob = function paintMob(context, mob) {
+	  mob.changed = false; // Changed to false to prevent repainting the same change.
+	  (0, _drawDisc.drawDisc)({
+	    context: context,
+	    x: mob.position.x,
+	    y: mob.position.y,
+	    radius: mob.size,
+	    fillStyle: mob.color
+	  });
+	};
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintTile = undefined;
+	
+	var _drawDisc = __webpack_require__(176);
+	
+	var paintTile = exports.paintTile = function paintTile(context, tile) {
+	  tile.changed = false; // Changed to false to prevent repainting the same change.
+	  (0, _drawDisc.drawDisc)({
+	    context: context,
+	    x: tile.x,
+	    y: tile.y,
+	    radius: tile.radius,
+	    fillStyle: tile.color
+	  });
+	};
 
 /***/ }
 /******/ ]);

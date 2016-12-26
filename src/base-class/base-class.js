@@ -1,4 +1,3 @@
-import * as C from '../constants';
 import { guid } from '../utils/guid';
 import { now } from '../utils/now';
 

@@ -99,4 +99,7 @@ export const ADULT_COLOR = COLOR.GOLD_D;
 export const HEADER_HEIGHT = 49;
 export const CANVAS_WIDTH = 280;
 export const CANVAS_HEIGHT = 320;
-export const WORLD_TILE_SIZE = 20;
+
+// World tiles.
+export const TILE_SIZE = 20;
+export const TILE_COLOR = COLOR.PURPLE_L;

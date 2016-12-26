@@ -6,6 +6,7 @@ import { ageMobs } from '../mob/age-mobs';
 import { addMobs } from '../mob/add-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
+import World from '../world/world';
 import './app.scss';
 
 // Main starting point of the game.
@@ -18,6 +19,9 @@ export default class App extends Component {
 
       // Mobs that used to be alive but are now dead.
       corpses: [],
+
+      // World models all environment parameters (not mobs).
+      world: new World({ window }),
 
       // In heartbeat, lastTime keeps track of the last time the function was run.
       lastTime: undefined,
@@ -45,8 +49,8 @@ export default class App extends Component {
     this.heartbeat(); // Start the heartbeat.
 
     this.context = this.refs.canvas.getContext('2d');
-    this.context.canvas.width  = window.innerWidth;
-    this.context.canvas.height = window.innerHeight - C.HEADER_HEIGHT;
+    this.context.canvas.width  = this.state.world.width;
+    this.context.canvas.height = this.state.world.height;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -87,8 +91,9 @@ export default class App extends Component {
   updateAnimation() {
     updateCanvas({
       context: this.context,
-      mobs: this.state.mobs,
+      world: this.state.world,
       corpses: this.state.corpses,
+      mobs: this.state.mobs,
     });
   }
 
@@ -183,11 +188,11 @@ export default class App extends Component {
       <div>
         <canvas id="canvas" ref="canvas" />
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
-          <input type="number" id="number-mobs-to-add" defaultValue="1" min="1" max="100" />
+          <input type="number" id="number-mobs-to-add" defaultValue="9" min="1" max="100" />
           <select name="mob-category" id="mob-category">
-            <option value="Cat">Cats</option>
-            <option value="Goblin">Goblins</option>
             <option value="Orc">Orcs</option>
+            <option value="Goblin">Goblins</option>
+            <option value="Cat">Cats</option>
           </select>
           <input type="submit" value="Add" />
         </form>

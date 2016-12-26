@@ -116,6 +116,20 @@ input,
 select {
   cursor: pointer;
   min-width: $min-size;
+  border-radius: .5em;
+  border: solid 1px;
+  background-color: $white;
+  color: $black;
+}
+
+input[type=submit] {
+  background-color: $green-l;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &:hover {
+    color: $green-d;
+  }
 }
 
 .scrollable-window {
