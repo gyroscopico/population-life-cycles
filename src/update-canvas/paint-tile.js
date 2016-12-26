@@ -1,8 +1,8 @@
-import { drawDisc } from './draw-disc';
+import { drawHexagon } from './draw-hexagon';
 
 export const paintTile = (context, tile) => {
   tile.changed = false; // Changed to false to prevent repainting the same change.
-  drawDisc({
+  drawHexagon({
     context,
     x: tile.x,
     y: tile.y,

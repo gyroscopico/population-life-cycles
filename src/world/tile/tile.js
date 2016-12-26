@@ -14,5 +14,7 @@ export default class Tile extends BaseClass {
     this.radius = this.size / 2;
 
     this.color = this.color || C.TILE_COLOR;
+
+    this.hasMob = false;
   }
 }

@@ -20184,7 +20184,8 @@
 	// List all error messages.
 	var ERROR = exports.ERROR = {
 	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
-	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category'
+	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
+	  WORLD_IS_FULL: 'World is full'
 	};
 	
 	// Default mob size when young or adult.
@@ -20200,8 +20201,8 @@
 	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
 	
 	// World tiles.
-	var TILE_SIZE = exports.TILE_SIZE = 20;
-	var TILE_COLOR = exports.TILE_COLOR = COLOR.PURPLE_L;
+	var TILE_SIZE = exports.TILE_SIZE = 30;
+	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
 
 /***/ },
 /* 161 */
@@ -20447,19 +20448,40 @@
 	    _this.changed = true;
 	
 	    // Position, size and color are properties used on canvas.
-	    _this.positionMobInWorld();
+	    if (_this.position === undefined) {
+	      _this.positionMobInWorld();
+	    }
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
 	    return _this;
 	  }
 	
 	  _createClass(Mob, [{
+	    key: 'getRandomTile',
+	    value: function getRandomTile() {
+	      var freeTiles = this.world.tiles.filter(function (tile) {
+	        return !tile.hasMob;
+	      });
+	
+	      if (freeTiles.length === 0) {
+	        throw new Error(C.ERROR.WORLD_IS_FULL);
+	      }
+	
+	      var randomIndex = this.randomNumber(0, freeTiles.length - 1);
+	      var tile = freeTiles[randomIndex];
+	
+	      tile.hasMob = true;
+	
+	      return tile;
+	    }
+	  }, {
 	    key: 'positionMobInWorld',
 	    value: function positionMobInWorld() {
-	      var randomPosition = this.randomNumber(0, this.world.tiles.length - 1);
-	      this.position = this.position || {
-	        x: this.world.tiles[randomPosition].x,
-	        y: this.world.tiles[randomPosition].y
+	      var tile = this.getRandomTile();
+	
+	      this.position = {
+	        x: tile.x,
+	        y: tile.y
 	      };
 	    }
 	
@@ -21044,11 +21066,11 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawDisc = __webpack_require__(174);
+	var _drawHexagon = __webpack_require__(182);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
-	  (0, _drawDisc.drawDisc)({
+	  (0, _drawHexagon.drawHexagon)({
 	    context: context,
 	    x: tile.x,
 	    y: tile.y,
@@ -21175,6 +21197,8 @@
 	    _this.radius = _this.size / 2;
 	
 	    _this.color = _this.color || C.TILE_COLOR;
+	
+	    _this.hasMob = false;
 	    return _this;
 	  }
 	
@@ -21532,6 +21556,33 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 182 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
+	
+	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.strokeStyle = fillStyle;
+	  context.lineWidth = 1;
+	  context.stroke();
+	  context.closePath();
+	};
 
 /***/ }
 /******/ ]);

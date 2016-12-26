@@ -29,16 +29,34 @@ export default class Mob extends BaseClass {
     this.changed = true;
 
     // Position, size and color are properties used on canvas.
-    this.positionMobInWorld();
+    if (this.position === undefined) {
+      this.positionMobInWorld();
+    }
     this.size = this._getSize();
     this.color = this._getColor();
   }
 
+  getRandomTile() {
+    const freeTiles = this.world.tiles.filter(tile => !tile.hasMob);
+
+    if (freeTiles.length === 0) {
+      throw new Error(C.ERROR.WORLD_IS_FULL);
+    }
+
+    const randomIndex = this.randomNumber(0, freeTiles.length - 1);
+    const tile = freeTiles[randomIndex];
+
+    tile.hasMob = true;
+
+    return tile;
+  }
+
   positionMobInWorld() {
-    const randomPosition = this.randomNumber(0, this.world.tiles.length - 1);
-    this.position = this.position || {
-      x: this.world.tiles[randomPosition].x,
-      y: this.world.tiles[randomPosition].y,
+    const tile = this.getRandomTile();
+
+    this.position = {
+      x: tile.x,
+      y: tile.y,
     };
   }
 

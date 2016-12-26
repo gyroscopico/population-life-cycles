@@ -41,8 +41,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 
 ### Must have tasks
 
-- mobs not spawning on top of each other (world with available coordinates).
-- mobs moving around (no collision).
+- mobs moving around (no collision is allowed).
 - mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 
 ### Low priority tasks

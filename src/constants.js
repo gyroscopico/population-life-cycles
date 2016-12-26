@@ -92,6 +92,7 @@ export const AGE_INCREMENT = 1;
 export const ERROR = {
   INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
   UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
+  WORLD_IS_FULL: 'World is full',
 };
 
 // Default mob size when young or adult.
@@ -107,5 +108,5 @@ export const ADULT_COLOR = COLOR.GOLD_D;
 export const HEADER_HEIGHT = 49;
 
 // World tiles.
-export const TILE_SIZE = 20;
-export const TILE_COLOR = COLOR.PURPLE_L;
+export const TILE_SIZE = 30;
+export const TILE_COLOR = COLOR.RED_L;
