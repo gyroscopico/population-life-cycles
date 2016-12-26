@@ -86,7 +86,6 @@ export default class App extends Component {
   // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
     updateCanvas({
-      canvas: this.refs.canvas,
       context: this.context,
       mobs: this.state.mobs,
       corpses: this.state.corpses,

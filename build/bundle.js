@@ -19892,7 +19892,6 @@
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
 	      (0, _updateCanvas.updateCanvas)({
-	        canvas: this.refs.canvas,
 	        context: this.context,
 	        mobs: this.state.mobs,
 	        corpses: this.state.corpses
@@ -20375,10 +20374,6 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _guid = __webpack_require__(166);
-	
-	var _now = __webpack_require__(161);
-	
 	var _baseClass = __webpack_require__(167);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
@@ -20393,6 +20388,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	// Note: methods starting with an underscore are meant to be private, i.e. not called outside this class.
 	var Mob = function (_BaseClass) {
 	  _inherits(Mob, _BaseClass);
 	
@@ -20415,38 +20411,66 @@
 	
 	    // A newborn mob from existing mobs who procreated is always 0 years of age.
 	    _this.age = _this.isBornFromMobs ? 0 : _this.randomNumber(0, _this.maxCreationAge());
+	    _this.longevity = _this.randomNumber(_this.minLongevity(), _this.maxLongevity());
 	
+	    // Category is related to age (young vs adult), so category should be defined after age.
+	    _this.category = _this._getCategory();
+	
+	    // Position, size and color are properties used on canvas.
 	    _this.position = _this.position || {
 	      x: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
 	      y: _this.randomNumber(C.WORLD_TILE_SIZE / 2, (_this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2)
 	    };
-	
-	    _this.size = _this.getSize();
-	    _this.color = _this.getColor();
-	
-	    _this.longevity = _this.randomNumber(_this.minLongevity(), _this.maxLongevity());
-	    _this.category = _this.getCategory();
+	    _this.size = _this._getSize();
+	    _this.color = _this._getColor();
 	    return _this;
 	  }
 	
-	  // Try to age a mob.
-	  // Return true if the mob could become older.
-	  // Return false and sets the age to the longevity (i.e. dead).
+	  // Track if the mob has changed.
+	  // Note: only previous properties relevant to canvas painting.
 	
 	
 	  _createClass(Mob, [{
+	    key: 'updatePrevious',
+	    value: function updatePrevious() {
+	      this.previous = {
+	        position: this.position,
+	        size: this.size,
+	        color: this.color
+	      };
+	    }
+	
+	    // Flag a change has happened.
+	
+	  }, {
+	    key: 'updateChangedFlag',
+	    value: function updateChangedFlag() {
+	      this.changed = this.position !== this.previous.position || this.size !== this.previous.size || this.color !== this.previous.color;
+	    }
+	
+	    // Try to age a mob.
+	
+	  }, {
 	    key: 'becomeOlder',
 	    value: function becomeOlder(years) {
-	      if (this.age + years < this.longevity) {
-	        this.age = this.age + years;
-	        this.category = this.getCategory();
-	        this.size = this.getSize();
-	        return true;
-	      }
+	      // Keep track of previous properties about to be changed.
+	      this.updatePrevious();
 	
-	      // Cannot become older.
-	      this.age = this.longevity;
-	      return false;
+	      // Age by a number of years or stop aging (dead).
+	      this.age = this.age + years < this.longevity ? this.age + years : this.longevity;
+	
+	      // Age related properties (will change based on age).
+	      // Warning: do not call the private _get methods outside this class.
+	      this.category = this._getCategory();
+	      this.size = this._getSize();
+	      this.color = this._getColor();
+	
+	      // Update the changed flag if the mob has changed within becomeOlder.
+	      this.updateChangedFlag();
+	
+	      // Return true if the mob could become older.
+	      // Return false and sets the age to the longevity (i.e. dead).
+	      return this.age < this.longevity;
 	    }
 	  }, {
 	    key: 'young',
@@ -20469,8 +20493,8 @@
 	      return C.ADULT_SIZE;
 	    }
 	  }, {
-	    key: 'getSize',
-	    value: function getSize() {
+	    key: '_getSize',
+	    value: function _getSize() {
 	      return this.isMature() ? this.getAdultSize() : this.getYoungSize();
 	    }
 	  }, {
@@ -20489,8 +20513,8 @@
 	      return C.DEAD_COLOR;
 	    }
 	  }, {
-	    key: 'getColor',
-	    value: function getColor() {
+	    key: '_getColor',
+	    value: function _getColor() {
 	      if (!this.isAlive()) {
 	        return this.getDeadColor();
 	      }
@@ -20551,8 +20575,8 @@
 	      return this.gender === C.FEMALE && this.canProcreate();
 	    }
 	  }, {
-	    key: 'getCategory',
-	    value: function getCategory() {
+	    key: '_getCategory',
+	    value: function _getCategory() {
 	      return this.age < this.maturity() ? this.young() : this.adult();
 	    }
 	  }]);
@@ -20842,29 +20866,34 @@
 	};
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
-	  var canvas = input.canvas,
-	      context = input.context,
+	  var context = input.context,
 	      mobs = input.mobs,
 	      corpses = input.corpses;
 	
 	
-	  corpses.map(function (corpse) {
-	    return drawDisc({
+	  corpses.filter(function (corpse) {
+	    return corpse.changed === undefined || corpse.changed;
+	  }).map(function (corpse) {
+	    corpse.changed = false; // Changed to false to prevent repainting the same change.
+	    drawDisc({
 	      context: context,
 	      x: corpse.position.x,
 	      y: corpse.position.y,
-	      radius: corpse.getSize(),
-	      fillStyle: corpse.getColor()
+	      radius: corpse.size,
+	      fillStyle: corpse.color
 	    });
 	  });
 	
-	  mobs.map(function (mob) {
-	    return drawDisc({
+	  mobs.filter(function (mob) {
+	    return mob.changed === undefined || mob.changed;
+	  }).map(function (mob) {
+	    mob.changed = false; // Changed to false to prevent repainting the same change.
+	    drawDisc({
 	      context: context,
 	      x: mob.position.x,
 	      y: mob.position.y,
-	      radius: mob.getSize(),
-	      fillStyle: mob.getColor()
+	      radius: mob.size,
+	      fillStyle: mob.color
 	    });
 	  });
 	};

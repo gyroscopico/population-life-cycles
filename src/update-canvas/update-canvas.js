@@ -18,25 +18,34 @@ const drawDisc = input => {
 
 export const updateCanvas = input => {
   const {
-    canvas,
     context,
     mobs,
     corpses,
   } = input;
 
-  corpses.map(corpse => drawDisc({
-    context,
-    x: corpse.position.x,
-    y: corpse.position.y,
-    radius: corpse.getSize(),
-    fillStyle: corpse.getColor(),
-  }));
+  corpses
+    .filter(corpse => corpse.changed === undefined || corpse.changed)
+    .map(corpse => {
+      corpse.changed = false; // Changed to false to prevent repainting the same change.
+      drawDisc({
+        context,
+        x: corpse.position.x,
+        y: corpse.position.y,
+        radius: corpse.size,
+        fillStyle: corpse.color,
+      });
+    });
 
-  mobs.map(mob => drawDisc({
-    context,
-    x: mob.position.x,
-    y: mob.position.y,
-    radius: mob.getSize(),
-    fillStyle: mob.getColor(),
-  }));
+  mobs
+    .filter(mob => mob.changed === undefined || mob.changed)
+    .map(mob => {
+      mob.changed = false; // Changed to false to prevent repainting the same change.
+      drawDisc({
+        context,
+        x: mob.position.x,
+        y: mob.position.y,
+        radius: mob.size,
+        fillStyle: mob.color,
+      });
+    });
 };

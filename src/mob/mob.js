@@ -1,8 +1,7 @@
 import * as C from '../constants';
-import { guid } from '../utils/guid';
-import { now } from '../utils/now';
 import BaseClass from '../base-class/base-class';
 
+// Note: methods starting with an underscore are meant to be private, i.e. not called outside this class.
 export default class Mob extends BaseClass {
   constructor(input) {
     super(input);
@@ -21,33 +20,57 @@ export default class Mob extends BaseClass {
 
     // A newborn mob from existing mobs who procreated is always 0 years of age.
     this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
 
+    // Category is related to age (young vs adult), so category should be defined after age.
+    this.category = this._getCategory();
+
+    // Position, size and color are properties used on canvas.
     this.position = this.position || {
       x: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasWidth || C.CANVAS_WIDTH) - C.WORLD_TILE_SIZE / 2),
       y: this.randomNumber(C.WORLD_TILE_SIZE / 2, (this.canvasHeight || C.CANVAS_HEIGHT) - C.WORLD_TILE_SIZE / 2),
     };
+    this.size = this._getSize();
+    this.color = this._getColor();
+  }
 
-    this.size = this.getSize();
-    this.color = this.getColor();
+  // Track if the mob has changed.
+  // Note: only previous properties relevant to canvas painting.
+  updatePrevious() {
+    this.previous = {
+      position: this.position,
+      size: this.size,
+      color: this.color,
+    };
+  }
 
-    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
-    this.category = this.getCategory();
+  // Flag a change has happened.
+  updateChangedFlag() {
+    this.changed = this.position !== this.previous.position ||
+        this.size !== this.previous.size ||
+        this.color !== this.previous.color;
   }
 
   // Try to age a mob.
-  // Return true if the mob could become older.
-  // Return false and sets the age to the longevity (i.e. dead).
   becomeOlder(years) {
-    if (this.age + years < this.longevity) {
-      this.age = this.age + years;
-      this.category = this.getCategory();
-      this.size = this.getSize();
-      return true;
-    }
+    // Keep track of previous properties about to be changed.
+    this.updatePrevious();
 
-    // Cannot become older.
-    this.age = this.longevity;
-    return false;
+    // Age by a number of years or stop aging (dead).
+    this.age = this.age + years < this.longevity ? this.age + years : this.longevity;
+
+    // Age related properties (will change based on age).
+    // Warning: do not call the private _get methods outside this class.
+    this.category = this._getCategory();
+    this.size = this._getSize();
+    this.color = this._getColor();
+
+    // Update the changed flag if the mob has changed within becomeOlder.
+    this.updateChangedFlag();
+
+    // Return true if the mob could become older.
+    // Return false and sets the age to the longevity (i.e. dead).
+    return this.age < this.longevity;
   }
 
   young() {
@@ -66,7 +89,7 @@ export default class Mob extends BaseClass {
     return C.ADULT_SIZE;
   }
 
-  getSize() {
+  _getSize() {
     return this.isMature() ? this.getAdultSize() : this.getYoungSize();
   }
 
@@ -82,7 +105,7 @@ export default class Mob extends BaseClass {
     return C.DEAD_COLOR;
   }
 
-  getColor() {
+  _getColor() {
     if (!this.isAlive()) {
       return this.getDeadColor();
     }
@@ -131,7 +154,7 @@ export default class Mob extends BaseClass {
     return this.gender === C.FEMALE && this.canProcreate();
   }
 
-  getCategory() {
+  _getCategory() {
     return this.age < this.maturity() ? this.young() : this.adult();
   }
 }
