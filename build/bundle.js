@@ -19779,15 +19779,15 @@
 	
 	var _addMobs = __webpack_require__(163);
 	
-	var _scrollToBottom = __webpack_require__(170);
+	var _scrollToBottom = __webpack_require__(171);
 	
-	var _updateCanvas = __webpack_require__(171);
+	var _updateCanvas = __webpack_require__(172);
 	
-	var _world = __webpack_require__(178);
+	var _world = __webpack_require__(176);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(172);
+	__webpack_require__(178);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20285,7 +20285,7 @@
 	
 	var _cat2 = _interopRequireDefault(_cat);
 	
-	var _human = __webpack_require__(182);
+	var _human = __webpack_require__(170);
 	
 	var _human2 = _interopRequireDefault(_human);
 	
@@ -20447,20 +20447,26 @@
 	    _this.changed = true;
 	
 	    // Position, size and color are properties used on canvas.
-	    _this.position = _this.position || {
-	      x: _this.randomNumber(0, _this.world.width - C.TILE_SIZE / 2),
-	      y: _this.randomNumber(0, _this.world.height - C.TILE_SIZE / 2)
-	    };
+	    _this.positionMobInWorld();
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
 	    return _this;
 	  }
 	
-	  // Track if the mob has changed.
-	  // Note: only previous properties relevant to canvas painting.
-	
-	
 	  _createClass(Mob, [{
+	    key: 'positionMobInWorld',
+	    value: function positionMobInWorld() {
+	      var randomPosition = this.randomNumber(0, this.world.tiles.length - 1);
+	      this.position = this.position || {
+	        x: this.world.tiles[randomPosition].x,
+	        y: this.world.tiles[randomPosition].y
+	      };
+	    }
+	
+	    // Track if the mob has changed.
+	    // Note: only previous properties relevant to canvas painting.
+	
+	  }, {
 	    key: 'updatePrevious',
 	    value: function updatePrevious() {
 	      this.previous = {
@@ -20846,6 +20852,87 @@
 
 /***/ },
 /* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _mob = __webpack_require__(165);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Human = function (_Mob) {
+	  _inherits(Human, _Mob);
+	
+	  function Human() {
+	    _classCallCheck(this, Human);
+	
+	    return _possibleConstructorReturn(this, (Human.__proto__ || Object.getPrototypeOf(Human)).apply(this, arguments));
+	  }
+	
+	  _createClass(Human, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'human child';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'human';
+	    }
+	  }, {
+	    key: 'minLongevity',
+	    value: function minLongevity() {
+	      return C.MIN_HUMAN_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maxLongevity',
+	    value: function maxLongevity() {
+	      return C.MAX_HUMAN_LONGEVITY;
+	    }
+	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_HUMAN_COLOR;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_HUMAN_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_HUMAN_COLOR;
+	    }
+	  }]);
+	
+	  return Human;
+	}(_mob2.default);
+	
+	exports.default = Human;
+
+/***/ },
+/* 171 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20858,7 +20945,7 @@
 	};
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20868,9 +20955,9 @@
 	});
 	exports.updateCanvas = undefined;
 	
-	var _paintMob = __webpack_require__(180);
+	var _paintMob = __webpack_require__(173);
 	
-	var _paintTile = __webpack_require__(181);
+	var _paintTile = __webpack_require__(175);
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -20899,16 +20986,214 @@
 	};
 
 /***/ },
-/* 172 */
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintMob = undefined;
+	
+	var _drawDisc = __webpack_require__(174);
+	
+	var paintMob = exports.paintMob = function paintMob(context, mob) {
+	  mob.changed = false; // Changed to false to prevent repainting the same change.
+	  (0, _drawDisc.drawDisc)({
+	    context: context,
+	    x: mob.position.x,
+	    y: mob.position.y,
+	    radius: mob.size,
+	    fillStyle: mob.color
+	  });
+	};
+
+/***/ },
+/* 174 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var drawDisc = exports.drawDisc = function drawDisc(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.fillStyle = fillStyle;
+	  context.fill();
+	  context.closePath();
+	};
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintTile = undefined;
+	
+	var _drawDisc = __webpack_require__(174);
+	
+	var paintTile = exports.paintTile = function paintTile(context, tile) {
+	  tile.changed = false; // Changed to false to prevent repainting the same change.
+	  (0, _drawDisc.drawDisc)({
+	    context: context,
+	    x: tile.x,
+	    y: tile.y,
+	    radius: tile.radius,
+	    fillStyle: tile.color
+	  });
+	};
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _baseClass = __webpack_require__(166);
+	
+	var _baseClass2 = _interopRequireDefault(_baseClass);
+	
+	var _tile = __webpack_require__(177);
+	
+	var _tile2 = _interopRequireDefault(_tile);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var World = function (_BaseClass) {
+	  _inherits(World, _BaseClass);
+	
+	  function World(input) {
+	    _classCallCheck(this, World);
+	
+	    // Total world canvas width and height in pixels.
+	    var _this = _possibleConstructorReturn(this, (World.__proto__ || Object.getPrototypeOf(World)).call(this, input));
+	
+	    _this.width = window.innerWidth;
+	    _this.height = window.innerHeight - C.HEADER_HEIGHT; // height minus the header.
+	
+	    // Array of tile objects.
+	    _this.tiles = _this._fillWorldWithTiles();
+	    return _this;
+	  }
+	
+	  _createClass(World, [{
+	    key: '_fillWorldWithTiles',
+	    value: function _fillWorldWithTiles() {
+	      var tiles = [];
+	      var fullTile = C.TILE_SIZE;
+	      var halfTile = fullTile / 2;
+	
+	      for (var x = 0; x <= this.width + halfTile; x = x + fullTile) {
+	        for (var y = 0; y <= this.height + halfTile; y = y + fullTile) {
+	          tiles.push(new _tile2.default({ x: x, y: y }));
+	        }
+	      }
+	
+	      return tiles;
+	    }
+	  }]);
+	
+	  return World;
+	}(_baseClass2.default);
+	
+	exports.default = World;
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _baseClass = __webpack_require__(166);
+	
+	var _baseClass2 = _interopRequireDefault(_baseClass);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Tile = function (_BaseClass) {
+	  _inherits(Tile, _BaseClass);
+	
+	  function Tile(input) {
+	    _classCallCheck(this, Tile);
+	
+	    // Initial state of changed is true because
+	    // I want to display the tile at least once.
+	    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, input));
+	
+	    _this.changed = true;
+	
+	    // Full size on one side.
+	    _this.size = _this.size || C.TILE_SIZE;
+	    _this.radius = _this.size / 2;
+	
+	    _this.color = _this.color || C.TILE_COLOR;
+	    return _this;
+	  }
+	
+	  return Tile;
+	}(_baseClass2.default);
+	
+	exports.default = Tile;
+
+/***/ },
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(173);
+	var content = __webpack_require__(179);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(175)(content, {});
+	var update = __webpack_require__(181)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20925,10 +21210,10 @@
 	}
 
 /***/ },
-/* 173 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(174)();
+	exports = module.exports = __webpack_require__(180)();
 	// imports
 	
 	
@@ -20939,7 +21224,7 @@
 
 
 /***/ },
-/* 174 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/*
@@ -20995,7 +21280,7 @@
 
 
 /***/ },
-/* 175 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21247,286 +21532,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 176 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var drawDisc = exports.drawDisc = function drawDisc(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI);
-	  context.fillStyle = fillStyle;
-	  context.fill();
-	  context.closePath();
-	};
-
-/***/ },
-/* 177 */,
-/* 178 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _baseClass = __webpack_require__(166);
-	
-	var _baseClass2 = _interopRequireDefault(_baseClass);
-	
-	var _tile = __webpack_require__(179);
-	
-	var _tile2 = _interopRequireDefault(_tile);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var World = function (_BaseClass) {
-	  _inherits(World, _BaseClass);
-	
-	  function World(input) {
-	    _classCallCheck(this, World);
-	
-	    // Total world canvas width and height in pixels.
-	    var _this = _possibleConstructorReturn(this, (World.__proto__ || Object.getPrototypeOf(World)).call(this, input));
-	
-	    _this.width = window.innerWidth;
-	    _this.height = window.innerHeight - C.HEADER_HEIGHT; // height minus the header.
-	
-	    // Array of tile objects.
-	    _this.tiles = _this._fillWorldWithTiles();
-	    return _this;
-	  }
-	
-	  _createClass(World, [{
-	    key: '_fillWorldWithTiles',
-	    value: function _fillWorldWithTiles() {
-	      var tiles = [];
-	      var fullTile = C.TILE_SIZE;
-	      var halfTile = fullTile / 2;
-	
-	      for (var x = 0; x <= this.width + halfTile; x = x + fullTile) {
-	        for (var y = 0; y <= this.height + halfTile; y = y + fullTile) {
-	          tiles.push(new _tile2.default({ x: x, y: y }));
-	        }
-	      }
-	
-	      return tiles;
-	    }
-	  }]);
-	
-	  return World;
-	}(_baseClass2.default);
-	
-	exports.default = World;
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _baseClass = __webpack_require__(166);
-	
-	var _baseClass2 = _interopRequireDefault(_baseClass);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Tile = function (_BaseClass) {
-	  _inherits(Tile, _BaseClass);
-	
-	  function Tile(input) {
-	    _classCallCheck(this, Tile);
-	
-	    // Initial state of changed is true because
-	    // I want to display the tile at least once.
-	    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, input));
-	
-	    _this.changed = true;
-	
-	    // Full size on one side.
-	    _this.size = _this.size || C.TILE_SIZE;
-	    _this.radius = _this.size / 2;
-	
-	    _this.color = _this.color || C.TILE_COLOR;
-	    return _this;
-	  }
-	
-	  return Tile;
-	}(_baseClass2.default);
-	
-	exports.default = Tile;
-
-/***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.paintMob = undefined;
-	
-	var _drawDisc = __webpack_require__(176);
-	
-	var paintMob = exports.paintMob = function paintMob(context, mob) {
-	  mob.changed = false; // Changed to false to prevent repainting the same change.
-	  (0, _drawDisc.drawDisc)({
-	    context: context,
-	    x: mob.position.x,
-	    y: mob.position.y,
-	    radius: mob.size,
-	    fillStyle: mob.color
-	  });
-	};
-
-/***/ },
-/* 181 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.paintTile = undefined;
-	
-	var _drawDisc = __webpack_require__(176);
-	
-	var paintTile = exports.paintTile = function paintTile(context, tile) {
-	  tile.changed = false; // Changed to false to prevent repainting the same change.
-	  (0, _drawDisc.drawDisc)({
-	    context: context,
-	    x: tile.x,
-	    y: tile.y,
-	    radius: tile.radius,
-	    fillStyle: tile.color
-	  });
-	};
-
-/***/ },
-/* 182 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _mob = __webpack_require__(165);
-	
-	var _mob2 = _interopRequireDefault(_mob);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Human = function (_Mob) {
-	  _inherits(Human, _Mob);
-	
-	  function Human() {
-	    _classCallCheck(this, Human);
-	
-	    return _possibleConstructorReturn(this, (Human.__proto__ || Object.getPrototypeOf(Human)).apply(this, arguments));
-	  }
-	
-	  _createClass(Human, [{
-	    key: 'young',
-	    value: function young() {
-	      return 'human child';
-	    }
-	  }, {
-	    key: 'adult',
-	    value: function adult() {
-	      return 'human';
-	    }
-	  }, {
-	    key: 'minLongevity',
-	    value: function minLongevity() {
-	      return C.MIN_HUMAN_LONGEVITY;
-	    }
-	  }, {
-	    key: 'maxLongevity',
-	    value: function maxLongevity() {
-	      return C.MAX_HUMAN_LONGEVITY;
-	    }
-	  }, {
-	    key: 'getYoungColor',
-	    value: function getYoungColor() {
-	      return C.YOUNG_HUMAN_COLOR;
-	    }
-	  }, {
-	    key: 'getAdultColor',
-	    value: function getAdultColor() {
-	      return C.ADULT_HUMAN_COLOR;
-	    }
-	  }, {
-	    key: 'getDeadColor',
-	    value: function getDeadColor() {
-	      return C.DEAD_HUMAN_COLOR;
-	    }
-	  }]);
-	
-	  return Human;
-	}(_mob2.default);
-	
-	exports.default = Human;
 
 /***/ }
 /******/ ]);

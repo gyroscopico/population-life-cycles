@@ -29,12 +29,17 @@ export default class Mob extends BaseClass {
     this.changed = true;
 
     // Position, size and color are properties used on canvas.
-    this.position = this.position || {
-      x: this.randomNumber(0, this.world.width - C.TILE_SIZE / 2),
-      y: this.randomNumber(0, this.world.height - C.TILE_SIZE / 2),
-    };
+    this.positionMobInWorld();
     this.size = this._getSize();
     this.color = this._getColor();
+  }
+
+  positionMobInWorld() {
+    const randomPosition = this.randomNumber(0, this.world.tiles.length - 1);
+    this.position = this.position || {
+      x: this.world.tiles[randomPosition].x,
+      y: this.world.tiles[randomPosition].y,
+    };
   }
 
   // Track if the mob has changed.
