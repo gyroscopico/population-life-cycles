@@ -19783,11 +19783,11 @@
 	
 	var _updateCanvas = __webpack_require__(172);
 	
-	var _world = __webpack_require__(176);
+	var _world = __webpack_require__(177);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(178);
+	__webpack_require__(179);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21066,7 +21066,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(182);
+	var _drawHexagon = __webpack_require__(176);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
@@ -21081,6 +21081,33 @@
 
 /***/ },
 /* 176 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
+	
+	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.strokeStyle = fillStyle;
+	  context.lineWidth = 1;
+	  context.stroke();
+	  context.closePath();
+	};
+
+/***/ },
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21099,7 +21126,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(177);
+	var _tile = __webpack_require__(178);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21153,7 +21180,7 @@
 	exports.default = World;
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21208,16 +21235,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(179);
+	var content = __webpack_require__(180);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(181)(content, {});
+	var update = __webpack_require__(182)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21234,10 +21261,10 @@
 	}
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(180)();
+	exports = module.exports = __webpack_require__(181)();
 	// imports
 	
 	
@@ -21248,7 +21275,7 @@
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports) {
 
 	/*
@@ -21304,7 +21331,7 @@
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21556,33 +21583,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 182 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
-	
-	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI);
-	  context.strokeStyle = fillStyle;
-	  context.lineWidth = 1;
-	  context.stroke();
-	  context.closePath();
-	};
 
 /***/ }
 /******/ ]);
