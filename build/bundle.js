@@ -20865,6 +20865,17 @@
 	  context.closePath();
 	};
 	
+	var paint = function paint(context, mob) {
+	  mob.changed = false; // Changed to false to prevent repainting the same change.
+	  drawDisc({
+	    context: context,
+	    x: mob.position.x,
+	    y: mob.position.y,
+	    radius: mob.size,
+	    fillStyle: mob.color
+	  });
+	};
+	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
 	      mobs = input.mobs,
@@ -20874,27 +20885,13 @@
 	  corpses.filter(function (corpse) {
 	    return corpse.changed === undefined || corpse.changed;
 	  }).map(function (corpse) {
-	    corpse.changed = false; // Changed to false to prevent repainting the same change.
-	    drawDisc({
-	      context: context,
-	      x: corpse.position.x,
-	      y: corpse.position.y,
-	      radius: corpse.size,
-	      fillStyle: corpse.color
-	    });
+	    return paint(context, corpse);
 	  });
 	
 	  mobs.filter(function (mob) {
 	    return mob.changed === undefined || mob.changed;
 	  }).map(function (mob) {
-	    mob.changed = false; // Changed to false to prevent repainting the same change.
-	    drawDisc({
-	      context: context,
-	      x: mob.position.x,
-	      y: mob.position.y,
-	      radius: mob.size,
-	      fillStyle: mob.color
-	    });
+	    return paint(context, mob);
 	  });
 	};
 
