@@ -21098,10 +21098,17 @@
 	      fillStyle = input.fillStyle;
 	
 	
+	  var numberOfSides = 6;
+	
 	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.moveTo(x + radius * Math.cos(0), y + radius * Math.sin(0));
+	
+	  for (var i = 1; i <= numberOfSides; i += 1) {
+	    context.lineTo(x + radius * Math.cos(i * 2 * Math.PI / numberOfSides), y + radius * Math.sin(i * 2 * Math.PI / numberOfSides));
+	  }
+	
 	  context.strokeStyle = fillStyle;
-	  context.lineWidth = 1;
+	  context.lineWidth = 2;
 	  context.stroke();
 	  context.closePath();
 	};
