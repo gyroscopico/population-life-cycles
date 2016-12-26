@@ -21315,8 +21315,8 @@
 	      var fullTile = C.TILE_SIZE;
 	      var halfTile = fullTile / 2;
 	
-	      for (var x = halfTile; x <= this.width - halfTile; x = x + fullTile) {
-	        for (var y = halfTile; y <= this.height - halfTile; y = y + fullTile) {
+	      for (var x = 0; x <= this.width + halfTile; x = x + fullTile) {
+	        for (var y = 0; y <= this.height + halfTile; y = y + fullTile) {
 	          tiles.push(new _tile2.default({ x: x, y: y }));
 	        }
 	      }

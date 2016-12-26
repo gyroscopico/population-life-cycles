@@ -19,8 +19,8 @@ export default class World extends BaseClass {
     const fullTile = C.TILE_SIZE;
     const halfTile = fullTile / 2;
 
-    for (let x = halfTile; x <= this.width - halfTile; x = x + fullTile) {
-      for (let y = halfTile; y <= this.height - halfTile; y = y + fullTile) {
+    for (let x = 0; x <= this.width + halfTile; x = x + fullTile) {
+      for (let y = 0; y <= this.height + halfTile; y = y + fullTile) {
         tiles.push(new Tile({ x, y }));
       }
     }
