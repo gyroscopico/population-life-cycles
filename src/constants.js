@@ -41,7 +41,7 @@ export const MAX_CREATION_AGE = 9;
 export const MIN_MOB_LONGEVITY = 15;
 export const MAX_MOB_LONGEVITY = 45;
 
-// At what age does a young become an adult who can procreate?
+// Age at which a young becomes an adult and can procreate.
 export const MATURITY = 12;
 
 // Cats default values vary from the standard mobs.
@@ -62,11 +62,19 @@ export const DEAD_GOBLIN_COLOR = COLOR.GREEN_L;
 export const YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 export const ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 
+// Human default values.
+export const MIN_HUMAN_LONGEVITY = 70;
+export const MAX_HUMAN_LONGEVITY = 120;
+export const DEAD_HUMAN_COLOR = COLOR.PINK_L;
+export const YOUNG_HUMAN_COLOR = COLOR.PINK_M;
+export const ADULT_HUMAN_COLOR = COLOR.PINK_D;
+
 // Mob categories.
 export const CATEGORY = {
   CAT: 'Cat',
   GOBLIN: 'Goblin',
   ORC: 'Orc',
+  HUMAN: 'Human',
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -97,8 +105,6 @@ export const ADULT_COLOR = COLOR.GOLD_D;
 
 // World.
 export const HEADER_HEIGHT = 49;
-export const CANVAS_WIDTH = 280;
-export const CANVAS_HEIGHT = 320;
 
 // World tiles.
 export const TILE_SIZE = 20;

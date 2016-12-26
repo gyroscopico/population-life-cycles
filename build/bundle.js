@@ -19972,8 +19972,7 @@
 	      var input = {
 	        toAdd: toAdd,
 	        category: category,
-	        canvasWidth: this.context.canvas.width,
-	        canvasHeight: this.context.canvas.height
+	        world: this.state.world
 	      };
 	
 	      // Add a given number of mobs.
@@ -20025,6 +20024,11 @@
 	              'option',
 	              { value: 'Cat' },
 	              'Cats'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'Human' },
+	              'Humans'
 	            )
 	          ),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
@@ -20130,7 +20134,7 @@
 	var MIN_MOB_LONGEVITY = exports.MIN_MOB_LONGEVITY = 15;
 	var MAX_MOB_LONGEVITY = exports.MAX_MOB_LONGEVITY = 45;
 	
-	// At what age does a young become an adult who can procreate?
+	// Age at which a young becomes an adult and can procreate.
 	var MATURITY = exports.MATURITY = 12;
 	
 	// Cats default values vary from the standard mobs.
@@ -20151,11 +20155,19 @@
 	var YOUNG_GOBLIN_COLOR = exports.YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 	var ADULT_GOBLIN_COLOR = exports.ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 	
+	// Human default values.
+	var MIN_HUMAN_LONGEVITY = exports.MIN_HUMAN_LONGEVITY = 70;
+	var MAX_HUMAN_LONGEVITY = exports.MAX_HUMAN_LONGEVITY = 120;
+	var DEAD_HUMAN_COLOR = exports.DEAD_HUMAN_COLOR = COLOR.PINK_L;
+	var YOUNG_HUMAN_COLOR = exports.YOUNG_HUMAN_COLOR = COLOR.PINK_M;
+	var ADULT_HUMAN_COLOR = exports.ADULT_HUMAN_COLOR = COLOR.PINK_D;
+	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
 	  CAT: 'Cat',
 	  GOBLIN: 'Goblin',
-	  ORC: 'Orc'
+	  ORC: 'Orc',
+	  HUMAN: 'Human'
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -20186,8 +20198,6 @@
 	
 	// World.
 	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
-	var CANVAS_WIDTH = exports.CANVAS_WIDTH = 280;
-	var CANVAS_HEIGHT = exports.CANVAS_HEIGHT = 320;
 	
 	// World tiles.
 	var TILE_SIZE = exports.TILE_SIZE = 20;
@@ -20275,6 +20285,10 @@
 	
 	var _cat2 = _interopRequireDefault(_cat);
 	
+	var _human = __webpack_require__(182);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -20287,22 +20301,24 @@
 	
 	  var toAdd = input.toAdd,
 	      category = input.category,
-	      canvasWidth = input.canvasWidth,
-	      canvasHeight = input.canvasHeight;
+	      world = input.world;
 	
 	
 	  for (var i = 0; i < toAdd; i++) {
 	    var newMob = void 0;
 	
 	    switch (category) {
-	      case C.CATEGORY.CAT:
-	        newMob = new _cat2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
-	        break;
 	      case C.CATEGORY.ORC:
-	        newMob = new _orc2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
+	        newMob = new _orc2.default({ world: world });
 	        break;
 	      case C.CATEGORY.GOBLIN:
-	        newMob = new _goblin2.default({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
+	        newMob = new _goblin2.default({ world: world });
+	        break;
+	      case C.CATEGORY.CAT:
+	        newMob = new _cat2.default({ world: world });
+	        break;
+	      case C.CATEGORY.HUMAN:
+	        newMob = new _human2.default({ world: world });
 	        break;
 	      default:
 	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
@@ -20432,8 +20448,8 @@
 	
 	    // Position, size and color are properties used on canvas.
 	    _this.position = _this.position || {
-	      x: _this.randomNumber(C.TILE_SIZE / 2, (_this.canvasWidth || C.CANVAS_WIDTH) - C.TILE_SIZE / 2),
-	      y: _this.randomNumber(C.TILE_SIZE / 2, (_this.canvasHeight || C.CANVAS_HEIGHT) - C.TILE_SIZE / 2)
+	      x: _this.randomNumber(0, _this.world.width - C.TILE_SIZE / 2),
+	      y: _this.randomNumber(0, _this.world.height - C.TILE_SIZE / 2)
 	    };
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
@@ -21430,6 +21446,87 @@
 	    fillStyle: tile.color
 	  });
 	};
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _mob = __webpack_require__(165);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Human = function (_Mob) {
+	  _inherits(Human, _Mob);
+	
+	  function Human() {
+	    _classCallCheck(this, Human);
+	
+	    return _possibleConstructorReturn(this, (Human.__proto__ || Object.getPrototypeOf(Human)).apply(this, arguments));
+	  }
+	
+	  _createClass(Human, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'human child';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'human';
+	    }
+	  }, {
+	    key: 'minLongevity',
+	    value: function minLongevity() {
+	      return C.MIN_HUMAN_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maxLongevity',
+	    value: function maxLongevity() {
+	      return C.MAX_HUMAN_LONGEVITY;
+	    }
+	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_HUMAN_COLOR;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_HUMAN_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_HUMAN_COLOR;
+	    }
+	  }]);
+	
+	  return Human;
+	}(_mob2.default);
+	
+	exports.default = Human;
 
 /***/ }
 /******/ ]);

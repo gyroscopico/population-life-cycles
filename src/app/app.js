@@ -161,8 +161,7 @@ export default class App extends Component {
     const input = {
       toAdd,
       category,
-      canvasWidth: this.context.canvas.width,
-      canvasHeight: this.context.canvas.height,
+      world: this.state.world,
     };
 
     // Add a given number of mobs.
@@ -193,6 +192,7 @@ export default class App extends Component {
             <option value="Orc">Orcs</option>
             <option value="Goblin">Goblins</option>
             <option value="Cat">Cats</option>
+            <option value="Human">Humans</option>
           </select>
           <input type="submit" value="Add" />
         </form>

@@ -2,6 +2,7 @@ import * as C from '../constants';
 import Orc from './orc/orc';
 import Goblin from './goblin/goblin';
 import Cat from './cat/cat';
+import Human from './human/human';
 
 export const addMobs = (event, input) => {
   event.preventDefault();
@@ -12,22 +13,24 @@ export const addMobs = (event, input) => {
   const {
     toAdd,
     category,
-    canvasWidth,
-    canvasHeight,
+    world,
   } = input;
 
   for (let i = 0; i < toAdd; i++) {
     let newMob;
 
     switch (category) {
-      case C.CATEGORY.CAT:
-        newMob = new Cat({ canvasWidth, canvasHeight });
-        break;
       case C.CATEGORY.ORC:
-        newMob = new Orc({ canvasWidth, canvasHeight });
+        newMob = new Orc({ world });
         break;
       case C.CATEGORY.GOBLIN:
-        newMob = new Goblin({ canvasWidth, canvasHeight });
+        newMob = new Goblin({ world });
+        break;
+      case C.CATEGORY.CAT:
+        newMob = new Cat({ world });
+        break;
+      case C.CATEGORY.HUMAN:
+        newMob = new Human({ world });
         break;
       default:
         throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
