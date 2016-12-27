@@ -20229,7 +20229,7 @@
 	var HEXAGON_LINE_WIDTH = exports.HEXAGON_LINE_WIDTH = 1;
 	
 	// World tiles.
-	var TILE_SIZE = exports.TILE_SIZE = 30;
+	var TILE_SIZE = exports.TILE_SIZE = 40;
 	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
 
 /***/ },
@@ -21149,6 +21149,8 @@
 	
 	var _paintTile = __webpack_require__(177);
 	
+	var _writeCoordinates = __webpack_require__(186);
+	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
 	      world = input.world,
@@ -21159,7 +21161,8 @@
 	  world.tiles.filter(function (tile) {
 	    return tile.changed;
 	  }).map(function (tile) {
-	    return (0, _paintTile.paintTile)(context, tile);
+	    (0, _paintTile.paintTile)(context, tile);
+	    (0, _writeCoordinates.writeCoordinates)(context, tile);
 	  });
 	
 	  corpses.filter(function (corpse) {
@@ -21792,6 +21795,30 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 185 */,
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  context.fillStyle = C.COLOR.BLACK;
+	  context.font = '9px Handlee';
+	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
+	};
 
 /***/ }
 /******/ ]);
