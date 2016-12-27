@@ -19898,6 +19898,12 @@
 	  }, {
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
+	      // quick test: do not keep this code
+	      if (this.state.mobs.length > 0) {
+	        this.state.mobs[0].position.x = this.state.mobs[0].position.x - 1;
+	        this.state.mobs[0].changed = true;
+	      }
+	
 	      (0, _updateCanvas.updateCanvas)({
 	        context: this.context,
 	        world: this.state.world,

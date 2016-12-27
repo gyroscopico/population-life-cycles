@@ -55,6 +55,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 - add sound effects when a mob pops or changes state (young to adult, adult to dead).
 - use localStorage to get some persistence locally in the browser and load previous data.
 - use online data store like https://firebase.google.com/ to store data.
+- give random names for each mob, based on category to have a flavour of the kind of mob (i.e. Murk Ironfist for an Orc). Switch letters (consonants) to increase variety.
 
 ## Version planning
 

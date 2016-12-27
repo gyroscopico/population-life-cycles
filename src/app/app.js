@@ -89,6 +89,12 @@ export default class App extends Component {
   // Update the visual virtual world on the 2D canvas.
   // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
+    // quick test: do not keep this code
+    if (this.state.mobs.length > 0) {
+      this.state.mobs[0].position.x = this.state.mobs[0].position.x - 1;
+      this.state.mobs[0].changed = true;
+    }
+
     updateCanvas({
       context: this.context,
       world: this.state.world,
