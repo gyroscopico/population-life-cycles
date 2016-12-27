@@ -101,8 +101,8 @@ export default class Mob extends BaseClass {
 
   // Pick a destination where the mob wants to move to.
   move() {
-    this.position.x = this.position.x + this.randomNumber(-1, 1);
-    this.position.y = this.position.y + this.randomNumber(-1, 1);
+    this.position.x = this.position.x + this.randomNumber(-6, 6);
+    this.position.y = this.position.y + this.randomNumber(-6, 6);
     this.changed = true;
 
     return this;

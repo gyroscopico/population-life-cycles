@@ -120,5 +120,5 @@ export const SCROLLABLE_WINDOW_HEIGHT = 114;
 export const HEXAGON_LINE_WIDTH = 1;
 
 // World tiles.
-export const TILE_SIZE = 30;
-export const TILE_COLOR = COLOR.RED_L;
+export const TILE_SIZE = 100;
+export const TILE_COLOR = COLOR.RED_M;

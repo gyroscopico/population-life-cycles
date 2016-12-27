@@ -20,8 +20,11 @@ export default class World extends BaseClass {
     const halfTile = fullTile / 2;
     const limitX = this.width - C.CONTROLS_WIDTH;
     const limitY = this.height - C.CONTROLS_HEIGHT - C.SCROLLABLE_WINDOW_HEIGHT;
+    const angleDeg = 30;
+    const angleRad = angleDeg * Math.PI / 180;
+    const horizontalIncrement = fullTile * Math.cos(angleRad);
 
-    for (let x = 0; x <= this.width + halfTile; x = x + fullTile) {
+    for (let x = 0; x <= this.width + halfTile; x = x + horizontalIncrement) {
       for (let y = 0; y <= this.height + halfTile; y = y + fullTile) {
         if (x > limitX && y > limitY) {
           continue;
