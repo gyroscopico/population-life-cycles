@@ -19783,11 +19783,11 @@
 	
 	var _updateCanvas = __webpack_require__(172);
 	
-	var _world = __webpack_require__(176);
+	var _world = __webpack_require__(177);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(178);
+	__webpack_require__(179);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20206,6 +20206,7 @@
 	var CONTROLS_WIDTH = exports.CONTROLS_WIDTH = 264;
 	var CONTROLS_HEIGHT = exports.CONTROLS_HEIGHT = 54;
 	var SCROLLABLE_WINDOW_HEIGHT = exports.SCROLLABLE_WINDOW_HEIGHT = 114;
+	var HEXAGON_LINE_WIDTH = exports.HEXAGON_LINE_WIDTH = 1;
 	
 	// World tiles.
 	var TILE_SIZE = exports.TILE_SIZE = 30;
@@ -21073,7 +21074,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(182);
+	var _drawHexagon = __webpack_require__(176);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
@@ -21095,6 +21096,57 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.drawHexagon = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var hexCorner = function hexCorner(center, radius, i) {
+	  var angleDeg = 60 * i + 30;
+	  var angleRad = Math.PI / 180 * angleDeg;
+	
+	  return {
+	    x: center.x + radius * Math.cos(angleRad),
+	    y: center.y + radius * Math.sin(angleRad)
+	  };
+	}; // See http://www.redblobgames.com/grids/hexagons/
+	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  var numberOfSides = 6;
+	
+	  context.beginPath();
+	  var corner = hexCorner({ x: x, y: y }, radius, 0);
+	  context.moveTo(corner.x, corner.y);
+	
+	  for (var i = 1; i <= numberOfSides; i += 1) {
+	    corner = hexCorner({ x: x, y: y }, radius, i);
+	    context.lineTo(corner.x, corner.y);
+	  }
+	
+	  context.strokeStyle = fillStyle;
+	  context.lineWidth = C.HEXAGON_LINE_WIDTH;
+	  context.stroke();
+	  context.closePath();
+	};
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -21106,7 +21158,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(177);
+	var _tile = __webpack_require__(178);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21166,7 +21218,7 @@
 	exports.default = World;
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21221,16 +21273,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(179);
+	var content = __webpack_require__(180);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(181)(content, {});
+	var update = __webpack_require__(182)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21247,10 +21299,10 @@
 	}
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(180)();
+	exports = module.exports = __webpack_require__(181)();
 	// imports
 	
 	
@@ -21261,7 +21313,7 @@
 
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports) {
 
 	/*
@@ -21317,7 +21369,7 @@
 
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21569,40 +21621,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 182 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
-	
-	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  var numberOfSides = 6;
-	
-	  context.beginPath();
-	  context.moveTo(x + radius * Math.cos(0), y + radius * Math.sin(0));
-	
-	  for (var i = 1; i <= numberOfSides; i += 1) {
-	    context.lineTo(x + radius * Math.cos(i * 2 * Math.PI / numberOfSides), y + radius * Math.sin(i * 2 * Math.PI / numberOfSides));
-	  }
-	
-	  context.strokeStyle = fillStyle;
-	  context.lineWidth = 2;
-	  context.stroke();
-	  context.closePath();
-	};
 
 /***/ }
 /******/ ]);
