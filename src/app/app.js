@@ -75,6 +75,9 @@ export default class App extends Component {
     // All mobs are getting older.
     population = ageMobs(population, C.AGE_INCREMENT);
 
+    // All mobs still alive can move.
+    population.mobs = moveMobs(population.mobs);
+
     // Update state for all mobs, corpses and log.
     this.setState({
       mobs: population.mobs,
@@ -92,11 +95,6 @@ export default class App extends Component {
   // Update the visual virtual world on the 2D canvas.
   // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
-    // All mobs still alive can move.
-    this.setState({
-      mobs: moveMobs(this.state.mobs),
-    });
-
     updateCanvas({
       context: this.context,
       world: this.state.world,

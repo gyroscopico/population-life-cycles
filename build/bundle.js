@@ -19881,6 +19881,9 @@
 	      // All mobs are getting older.
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
 	
+	      // All mobs still alive can move.
+	      population.mobs = (0, _moveMobs.moveMobs)(population.mobs);
+	
 	      // Update state for all mobs, corpses and log.
 	      this.setState({
 	        mobs: population.mobs,
@@ -19902,11 +19905,6 @@
 	  }, {
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
-	      // All mobs still alive can move.
-	      this.setState({
-	        mobs: (0, _moveMobs.moveMobs)(this.state.mobs)
-	      });
-	
 	      (0, _updateCanvas.updateCanvas)({
 	        context: this.context,
 	        world: this.state.world,
@@ -20231,8 +20229,8 @@
 	var HEXAGON_LINE_WIDTH = exports.HEXAGON_LINE_WIDTH = 1;
 	
 	// World tiles.
-	var TILE_SIZE = exports.TILE_SIZE = 100;
-	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_M;
+	var TILE_SIZE = exports.TILE_SIZE = 30;
+	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
 
 /***/ },
 /* 161 */
@@ -21362,15 +21360,23 @@
 	      var angleDeg = 30;
 	      var angleRad = angleDeg * Math.PI / 180;
 	      var horizontalIncrement = fullTile * Math.cos(angleRad);
+	      var verticalIncrement = fullTile * 3 / 4;
+	      var shift = false;
+	      var coordinateX = 0;
+	      var coordinateY = 0;
 	
-	      for (var x = 0; x <= this.width + halfTile; x = x + horizontalIncrement) {
-	        for (var y = 0; y <= this.height + halfTile; y = y + fullTile) {
+	      for (var y = 0; y <= this.height + halfTile; y = y + verticalIncrement) {
+	        for (var x = shift ? 0 : horizontalIncrement / 2; x <= this.width + halfTile; x = x + horizontalIncrement) {
 	          if (x > limitX && y > limitY) {
 	            continue;
 	          } else {
-	            tiles.push(new _tile2.default({ x: x, y: y }));
+	            tiles.push(new _tile2.default({ x: x, y: y, coordinateX: coordinateX, coordinateY: coordinateY }));
+	            coordinateX++;
 	          }
 	        }
+	        shift = !shift;
+	        coordinateX = 0;
+	        coordinateY++;
 	      }
 	
 	      return tiles;

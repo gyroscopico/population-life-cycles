@@ -23,15 +23,23 @@ export default class World extends BaseClass {
     const angleDeg = 30;
     const angleRad = angleDeg * Math.PI / 180;
     const horizontalIncrement = fullTile * Math.cos(angleRad);
+    const verticalIncrement = fullTile * 3 / 4;
+    let shift = false;
+    let coordinateX = 0;
+    let coordinateY = 0;
 
-    for (let x = 0; x <= this.width + halfTile; x = x + horizontalIncrement) {
-      for (let y = 0; y <= this.height + halfTile; y = y + fullTile) {
+    for (let y = 0; y <= this.height + halfTile; y = y + verticalIncrement) {
+      for (let x = shift ? 0 : horizontalIncrement / 2; x <= this.width + halfTile; x = x + horizontalIncrement) {
         if (x > limitX && y > limitY) {
           continue;
         } else {
-          tiles.push(new Tile({ x, y }));
+          tiles.push(new Tile({ x, y, coordinateX, coordinateY }));
+          coordinateX++;
         }
       }
+      shift = !shift;
+      coordinateX = 0;
+      coordinateY++;
     }
 
     return tiles;
