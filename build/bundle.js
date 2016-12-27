@@ -19783,11 +19783,11 @@
 	
 	var _updateCanvas = __webpack_require__(172);
 	
-	var _world = __webpack_require__(177);
+	var _world = __webpack_require__(176);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(179);
+	__webpack_require__(178);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20006,7 +20006,11 @@
 	        _react2.default.createElement(
 	          'form',
 	          { id: 'main-controls', action: '#', onSubmit: this.submitForm },
-	          _react2.default.createElement('input', { type: 'number', id: 'number-mobs-to-add', defaultValue: '9', min: '1', max: '100' }),
+	          _react2.default.createElement('input', {
+	            type: 'number', id: 'number-mobs-to-add',
+	            defaultValue: '9', min: '1', max: '100',
+	            pattern: '\\d'
+	          }),
 	          _react2.default.createElement(
 	            'select',
 	            { name: 'mob-category', id: 'mob-category' },
@@ -21069,7 +21073,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(176);
+	var _drawHexagon = __webpack_require__(182);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
@@ -21084,40 +21088,6 @@
 
 /***/ },
 /* 176 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
-	
-	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  var numberOfSides = 6;
-	
-	  context.beginPath();
-	  context.moveTo(x + radius * Math.cos(0), y + radius * Math.sin(0));
-	
-	  for (var i = 1; i <= numberOfSides; i += 1) {
-	    context.lineTo(x + radius * Math.cos(i * 2 * Math.PI / numberOfSides), y + radius * Math.sin(i * 2 * Math.PI / numberOfSides));
-	  }
-	
-	  context.strokeStyle = fillStyle;
-	  context.lineWidth = 2;
-	  context.stroke();
-	  context.closePath();
-	};
-
-/***/ },
-/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21136,7 +21106,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(178);
+	var _tile = __webpack_require__(177);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21196,7 +21166,7 @@
 	exports.default = World;
 
 /***/ },
-/* 178 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21251,16 +21221,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 179 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(180);
+	var content = __webpack_require__(179);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(182)(content, {});
+	var update = __webpack_require__(181)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21277,21 +21247,21 @@
 	}
 
 /***/ },
-/* 180 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(181)();
+	exports = module.exports = __webpack_require__(180)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput[type=submit] {\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase; }\n  input[type=submit]:hover {\n    color: #009701; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D;\n  line-height: 30px; }\n\ninput[type=submit] {\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase; }\n  input[type=submit]:hover {\n    color: #009701; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 181 */
+/* 180 */
 /***/ function(module, exports) {
 
 	/*
@@ -21347,7 +21317,7 @@
 
 
 /***/ },
-/* 182 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21599,6 +21569,40 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 182 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// See http://scienceprimer.com/drawing-regular-polygons-javascript-canvas
+	
+	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  var numberOfSides = 6;
+	
+	  context.beginPath();
+	  context.moveTo(x + radius * Math.cos(0), y + radius * Math.sin(0));
+	
+	  for (var i = 1; i <= numberOfSides; i += 1) {
+	    context.lineTo(x + radius * Math.cos(i * 2 * Math.PI / numberOfSides), y + radius * Math.sin(i * 2 * Math.PI / numberOfSides));
+	  }
+	
+	  context.strokeStyle = fillStyle;
+	  context.lineWidth = 2;
+	  context.stroke();
+	  context.closePath();
+	};
 
 /***/ }
 /******/ ]);

@@ -187,7 +187,11 @@ export default class App extends Component {
       <div>
         <canvas id="canvas" ref="canvas" />
         <form id="main-controls" action="#" onSubmit={this.submitForm}>
-          <input type="number" id="number-mobs-to-add" defaultValue="9" min="1" max="100" />
+          <input
+            type="number" id="number-mobs-to-add"
+            defaultValue="9" min="1" max="100"
+            pattern="\d"
+          />
           <select name="mob-category" id="mob-category">
             <option value="Orc">Orcs</option>
             <option value="Goblin">Goblins</option>
