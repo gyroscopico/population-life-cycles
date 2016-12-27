@@ -19777,7 +19777,7 @@
 	
 	var _ageMobs = __webpack_require__(162);
 	
-	var _addMobs = __webpack_require__(163);
+	var _popMobs = __webpack_require__(184);
 	
 	var _scrollToBottom = __webpack_require__(171);
 	
@@ -19976,7 +19976,7 @@
 	      };
 	
 	      // Add a given number of mobs.
-	      var newMobs = (0, _addMobs.addMobs)(event, input);
+	      var newMobs = (0, _popMobs.popMobs)(event, input);
 	
 	      this.setState({
 	        mobs: this.state.mobs.concat(newMobs.mobs),
@@ -20033,6 +20033,11 @@
 	              'option',
 	              { value: 'Human' },
 	              'Humans'
+	            ),
+	            _react2.default.createElement(
+	              'option',
+	              { value: 'Faery' },
+	              'Faery'
 	            )
 	          ),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
@@ -20131,47 +20136,64 @@
 	var YOUNG = exports.YOUNG = 'pawn';
 	var ADULT = exports.ADULT = 'mob';
 	
-	// Maximum age when mob is created by a player (not born from mobs).
-	var MAX_CREATION_AGE = exports.MAX_CREATION_AGE = 9;
+	// Small size mobs.
+	var SMALL_SIZE_YOUNG = exports.SMALL_SIZE_YOUNG = 2;
+	var SMALL_SIZE_ADULT = exports.SMALL_SIZE_ADULT = 3;
 	
-	// Longevity is a range and dictates when a mob dies of old age.
+	// Mob pop default values.
 	var MIN_MOB_LONGEVITY = exports.MIN_MOB_LONGEVITY = 15;
 	var MAX_MOB_LONGEVITY = exports.MAX_MOB_LONGEVITY = 45;
-	
-	// Age at which a young becomes an adult and can procreate.
 	var MATURITY = exports.MATURITY = 12;
+	var MAX_CREATION_AGE = exports.MAX_CREATION_AGE = 9;
+	var YOUNG_SIZE = exports.YOUNG_SIZE = 6;
+	var ADULT_SIZE = exports.ADULT_SIZE = 9; // young size * 1.5
+	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
+	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
+	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
 	
-	// Cats default values vary from the standard mobs.
+	// Cats pop default values.
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
 	var MAX_CAT_LONGEVITY = exports.MAX_CAT_LONGEVITY = 17;
 	var CAT_MATURITY = exports.CAT_MATURITY = 2;
 	var MAX_CAT_CREATION_AGE = exports.MAX_CAT_CREATION_AGE = 3;
-	var YOUNG_CAT_SIZE = exports.YOUNG_CAT_SIZE = 2;
-	var ADULT_CAT_SIZE = exports.ADULT_CAT_SIZE = 3; // young size * 1.5
+	var YOUNG_CAT_SIZE = exports.YOUNG_CAT_SIZE = SMALL_SIZE_YOUNG;
+	var ADULT_CAT_SIZE = exports.ADULT_CAT_SIZE = SMALL_SIZE_ADULT;
 	var DEAD_CAT_COLOR = exports.DEAD_CAT_COLOR = COLOR.BLUE_L;
 	var YOUNG_CAT_COLOR = exports.YOUNG_CAT_COLOR = COLOR.BLUE_M;
 	var ADULT_CAT_COLOR = exports.ADULT_CAT_COLOR = COLOR.BLUE_D;
 	
-	// Goblin default values vary from the standard mobs.
+	// Goblin pop default values.
 	var YOUNG_GOBLIN_SIZE = exports.YOUNG_GOBLIN_SIZE = 4;
 	var ADULT_GOBLIN_SIZE = exports.ADULT_GOBLIN_SIZE = 6; // young size * 1.5
 	var DEAD_GOBLIN_COLOR = exports.DEAD_GOBLIN_COLOR = COLOR.GREEN_L;
 	var YOUNG_GOBLIN_COLOR = exports.YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 	var ADULT_GOBLIN_COLOR = exports.ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 	
-	// Human default values.
+	// Human pop default values.
 	var MIN_HUMAN_LONGEVITY = exports.MIN_HUMAN_LONGEVITY = 70;
-	var MAX_HUMAN_LONGEVITY = exports.MAX_HUMAN_LONGEVITY = 120;
+	var MAX_HUMAN_LONGEVITY = exports.MAX_HUMAN_LONGEVITY = 90;
 	var DEAD_HUMAN_COLOR = exports.DEAD_HUMAN_COLOR = COLOR.PINK_L;
 	var YOUNG_HUMAN_COLOR = exports.YOUNG_HUMAN_COLOR = COLOR.PINK_M;
 	var ADULT_HUMAN_COLOR = exports.ADULT_HUMAN_COLOR = COLOR.PINK_D;
+	
+	// Faery pop default value.
+	var MIN_FAERY_LONGEVITY = exports.MIN_FAERY_LONGEVITY = 630;
+	var MAX_FAERY_LONGEVITY = exports.MAX_FAERY_LONGEVITY = 810;
+	var FAERY_MATURITY = exports.FAERY_MATURITY = 540;
+	var MAX_FAERY_CREATION_AGE = exports.MAX_FAERY_CREATION_AGE = 27;
+	var YOUNG_FAERY_SIZE = exports.YOUNG_FAERY_SIZE = SMALL_SIZE_YOUNG;
+	var ADULT_FAERY_SIZE = exports.ADULT_FAERY_SIZE = SMALL_SIZE_ADULT;
+	var YOUNG_FAERY_COLOR = exports.YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
+	var ADULT_FAERY_COLOR = exports.ADULT_FAERY_COLOR = COLOR.PURPLE_D;
+	var DEAD_FAERY_COLOR = exports.DEAD_FAERY_COLOR = COLOR.PURPLE_L;
 	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
 	  CAT: 'Cat',
 	  GOBLIN: 'Goblin',
 	  ORC: 'Orc',
-	  HUMAN: 'Human'
+	  HUMAN: 'Human',
+	  FAERY: 'Faery'
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -20191,15 +20213,6 @@
 	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
 	  WORLD_IS_FULL: 'World is full'
 	};
-	
-	// Default mob size when young or adult.
-	var YOUNG_SIZE = exports.YOUNG_SIZE = 6;
-	var ADULT_SIZE = exports.ADULT_SIZE = 9; // young size * 1.5
-	
-	// Default mob color when young or adult.
-	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
-	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
-	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
 	
 	// World.
 	var HEADER_HEIGHT = exports.HEADER_HEIGHT = 49;
@@ -20268,83 +20281,7 @@
 	};
 
 /***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.addMobs = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _orc = __webpack_require__(164);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _goblin = __webpack_require__(168);
-	
-	var _goblin2 = _interopRequireDefault(_goblin);
-	
-	var _cat = __webpack_require__(169);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	var _human = __webpack_require__(170);
-	
-	var _human2 = _interopRequireDefault(_human);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var addMobs = exports.addMobs = function addMobs(event, input) {
-	  event.preventDefault();
-	
-	  var mobs = [];
-	  var log = [];
-	
-	  var toAdd = input.toAdd,
-	      category = input.category,
-	      world = input.world;
-	
-	
-	  for (var i = 0; i < toAdd; i++) {
-	    var newMob = void 0;
-	
-	    switch (category) {
-	      case C.CATEGORY.ORC:
-	        newMob = new _orc2.default({ world: world });
-	        break;
-	      case C.CATEGORY.GOBLIN:
-	        newMob = new _goblin2.default({ world: world });
-	        break;
-	      case C.CATEGORY.CAT:
-	        newMob = new _cat2.default({ world: world });
-	        break;
-	      case C.CATEGORY.HUMAN:
-	        newMob = new _human2.default({ world: world });
-	        break;
-	      default:
-	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
-	    }
-	
-	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
-	    mobs.push(newMob);
-	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
-	  }
-	
-	  return {
-	    mobs: mobs,
-	    log: log
-	  };
-	};
-
-/***/ },
+/* 163 */,
 /* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21621,6 +21558,191 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _mob = __webpack_require__(165);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Faery = function (_Mob) {
+	  _inherits(Faery, _Mob);
+	
+	  function Faery() {
+	    _classCallCheck(this, Faery);
+	
+	    return _possibleConstructorReturn(this, (Faery.__proto__ || Object.getPrototypeOf(Faery)).apply(this, arguments));
+	  }
+	
+	  _createClass(Faery, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'faery youth';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'faery elder';
+	    }
+	  }, {
+	    key: 'minLongevity',
+	    value: function minLongevity() {
+	      return C.MIN_FAERY_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maxLongevity',
+	    value: function maxLongevity() {
+	      return C.MAX_FAERY_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maturity',
+	    value: function maturity() {
+	      return C.FAERY_MATURITY;
+	    }
+	  }, {
+	    key: 'maxCreationAge',
+	    value: function maxCreationAge() {
+	      return C.MAX_FAERY_CREATION_AGE;
+	    }
+	  }, {
+	    key: 'getYoungSize',
+	    value: function getYoungSize() {
+	      return C.YOUNG_FAERY_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultSize',
+	    value: function getAdultSize() {
+	      return C.ADULT_FAERY_SIZE;
+	    }
+	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_FAERY_COLOR;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_FAERY_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_FAERY_COLOR;
+	    }
+	  }]);
+	
+	  return Faery;
+	}(_mob2.default);
+	
+	exports.default = Faery;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.popMobs = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _orc = __webpack_require__(164);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _goblin = __webpack_require__(168);
+	
+	var _goblin2 = _interopRequireDefault(_goblin);
+	
+	var _cat = __webpack_require__(169);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
+	var _human = __webpack_require__(170);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
+	var _faery = __webpack_require__(183);
+	
+	var _faery2 = _interopRequireDefault(_faery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var popMobs = exports.popMobs = function popMobs(event, input) {
+	  event.preventDefault();
+	
+	  var mobs = [];
+	  var log = [];
+	
+	  var toAdd = input.toAdd,
+	      category = input.category,
+	      world = input.world;
+	
+	
+	  for (var i = 0; i < toAdd; i++) {
+	    var newMob = void 0;
+	
+	    switch (category) {
+	      case C.CATEGORY.ORC:
+	        newMob = new _orc2.default({ world: world });
+	        break;
+	      case C.CATEGORY.GOBLIN:
+	        newMob = new _goblin2.default({ world: world });
+	        break;
+	      case C.CATEGORY.CAT:
+	        newMob = new _cat2.default({ world: world });
+	        break;
+	      case C.CATEGORY.HUMAN:
+	        newMob = new _human2.default({ world: world });
+	        break;
+	      case C.CATEGORY.FAERY:
+	        newMob = new _faery2.default({ world: world });
+	        break;
+	      default:
+	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
+	    }
+	
+	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
+	    mobs.push(newMob);
+	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
+	  }
+	
+	  return {
+	    mobs: mobs,
+	    log: log
+	  };
+	};
 
 /***/ }
 /******/ ]);

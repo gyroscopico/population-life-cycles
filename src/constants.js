@@ -34,40 +34,56 @@ export const FEMALE = 'female';
 export const YOUNG = 'pawn';
 export const ADULT = 'mob';
 
-// Maximum age when mob is created by a player (not born from mobs).
-export const MAX_CREATION_AGE = 9;
+// Small size mobs.
+export const SMALL_SIZE_YOUNG = 2;
+export const SMALL_SIZE_ADULT = 3;
 
-// Longevity is a range and dictates when a mob dies of old age.
+// Mob pop default values.
 export const MIN_MOB_LONGEVITY = 15;
 export const MAX_MOB_LONGEVITY = 45;
-
-// Age at which a young becomes an adult and can procreate.
 export const MATURITY = 12;
+export const MAX_CREATION_AGE = 9;
+export const YOUNG_SIZE = 6;
+export const ADULT_SIZE = 9; // young size * 1.5
+export const DEAD_COLOR = COLOR.GOLD_L;
+export const YOUNG_COLOR = COLOR.GOLD_M;
+export const ADULT_COLOR = COLOR.GOLD_D;
 
-// Cats default values vary from the standard mobs.
+// Cats pop default values.
 export const MIN_CAT_LONGEVITY = 4;
 export const MAX_CAT_LONGEVITY = 17;
 export const CAT_MATURITY = 2;
 export const MAX_CAT_CREATION_AGE = 3;
-export const YOUNG_CAT_SIZE = 2;
-export const ADULT_CAT_SIZE = 3;  // young size * 1.5
+export const YOUNG_CAT_SIZE = SMALL_SIZE_YOUNG;
+export const ADULT_CAT_SIZE = SMALL_SIZE_ADULT;
 export const DEAD_CAT_COLOR = COLOR.BLUE_L;
 export const YOUNG_CAT_COLOR = COLOR.BLUE_M;
 export const ADULT_CAT_COLOR = COLOR.BLUE_D;
 
-// Goblin default values vary from the standard mobs.
+// Goblin pop default values.
 export const YOUNG_GOBLIN_SIZE = 4;
 export const ADULT_GOBLIN_SIZE = 6;  // young size * 1.5
 export const DEAD_GOBLIN_COLOR = COLOR.GREEN_L;
 export const YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 export const ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
 
-// Human default values.
+// Human pop default values.
 export const MIN_HUMAN_LONGEVITY = 70;
-export const MAX_HUMAN_LONGEVITY = 120;
+export const MAX_HUMAN_LONGEVITY = 90;
 export const DEAD_HUMAN_COLOR = COLOR.PINK_L;
 export const YOUNG_HUMAN_COLOR = COLOR.PINK_M;
 export const ADULT_HUMAN_COLOR = COLOR.PINK_D;
+
+// Faery pop default value.
+export const MIN_FAERY_LONGEVITY = 630;
+export const MAX_FAERY_LONGEVITY = 810;
+export const FAERY_MATURITY = 540;
+export const MAX_FAERY_CREATION_AGE = 27;
+export const YOUNG_FAERY_SIZE = SMALL_SIZE_YOUNG;
+export const ADULT_FAERY_SIZE = SMALL_SIZE_ADULT;
+export const YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
+export const ADULT_FAERY_COLOR = COLOR.PURPLE_D;
+export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
 
 // Mob categories.
 export const CATEGORY = {
@@ -75,6 +91,7 @@ export const CATEGORY = {
   GOBLIN: 'Goblin',
   ORC: 'Orc',
   HUMAN: 'Human',
+  FAERY: 'Faery',
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -94,15 +111,6 @@ export const ERROR = {
   UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
   WORLD_IS_FULL: 'World is full',
 };
-
-// Default mob size when young or adult.
-export const YOUNG_SIZE = 6;
-export const ADULT_SIZE = 9; // young size * 1.5
-
-// Default mob color when young or adult.
-export const DEAD_COLOR = COLOR.GOLD_L;
-export const YOUNG_COLOR = COLOR.GOLD_M;
-export const ADULT_COLOR = COLOR.GOLD_D;
 
 // World.
 export const HEADER_HEIGHT = 49;

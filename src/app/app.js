@@ -3,7 +3,7 @@ import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import * as C from '../constants';
 import { now } from '../utils/now';
 import { ageMobs } from '../mob/age-mobs';
-import { addMobs } from '../mob/add-mobs';
+import { popMobs } from '../mob/pop-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
 import World from '../world/world';
@@ -165,7 +165,7 @@ export default class App extends Component {
     };
 
     // Add a given number of mobs.
-    const newMobs = addMobs(event, input);
+    const newMobs = popMobs(event, input);
 
     this.setState({
       mobs: this.state.mobs.concat(newMobs.mobs),
@@ -197,6 +197,7 @@ export default class App extends Component {
             <option value="Goblin">Goblins</option>
             <option value="Cat">Cats</option>
             <option value="Human">Humans</option>
+            <option value="Faery">Faery</option>
           </select>
           <input type="submit" value="Add" />
         </form>

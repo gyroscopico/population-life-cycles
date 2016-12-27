@@ -3,8 +3,9 @@ import Orc from './orc/orc';
 import Goblin from './goblin/goblin';
 import Cat from './cat/cat';
 import Human from './human/human';
+import Faery from './faery/faery';
 
-export const addMobs = (event, input) => {
+export const popMobs = (event, input) => {
   event.preventDefault();
 
   const mobs = [];
@@ -31,6 +32,9 @@ export const addMobs = (event, input) => {
         break;
       case C.CATEGORY.HUMAN:
         newMob = new Human({ world });
+        break;
+      case C.CATEGORY.FAERY:
+        newMob = new Faery({ world });
         break;
       default:
         throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
