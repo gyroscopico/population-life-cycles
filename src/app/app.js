@@ -2,8 +2,9 @@ import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 
 import * as C from '../constants';
 import { now } from '../utils/now';
-import { ageMobs } from '../mob/age-mobs';
 import { popMobs } from '../mob/pop-mobs';
+import { ageMobs } from '../mob/age-mobs';
+import { moveMobs } from '../mob/move-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
 import World from '../world/world';
@@ -73,6 +74,8 @@ export default class App extends Component {
 
     // All mobs are getting older.
     population = ageMobs(population, C.AGE_INCREMENT);
+
+    // Update state for all mobs, corpses and log.
     this.setState({
       mobs: population.mobs,
       corpses: population.corpses,
@@ -89,11 +92,10 @@ export default class App extends Component {
   // Update the visual virtual world on the 2D canvas.
   // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
-    // quick test: do not keep this code
-    if (this.state.mobs.length > 0) {
-      this.state.mobs[0].position.x = this.state.mobs[0].position.x - 1;
-      this.state.mobs[0].changed = true;
-    }
+    // All mobs still alive can move.
+    this.setState({
+      mobs: moveMobs(this.state.mobs),
+    });
 
     updateCanvas({
       context: this.context,

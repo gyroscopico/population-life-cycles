@@ -19775,9 +19775,11 @@
 	
 	var _now = __webpack_require__(161);
 	
+	var _popMobs = __webpack_require__(184);
+	
 	var _ageMobs = __webpack_require__(162);
 	
-	var _popMobs = __webpack_require__(184);
+	var _moveMobs = __webpack_require__(185);
 	
 	var _scrollToBottom = __webpack_require__(171);
 	
@@ -19878,6 +19880,8 @@
 	
 	      // All mobs are getting older.
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
+	
+	      // Update state for all mobs, corpses and log.
 	      this.setState({
 	        mobs: population.mobs,
 	        corpses: population.corpses,
@@ -19898,11 +19902,10 @@
 	  }, {
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
-	      // quick test: do not keep this code
-	      if (this.state.mobs.length > 0) {
-	        this.state.mobs[0].position.x = this.state.mobs[0].position.x - 1;
-	        this.state.mobs[0].changed = true;
-	      }
+	      // All mobs still alive can move.
+	      this.setState({
+	        mobs: (0, _moveMobs.moveMobs)(this.state.mobs)
+	      });
 	
 	      (0, _updateCanvas.updateCanvas)({
 	        context: this.context,
@@ -21748,6 +21751,29 @@
 	    mobs: mobs,
 	    log: log
 	  };
+	};
+
+/***/ },
+/* 185 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a population of mobs with updated position x and y.
+	var moveMobs = exports.moveMobs = function moveMobs(mobs) {
+	  if (!mobs || mobs.length === 0) {
+	    return [];
+	  }
+	
+	  return mobs.map(function (mob) {
+	    mob.position.x = mob.position.x + mob.randomNumber(-2, 2);
+	    mob.position.y = mob.position.y + mob.randomNumber(-2, 2);
+	    mob.changed = true;
+	    return mob;
+	  });
 	};
 
 /***/ }
