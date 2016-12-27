@@ -19775,21 +19775,21 @@
 	
 	var _now = __webpack_require__(161);
 	
-	var _popMobs = __webpack_require__(184);
+	var _popMobs = __webpack_require__(162);
 	
-	var _ageMobs = __webpack_require__(162);
+	var _ageMobs = __webpack_require__(171);
 	
-	var _moveMobs = __webpack_require__(185);
+	var _moveMobs = __webpack_require__(172);
 	
-	var _scrollToBottom = __webpack_require__(171);
+	var _scrollToBottom = __webpack_require__(173);
 	
-	var _updateCanvas = __webpack_require__(172);
+	var _updateCanvas = __webpack_require__(174);
 	
-	var _world = __webpack_require__(177);
+	var _world = __webpack_require__(179);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(179);
+	__webpack_require__(181);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20257,41 +20257,83 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ageMobs = undefined;
+	exports.popMobs = undefined;
 	
 	var _constants = __webpack_require__(160);
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _now = __webpack_require__(161);
+	var _orc = __webpack_require__(163);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _goblin = __webpack_require__(167);
+	
+	var _goblin2 = _interopRequireDefault(_goblin);
+	
+	var _cat = __webpack_require__(168);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
+	var _human = __webpack_require__(169);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
+	var _faery = __webpack_require__(170);
+	
+	var _faery2 = _interopRequireDefault(_faery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	// Return an aged population of mobs and corpses.
-	var ageMobs = exports.ageMobs = function ageMobs(population, years) {
+	var popMobs = exports.popMobs = function popMobs(event, input) {
+	  event.preventDefault();
+	
+	  var mobs = [];
 	  var log = [];
 	
-	  population.mobs = population.mobs.filter(function (mob) {
-	    if (mob.becomeOlder(years)) {
-	      return mob; // This mob is years older but still alive.
-	    } else {
-	      mob.timeOfDeath = (0, _now.now)();
-	      mob.causeOfDeath = C.OLD_AGE;
-	      population.corpses.push(mob); // This mob just died.
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
+	  var toAdd = input.toAdd,
+	      category = input.category,
+	      world = input.world;
+	
+	
+	  for (var i = 0; i < toAdd; i++) {
+	    var newMob = void 0;
+	
+	    switch (category) {
+	      case C.CATEGORY.ORC:
+	        newMob = new _orc2.default({ world: world });
+	        break;
+	      case C.CATEGORY.GOBLIN:
+	        newMob = new _goblin2.default({ world: world });
+	        break;
+	      case C.CATEGORY.CAT:
+	        newMob = new _cat2.default({ world: world });
+	        break;
+	      case C.CATEGORY.HUMAN:
+	        newMob = new _human2.default({ world: world });
+	        break;
+	      case C.CATEGORY.FAERY:
+	        newMob = new _faery2.default({ world: world });
+	        break;
+	      default:
+	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
 	    }
-	  });
+	
+	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
+	    mobs.push(newMob);
+	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
+	  }
 	
 	  return {
-	    mobs: population.mobs,
-	    corpses: population.corpses,
+	    mobs: mobs,
 	    log: log
 	  };
 	};
 
 /***/ },
-/* 163 */,
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20302,7 +20344,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mob = __webpack_require__(165);
+	var _mob = __webpack_require__(164);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20341,7 +20383,7 @@
 	exports.default = Orc;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20356,7 +20398,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(166);
+	var _baseClass = __webpack_require__(165);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -20484,6 +20526,18 @@
 	      // Return false and sets the age to the longevity (i.e. dead).
 	      return this.age < this.longevity;
 	    }
+	
+	    // Pick a destination where the mob wants to move to.
+	
+	  }, {
+	    key: 'move',
+	    value: function move() {
+	      this.position.x = this.position.x + this.randomNumber(-1, 1);
+	      this.position.y = this.position.y + this.randomNumber(-1, 1);
+	      this.changed = true;
+	
+	      return this;
+	    }
 	  }, {
 	    key: 'young',
 	    value: function young() {
@@ -20599,7 +20653,7 @@
 	exports.default = Mob;
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20608,7 +20662,7 @@
 	  value: true
 	});
 	
-	var _guid = __webpack_require__(167);
+	var _guid = __webpack_require__(166);
 	
 	var _now = __webpack_require__(161);
 	
@@ -20627,7 +20681,7 @@
 	exports.default = BaseClass;
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20645,7 +20699,7 @@
 	};
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20660,7 +20714,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(165);
+	var _mob = __webpack_require__(164);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20726,7 +20780,7 @@
 	exports.default = Goblin;
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20741,7 +20795,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(165);
+	var _mob = __webpack_require__(164);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20827,7 +20881,7 @@
 	exports.default = Cat;
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20842,7 +20896,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(165);
+	var _mob = __webpack_require__(164);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20908,7 +20962,169 @@
 	exports.default = Human;
 
 /***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _mob = __webpack_require__(164);
+	
+	var _mob2 = _interopRequireDefault(_mob);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Faery = function (_Mob) {
+	  _inherits(Faery, _Mob);
+	
+	  function Faery() {
+	    _classCallCheck(this, Faery);
+	
+	    return _possibleConstructorReturn(this, (Faery.__proto__ || Object.getPrototypeOf(Faery)).apply(this, arguments));
+	  }
+	
+	  _createClass(Faery, [{
+	    key: 'young',
+	    value: function young() {
+	      return 'faery youth';
+	    }
+	  }, {
+	    key: 'adult',
+	    value: function adult() {
+	      return 'faery elder';
+	    }
+	  }, {
+	    key: 'minLongevity',
+	    value: function minLongevity() {
+	      return C.MIN_FAERY_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maxLongevity',
+	    value: function maxLongevity() {
+	      return C.MAX_FAERY_LONGEVITY;
+	    }
+	  }, {
+	    key: 'maturity',
+	    value: function maturity() {
+	      return C.FAERY_MATURITY;
+	    }
+	  }, {
+	    key: 'maxCreationAge',
+	    value: function maxCreationAge() {
+	      return C.MAX_FAERY_CREATION_AGE;
+	    }
+	  }, {
+	    key: 'getYoungSize',
+	    value: function getYoungSize() {
+	      return C.YOUNG_FAERY_SIZE;
+	    }
+	  }, {
+	    key: 'getAdultSize',
+	    value: function getAdultSize() {
+	      return C.ADULT_FAERY_SIZE;
+	    }
+	  }, {
+	    key: 'getYoungColor',
+	    value: function getYoungColor() {
+	      return C.YOUNG_FAERY_COLOR;
+	    }
+	  }, {
+	    key: 'getAdultColor',
+	    value: function getAdultColor() {
+	      return C.ADULT_FAERY_COLOR;
+	    }
+	  }, {
+	    key: 'getDeadColor',
+	    value: function getDeadColor() {
+	      return C.DEAD_FAERY_COLOR;
+	    }
+	  }]);
+	
+	  return Faery;
+	}(_mob2.default);
+	
+	exports.default = Faery;
+
+/***/ },
 /* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.ageMobs = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _now = __webpack_require__(161);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Return an aged population of mobs and corpses.
+	var ageMobs = exports.ageMobs = function ageMobs(population, years) {
+	  var log = [];
+	
+	  population.mobs = population.mobs.filter(function (mob) {
+	    if (mob.becomeOlder(years)) {
+	      return mob; // This mob is years older but still alive.
+	    } else {
+	      mob.timeOfDeath = (0, _now.now)();
+	      mob.causeOfDeath = C.OLD_AGE;
+	      population.corpses.push(mob); // This mob just died.
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
+	    }
+	  });
+	
+	  return {
+	    mobs: population.mobs,
+	    corpses: population.corpses,
+	    log: log
+	  };
+	};
+
+/***/ },
+/* 172 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a population of mobs with updated position x and y.
+	var moveMobs = exports.moveMobs = function moveMobs(mobs) {
+	  if (!mobs || mobs.length === 0) {
+	    return [];
+	  }
+	
+	  return mobs.map(function (mob) {
+	    return mob.move();
+	  });
+	};
+
+/***/ },
+/* 173 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20921,7 +21137,7 @@
 	};
 
 /***/ },
-/* 172 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20931,9 +21147,9 @@
 	});
 	exports.updateCanvas = undefined;
 	
-	var _paintMob = __webpack_require__(173);
+	var _paintMob = __webpack_require__(175);
 	
-	var _paintTile = __webpack_require__(175);
+	var _paintTile = __webpack_require__(177);
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -20962,7 +21178,7 @@
 	};
 
 /***/ },
-/* 173 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20972,7 +21188,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(174);
+	var _drawDisc = __webpack_require__(176);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob) {
 	  mob.changed = false; // Changed to false to prevent repainting the same change.
@@ -20986,7 +21202,7 @@
 	};
 
 /***/ },
-/* 174 */
+/* 176 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21010,7 +21226,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21020,7 +21236,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(176);
+	var _drawHexagon = __webpack_require__(178);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
@@ -21034,7 +21250,7 @@
 	};
 
 /***/ },
-/* 176 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21085,7 +21301,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21100,11 +21316,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(166);
+	var _baseClass = __webpack_require__(165);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(178);
+	var _tile = __webpack_require__(180);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21164,7 +21380,7 @@
 	exports.default = World;
 
 /***/ },
-/* 178 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21177,7 +21393,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(166);
+	var _baseClass = __webpack_require__(165);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -21219,16 +21435,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 179 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(180);
+	var content = __webpack_require__(182);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(182)(content, {});
+	var update = __webpack_require__(184)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21245,10 +21461,10 @@
 	}
 
 /***/ },
-/* 180 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(181)();
+	exports = module.exports = __webpack_require__(183)();
 	// imports
 	
 	
@@ -21259,7 +21475,7 @@
 
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports) {
 
 	/*
@@ -21315,7 +21531,7 @@
 
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21567,214 +21783,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 183 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _mob = __webpack_require__(165);
-	
-	var _mob2 = _interopRequireDefault(_mob);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Faery = function (_Mob) {
-	  _inherits(Faery, _Mob);
-	
-	  function Faery() {
-	    _classCallCheck(this, Faery);
-	
-	    return _possibleConstructorReturn(this, (Faery.__proto__ || Object.getPrototypeOf(Faery)).apply(this, arguments));
-	  }
-	
-	  _createClass(Faery, [{
-	    key: 'young',
-	    value: function young() {
-	      return 'faery youth';
-	    }
-	  }, {
-	    key: 'adult',
-	    value: function adult() {
-	      return 'faery elder';
-	    }
-	  }, {
-	    key: 'minLongevity',
-	    value: function minLongevity() {
-	      return C.MIN_FAERY_LONGEVITY;
-	    }
-	  }, {
-	    key: 'maxLongevity',
-	    value: function maxLongevity() {
-	      return C.MAX_FAERY_LONGEVITY;
-	    }
-	  }, {
-	    key: 'maturity',
-	    value: function maturity() {
-	      return C.FAERY_MATURITY;
-	    }
-	  }, {
-	    key: 'maxCreationAge',
-	    value: function maxCreationAge() {
-	      return C.MAX_FAERY_CREATION_AGE;
-	    }
-	  }, {
-	    key: 'getYoungSize',
-	    value: function getYoungSize() {
-	      return C.YOUNG_FAERY_SIZE;
-	    }
-	  }, {
-	    key: 'getAdultSize',
-	    value: function getAdultSize() {
-	      return C.ADULT_FAERY_SIZE;
-	    }
-	  }, {
-	    key: 'getYoungColor',
-	    value: function getYoungColor() {
-	      return C.YOUNG_FAERY_COLOR;
-	    }
-	  }, {
-	    key: 'getAdultColor',
-	    value: function getAdultColor() {
-	      return C.ADULT_FAERY_COLOR;
-	    }
-	  }, {
-	    key: 'getDeadColor',
-	    value: function getDeadColor() {
-	      return C.DEAD_FAERY_COLOR;
-	    }
-	  }]);
-	
-	  return Faery;
-	}(_mob2.default);
-	
-	exports.default = Faery;
-
-/***/ },
-/* 184 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.popMobs = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _orc = __webpack_require__(164);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _goblin = __webpack_require__(168);
-	
-	var _goblin2 = _interopRequireDefault(_goblin);
-	
-	var _cat = __webpack_require__(169);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	var _human = __webpack_require__(170);
-	
-	var _human2 = _interopRequireDefault(_human);
-	
-	var _faery = __webpack_require__(183);
-	
-	var _faery2 = _interopRequireDefault(_faery);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var popMobs = exports.popMobs = function popMobs(event, input) {
-	  event.preventDefault();
-	
-	  var mobs = [];
-	  var log = [];
-	
-	  var toAdd = input.toAdd,
-	      category = input.category,
-	      world = input.world;
-	
-	
-	  for (var i = 0; i < toAdd; i++) {
-	    var newMob = void 0;
-	
-	    switch (category) {
-	      case C.CATEGORY.ORC:
-	        newMob = new _orc2.default({ world: world });
-	        break;
-	      case C.CATEGORY.GOBLIN:
-	        newMob = new _goblin2.default({ world: world });
-	        break;
-	      case C.CATEGORY.CAT:
-	        newMob = new _cat2.default({ world: world });
-	        break;
-	      case C.CATEGORY.HUMAN:
-	        newMob = new _human2.default({ world: world });
-	        break;
-	      case C.CATEGORY.FAERY:
-	        newMob = new _faery2.default({ world: world });
-	        break;
-	      default:
-	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
-	    }
-	
-	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
-	    mobs.push(newMob);
-	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
-	  }
-	
-	  return {
-	    mobs: mobs,
-	    log: log
-	  };
-	};
-
-/***/ },
-/* 185 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Return a population of mobs with updated position x and y.
-	var moveMobs = exports.moveMobs = function moveMobs(mobs) {
-	  if (!mobs || mobs.length === 0) {
-	    return [];
-	  }
-	
-	  return mobs.map(function (mob) {
-	    mob.position.x = mob.position.x + mob.randomNumber(-2, 2);
-	    mob.position.y = mob.position.y + mob.randomNumber(-2, 2);
-	    mob.changed = true;
-	    return mob;
-	  });
-	};
 
 /***/ }
 /******/ ]);
