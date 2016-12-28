@@ -32,8 +32,13 @@ export const updateCanvas = input => {
           mob.destination.y > mob.position.y ?
           mob.position.y + mob.speed + mob.randomNumber(-6, 6) :
           mob.position.y - mob.speed + mob.randomNumber(-6, 6);
-      mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
+      mob.position.x =
+          mob.destination.x > mob.position.x ?
+          mob.position.x + mob.speed + mob.randomNumber(-6, 6) :
+          mob.position.x - mob.speed + mob.randomNumber(-6, 6);
       mob.changed = true;
+
+      return mob;
     });
 
   mobs
