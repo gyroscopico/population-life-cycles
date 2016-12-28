@@ -45,8 +45,4 @@ export default class Faery extends Mob {
   getDeadColor() {
     return C.DEAD_FAERY_COLOR;
   }
-
-  getSpeed() {
-    return C.FAERY_SPEED;
-  }
 }

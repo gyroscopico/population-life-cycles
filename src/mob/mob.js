@@ -116,8 +116,25 @@ export default class Mob extends BaseClass {
   pickDestination(world) {
     // Pick a free hexagon coordinates here, the code
     // to animate to it with x, y will be elsewhere.
-    const destinationY = this.randomNumber(0, world.tiles.length - 1);
-    const destinationX = this.randomNumber(0, world.tiles[destinationY].length - 1);
+    let destinationY = this.position.coordinateY + this.randomNumber(-1, 1);
+    let destinationX = this.position.coordinateX + this.randomNumber(-1, 1);
+
+    if (destinationY < 0) {
+      destinationY = 1;
+    }
+
+    if (destinationY > world.tiles.length - 1) {
+      destinationY = world.tiles.length - 2;
+    }
+
+    if (destinationX < 0) {
+      destinationX = 1;
+    }
+
+    if (destinationX > world.tiles[destinationY].length - 1) {
+      destinationX = world.tiles[destinationY].length - 2;
+    }
+
     this.destination = world.tiles[destinationY][destinationX];
 
     return this;

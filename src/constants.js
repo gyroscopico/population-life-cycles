@@ -85,7 +85,6 @@ export const ADULT_FAERY_SIZE = SMALL_SIZE_ADULT;
 export const YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 export const ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
-export const FAERY_SPEED = 2.2;
 
 // Mob categories.
 export const CATEGORY = {

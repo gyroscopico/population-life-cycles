@@ -20194,7 +20194,6 @@
 	var YOUNG_FAERY_COLOR = exports.YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 	var ADULT_FAERY_COLOR = exports.ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 	var DEAD_FAERY_COLOR = exports.DEAD_FAERY_COLOR = COLOR.PURPLE_L;
-	var FAERY_SPEED = exports.FAERY_SPEED = 2.2;
 	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
@@ -20545,8 +20544,25 @@
 	    value: function pickDestination(world) {
 	      // Pick a free hexagon coordinates here, the code
 	      // to animate to it with x, y will be elsewhere.
-	      var destinationY = this.randomNumber(0, world.tiles.length - 1);
-	      var destinationX = this.randomNumber(0, world.tiles[destinationY].length - 1);
+	      var destinationY = this.position.coordinateY + this.randomNumber(-1, 1);
+	      var destinationX = this.position.coordinateX + this.randomNumber(-1, 1);
+	
+	      if (destinationY < 0) {
+	        destinationY = 1;
+	      }
+	
+	      if (destinationY > world.tiles.length - 1) {
+	        destinationY = world.tiles.length - 2;
+	      }
+	
+	      if (destinationX < 0) {
+	        destinationX = 1;
+	      }
+	
+	      if (destinationX > world.tiles[destinationY].length - 1) {
+	        destinationX = world.tiles[destinationY].length - 2;
+	      }
+	
 	      this.destination = world.tiles[destinationY][destinationX];
 	
 	      return this;
@@ -21072,11 +21088,6 @@
 	    key: 'getDeadColor',
 	    value: function getDeadColor() {
 	      return C.DEAD_FAERY_COLOR;
-	    }
-	  }, {
-	    key: 'getSpeed',
-	    value: function getSpeed() {
-	      return C.FAERY_SPEED;
 	    }
 	  }]);
 	
