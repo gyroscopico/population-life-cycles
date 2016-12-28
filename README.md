@@ -42,7 +42,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 ### Must have tasks
 
 - mobs moving around (no collision is allowed):
-  -> work on mob.move()
+  -> work on mob.pickDestination()
 - mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 
 ### Low priority tasks

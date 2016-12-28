@@ -111,13 +111,12 @@ export default class Mob extends BaseClass {
   }
 
   // Try to pick a free hexagon where the mob wants to move to.
-  move(world) {
+  pickDestination(world) {
     // Pick a free hexagon coordinates here, the code
     // to animate to it with x, y will be elsewhere.
     const destinationY = this.randomNumber(0, world.tiles.length);
     const destinationX = this.randomNumber(0, world.tiles[destinationY].length);
     this.destination = world.tiles[destinationY][destinationX];
-    this.changed = true;
 
     return this;
   }

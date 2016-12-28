@@ -4,7 +4,7 @@ import * as C from '../constants';
 import { now } from '../utils/now';
 import { popMobs } from '../mob/pop-mobs';
 import { ageMobs } from '../mob/age-mobs';
-import { moveMobs } from '../mob/move-mobs';
+import { pickDestinations } from '../mob/pick-destinations';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
 import World from '../world/world';
@@ -75,8 +75,8 @@ export default class App extends Component {
     // All mobs are getting older.
     population = ageMobs(population, C.AGE_INCREMENT);
 
-    // All mobs still alive can move.
-    population.mobs = moveMobs(population.mobs, this.state.world);
+    // All mobs still alive can pick their destinations.
+    population.mobs = pickDestinations(population.mobs, this.state.world);
 
     // Update state for all mobs, corpses and log.
     this.setState({

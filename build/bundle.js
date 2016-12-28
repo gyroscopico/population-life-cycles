@@ -19779,7 +19779,7 @@
 	
 	var _ageMobs = __webpack_require__(171);
 	
-	var _moveMobs = __webpack_require__(172);
+	var _pickDestinations = __webpack_require__(186);
 	
 	var _scrollToBottom = __webpack_require__(173);
 	
@@ -19881,8 +19881,8 @@
 	      // All mobs are getting older.
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
 	
-	      // All mobs still alive can move.
-	      population.mobs = (0, _moveMobs.moveMobs)(population.mobs, this.state.world);
+	      // All mobs still alive can pick their destinations.
+	      population.mobs = (0, _pickDestinations.pickDestinations)(population.mobs, this.state.world);
 	
 	      // Update state for all mobs, corpses and log.
 	      this.setState({
@@ -20537,14 +20537,13 @@
 	    // Try to pick a free hexagon where the mob wants to move to.
 	
 	  }, {
-	    key: 'move',
-	    value: function move(world) {
+	    key: 'pickDestination',
+	    value: function pickDestination(world) {
 	      // Pick a free hexagon coordinates here, the code
 	      // to animate to it with x, y will be elsewhere.
 	      var destinationY = this.randomNumber(0, world.tiles.length);
 	      var destinationX = this.randomNumber(0, world.tiles[destinationY].length);
 	      this.destination = world.tiles[destinationY][destinationX];
-	      this.changed = true;
 	
 	      return this;
 	    }
@@ -21114,26 +21113,7 @@
 	};
 
 /***/ },
-/* 172 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Return a population of mobs with updated position x and y.
-	var moveMobs = exports.moveMobs = function moveMobs(mobs, world) {
-	  if (!mobs || mobs.length === 0) {
-	    return [];
-	  }
-	
-	  return mobs.map(function (mob) {
-	    return mob.move(world);
-	  });
-	};
-
-/***/ },
+/* 172 */,
 /* 173 */
 /***/ function(module, exports) {
 
@@ -21183,6 +21163,15 @@
 	    return corpse.changed;
 	  }).map(function (corpse) {
 	    return (0, _paintMob.paintMob)(context, corpse);
+	  });
+	
+	  // Update the position towards the destination, if any.
+	  mobs.filter(function (mob) {
+	    return mob.destination && mob.destination.coordinateY !== mob.position.coordinateY && mob.destination.coordinateX !== mob.position.coordinateX;
+	  }).map(function (mob) {
+	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + 1 : mob.position.y - 1;
+	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + 1 : mob.position.x - 1;
+	    mob.changed = true;
 	  });
 	
 	  mobs.filter(function (mob) {
@@ -21839,6 +21828,26 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 186 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a population of mobs with the destinations they picked.
+	var pickDestinations = exports.pickDestinations = function pickDestinations(mobs, world) {
+	  if (!mobs || mobs.length === 0) {
+	    return [];
+	  }
+	
+	  return mobs.map(function (mob) {
+	    return mob.pickDestination(world);
+	  });
+	};
 
 /***/ }
 /******/ ]);
