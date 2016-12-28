@@ -9,7 +9,5 @@ export const paintMob = (context, mob, fillStyle) => {
     fillStyle: fillStyle || mob.color,
   });
 
-  mob.changed = false; // Changed to false to prevent repainting the same change.
-
   return mob;
 };

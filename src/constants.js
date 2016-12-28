@@ -1,3 +1,5 @@
+export const DEBUG = false;
+
 // Colour scheme. See scss too.
 export const COLOR = {
   GOLD_L: '#FFFFC5',

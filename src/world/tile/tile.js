@@ -5,10 +5,6 @@ export default class Tile extends BaseClass {
   constructor(input) {
     super(input);
 
-    // Initial state of changed is true because
-    // I want to display the tile at least once.
-    this.changed = true;
-
     // Full size on one side.
     this.size = this.size || C.TILE_SIZE;
     this.radius = this.size / 2;

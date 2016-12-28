@@ -27,9 +27,6 @@ export default class Mob extends BaseClass {
 
     this.speed = this.speed || this.getSpeed();
 
-    // Initial state of changed is true because I want to display the mob.
-    this.changed = true;
-
     // Position, size and color are properties used on canvas.
     if (this.position === undefined) {
       this.positionMobInWorld();
@@ -73,28 +70,8 @@ export default class Mob extends BaseClass {
     };
   }
 
-  // Track if the mob has changed.
-  // Note: only previous properties relevant to canvas painting.
-  updatePrevious() {
-    this.previous = {
-      position: this.position,
-      size: this.size,
-      color: this.color,
-    };
-  }
-
-  // Flag a change has happened.
-  updateChangedFlag() {
-    this.changed = this.position !== this.previous.position ||
-        this.size !== this.previous.size ||
-        this.color !== this.previous.color;
-  }
-
   // Try to age a mob.
   becomeOlder(years) {
-    // Keep track of previous properties about to be changed.
-    this.updatePrevious();
-
     // Age by a number of years or stop aging (dead).
     this.age = this.age + years < this.longevity ? this.age + years : this.longevity;
 
@@ -103,9 +80,6 @@ export default class Mob extends BaseClass {
     this.category = this._getCategory();
     this.size = this._getSize();
     this.color = this._getColor();
-
-    // Update the changed flag if the mob has changed within becomeOlder.
-    this.updateChangedFlag();
 
     // Return true if the mob could become older.
     // Return false and sets the age to the longevity (i.e. dead).

@@ -20107,6 +20107,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	var DEBUG = exports.DEBUG = false;
+	
 	// Colour scheme. See scss too.
 	var COLOR = exports.COLOR = {
 	  GOLD_L: '#FFFFC5',
@@ -20441,9 +20443,6 @@
 	
 	    _this.speed = _this.speed || _this.getSpeed();
 	
-	    // Initial state of changed is true because I want to display the mob.
-	    _this.changed = true;
-	
 	    // Position, size and color are properties used on canvas.
 	    if (_this.position === undefined) {
 	      _this.positionMobInWorld();
@@ -20491,35 +20490,11 @@
 	      };
 	    }
 	
-	    // Track if the mob has changed.
-	    // Note: only previous properties relevant to canvas painting.
-	
-	  }, {
-	    key: 'updatePrevious',
-	    value: function updatePrevious() {
-	      this.previous = {
-	        position: this.position,
-	        size: this.size,
-	        color: this.color
-	      };
-	    }
-	
-	    // Flag a change has happened.
-	
-	  }, {
-	    key: 'updateChangedFlag',
-	    value: function updateChangedFlag() {
-	      this.changed = this.position !== this.previous.position || this.size !== this.previous.size || this.color !== this.previous.color;
-	    }
-	
 	    // Try to age a mob.
 	
 	  }, {
 	    key: 'becomeOlder',
 	    value: function becomeOlder(years) {
-	      // Keep track of previous properties about to be changed.
-	      this.updatePrevious();
-	
 	      // Age by a number of years or stop aging (dead).
 	      this.age = this.age + years < this.longevity ? this.age + years : this.longevity;
 	
@@ -20528,9 +20503,6 @@
 	      this.category = this._getCategory();
 	      this.size = this._getSize();
 	      this.color = this._getColor();
-	
-	      // Update the changed flag if the mob has changed within becomeOlder.
-	      this.updateChangedFlag();
 	
 	      // Return true if the mob could become older.
 	      // Return false and sets the age to the longevity (i.e. dead).
@@ -21180,40 +21152,41 @@
 	      corpses = input.corpses,
 	      mobs = input.mobs;
 	
+	  // Paint world tiles.
 	
 	  for (var y = 0; y < world.tiles.length; y++) {
 	    for (var x = 0; x < world.tiles[y].length; x++) {
-	      if (world.tiles[y][x].changed) {
-	        (0, _paintTile.paintTile)(context, world.tiles[y][x]);
+	      (0, _paintTile.paintTile)(context, world.tiles[y][x]);
+	      if (C.DEBUG) {
 	        (0, _writeCoordinates.writeCoordinates)(context, world.tiles[y][x]);
 	      }
 	    }
 	  }
 	
-	  corpses.filter(function (corpse) {
-	    return corpse.changed;
-	  }).map(function (corpse) {
+	  // Paint corpses.
+	  corpses.map(function (corpse) {
 	    return (0, _paintMob.paintMob)(context, corpse);
 	  });
 	
 	  // Update the position towards the destination, if any.
 	  mobs.filter(function (mob) {
-	    return mob.destination && mob.destination.coordinateY !== mob.position.coordinateY && mob.destination.coordinateX !== mob.position.coordinateX;
+	    return mob.destination && Math.floor(mob.destination.coordinateY) !== Math.floor(mob.position.coordinateY) && Math.floor(mob.destination.coordinateX) !== Math.floor(mob.position.coordinateX);
 	  }).map(function (mob) {
 	    (0, _paintMob.paintMob)(context, mob, C.COLOR.WHITE);
 	
-	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
+	    if (Math.floor(mob.position.y) !== Math.floor(mob.destination.y)) {
+	      mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
+	    }
 	
-	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
-	
-	    mob.changed = true;
+	    if (Math.floor(mob.position.x) !== Math.floor(mob.destination.x)) {
+	      mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
+	    }
 	
 	    return mob;
 	  });
 	
-	  mobs.filter(function (mob) {
-	    return mob.changed;
-	  }).map(function (mob) {
+	  // Paint live mobs.
+	  mobs.map(function (mob) {
 	    return (0, _paintMob.paintMob)(context, mob);
 	  });
 	};
@@ -21239,8 +21212,6 @@
 	    radius: mob.size + (fillStyle ? 1 : 0),
 	    fillStyle: fillStyle || mob.color
 	  });
-	
-	  mob.changed = false; // Changed to false to prevent repainting the same change.
 	
 	  return mob;
 	};
@@ -21283,8 +21254,6 @@
 	var _drawHexagon = __webpack_require__(178);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
-	  tile.changed = false; // Changed to false to prevent repainting the same change.
-	
 	  (0, _drawHexagon.drawHexagon)({
 	    context: context,
 	    x: tile.x,
@@ -21495,13 +21464,9 @@
 	  function Tile(input) {
 	    _classCallCheck(this, Tile);
 	
-	    // Initial state of changed is true because
-	    // I want to display the tile at least once.
+	    // Full size on one side.
 	    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, input));
 	
-	    _this.changed = true;
-	
-	    // Full size on one side.
 	    _this.size = _this.size || C.TILE_SIZE;
 	    _this.radius = _this.size / 2;
 	
