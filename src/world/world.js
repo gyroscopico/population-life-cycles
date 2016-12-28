@@ -29,11 +29,14 @@ export default class World extends BaseClass {
     let coordinateY = 0;
 
     for (let y = 0; y <= this.height + halfTile; y = y + verticalIncrement) {
-      for (let x = shift ? 0 : horizontalIncrement / 2; x <= this.width + halfTile; x = x + horizontalIncrement) {
+      tiles.push([]);
+      for (let x = shift ? 0 : horizontalIncrement / 2;
+          x <= this.width + halfTile;
+          x = x + horizontalIncrement) {
         if (x > limitX && y > limitY) {
           continue;
         } else {
-          tiles.push(new Tile({ x, y, coordinateX, coordinateY }));
+          tiles[coordinateY].push(new Tile({ x, y, coordinateX, coordinateY }));
           coordinateX++;
         }
       }

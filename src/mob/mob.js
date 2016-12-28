@@ -37,13 +37,22 @@ export default class Mob extends BaseClass {
   }
 
   getRandomTile() {
-    const freeTiles = this.world.tiles.filter(tile => !tile.hasMob);
+    const freeTiles = [];
+
+    for (let y = 0; y < this.world.tiles.length; y++) {
+      for (let x = 0; x < this.world.tiles[y].length; x++) {
+        if (!this.world.tiles[y][x].hasMob) {
+          freeTiles.push(this.world.tiles[y][x]);
+        }
+      }
+    }
 
     if (freeTiles.length === 0) {
       throw new Error(C.ERROR.WORLD_IS_FULL);
     }
 
     const randomIndex = this.randomNumber(0, freeTiles.length - 1);
+
     const tile = freeTiles[randomIndex];
 
     tile.hasMob = true;
@@ -57,6 +66,8 @@ export default class Mob extends BaseClass {
     this.position = {
       x: tile.x,
       y: tile.y,
+      coordinateX: tile.coordinateX,
+      coordinateY: tile.coordinateY,
     };
   }
 
@@ -99,8 +110,10 @@ export default class Mob extends BaseClass {
     return this.age < this.longevity;
   }
 
-  // Pick a destination where the mob wants to move to.
+  // Try to pick a free hexagon where the mob wants to move to.
   move() {
+    // todo: pick a free hexagon coordinates here, the code
+    // to animate to it with x, y will be elsewhere.
     this.position.x = this.position.x + this.randomNumber(-6, 6);
     this.position.y = this.position.y + this.randomNumber(-6, 6);
     this.changed = true;

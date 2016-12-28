@@ -20453,15 +20453,22 @@
 	  _createClass(Mob, [{
 	    key: 'getRandomTile',
 	    value: function getRandomTile() {
-	      var freeTiles = this.world.tiles.filter(function (tile) {
-	        return !tile.hasMob;
-	      });
+	      var freeTiles = [];
+	
+	      for (var y = 0; y < this.world.tiles.length; y++) {
+	        for (var x = 0; x < this.world.tiles[y].length; x++) {
+	          if (!this.world.tiles[y][x].hasMob) {
+	            freeTiles.push(this.world.tiles[y][x]);
+	          }
+	        }
+	      }
 	
 	      if (freeTiles.length === 0) {
 	        throw new Error(C.ERROR.WORLD_IS_FULL);
 	      }
 	
 	      var randomIndex = this.randomNumber(0, freeTiles.length - 1);
+	
 	      var tile = freeTiles[randomIndex];
 	
 	      tile.hasMob = true;
@@ -20475,7 +20482,9 @@
 	
 	      this.position = {
 	        x: tile.x,
-	        y: tile.y
+	        y: tile.y,
+	        coordinateX: tile.coordinateX,
+	        coordinateY: tile.coordinateY
 	      };
 	    }
 	
@@ -20525,11 +20534,13 @@
 	      return this.age < this.longevity;
 	    }
 	
-	    // Pick a destination where the mob wants to move to.
+	    // Try to pick a free hexagon where the mob wants to move to.
 	
 	  }, {
 	    key: 'move',
 	    value: function move() {
+	      // todo: pick a free hexagon coordinates here, the code
+	      // to animate to it with x, y will be elsewhere.
 	      this.position.x = this.position.x + this.randomNumber(-6, 6);
 	      this.position.y = this.position.y + this.randomNumber(-6, 6);
 	      this.changed = true;
@@ -21158,14 +21169,14 @@
 	      mobs = input.mobs;
 	
 	
-	  world.tiles.filter(function (tile) {
-	    return tile.changed;
-	  }).map(function (tile) {
-	    (0, _paintTile.paintTile)(context, tile);
-	    (0, _writeCoordinates.writeCoordinates)(context, tile);
-	
-	    return tile;
-	  });
+	  for (var y = 0; y < world.tiles.length; y++) {
+	    for (var x = 0; x < world.tiles[y].length; x++) {
+	      if (world.tiles[y][x].changed) {
+	        (0, _paintTile.paintTile)(context, world.tiles[y][x]);
+	        (0, _writeCoordinates.writeCoordinates)(context, world.tiles[y][x]);
+	      }
+	    }
+	  }
 	
 	  corpses.filter(function (corpse) {
 	    return corpse.changed;
@@ -21400,11 +21411,12 @@
 	      var coordinateY = 0;
 	
 	      for (var y = 0; y <= this.height + halfTile; y = y + verticalIncrement) {
+	        tiles.push([]);
 	        for (var x = shift ? 0 : horizontalIncrement / 2; x <= this.width + halfTile; x = x + horizontalIncrement) {
 	          if (x > limitX && y > limitY) {
 	            continue;
 	          } else {
-	            tiles.push(new _tile2.default({ x: x, y: y, coordinateX: coordinateX, coordinateY: coordinateY }));
+	            tiles[coordinateY].push(new _tile2.default({ x: x, y: y, coordinateX: coordinateX, coordinateY: coordinateY }));
 	            coordinateX++;
 	          }
 	        }

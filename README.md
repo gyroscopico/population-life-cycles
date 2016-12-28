@@ -42,7 +42,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 ### Must have tasks
 
 - mobs moving around (no collision is allowed):
-  - start the population of the grid from the center. The hexagons should be starting from a central hexagon and be built from there.
+  -> work on mob.move()
 - mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 
 ### Low priority tasks

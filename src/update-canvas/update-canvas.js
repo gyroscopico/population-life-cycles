@@ -10,14 +10,14 @@ export const updateCanvas = input => {
     mobs,
   } = input;
 
-  world.tiles
-    .filter(tile => tile.changed)
-    .map(tile => {
-      paintTile(context, tile);
-      writeCoordinates(context, tile);
-
-      return tile;
-    });
+  for (let y = 0; y < world.tiles.length; y++) {
+    for (let x = 0; x < world.tiles[y].length; x++) {
+      if (world.tiles[y][x].changed) {
+        paintTile(context, world.tiles[y][x]);
+        writeCoordinates(context, world.tiles[y][x]);
+      }
+    }
+  }
 
   corpses
     .filter(corpse => corpse.changed)
