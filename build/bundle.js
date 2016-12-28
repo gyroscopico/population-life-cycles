@@ -20194,7 +20194,7 @@
 	var YOUNG_FAERY_COLOR = exports.YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 	var ADULT_FAERY_COLOR = exports.ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 	var DEAD_FAERY_COLOR = exports.DEAD_FAERY_COLOR = COLOR.PURPLE_L;
-	var FAERY_SPEED = exports.FAERY_SPEED = 10;
+	var FAERY_SPEED = exports.FAERY_SPEED = 2.2;
 	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
@@ -21183,7 +21183,7 @@
 	  mobs.filter(function (mob) {
 	    return mob.destination && mob.destination.coordinateY !== mob.position.coordinateY && mob.destination.coordinateX !== mob.position.coordinateX;
 	  }).map(function (mob) {
-	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
+	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed + mob.randomNumber(-6, 6) : mob.position.y - mob.speed + mob.randomNumber(-6, 6);
 	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
 	    mob.changed = true;
 	  });
