@@ -42,6 +42,8 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 ### Must have tasks
 
 - prevent collisions (one mob per hexagon).
+  - When a mob leaves a tile, that tile hasMob property should update to false.
+  - Currently, freeTiles can only go down. As mobs die, the world tiles should become available.
 - mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 
 ### Low priority tasks
