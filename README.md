@@ -60,10 +60,11 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 
 ## Version planning
 
-- 1.3.0: mobs can procreate and give birth to new mobs.
-- 1.2.0: mobs move around.
+- 1.4.0: mobs can procreate and give birth to new mobs.
+- 1.3.0: mobs don't collide.
 
 ## Version history
 
+- 1.2.0: mobs move around.
 - 1.1.0: canvas world to see where mobs are.
 - 1.0.0: basic version with mobs but without canvas world.
