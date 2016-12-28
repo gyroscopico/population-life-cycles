@@ -76,7 +76,7 @@ export default class App extends Component {
     population = ageMobs(population, C.AGE_INCREMENT);
 
     // All mobs still alive can move.
-    population.mobs = moveMobs(population.mobs);
+    population.mobs = moveMobs(population.mobs, this.state.world);
 
     // Update state for all mobs, corpses and log.
     this.setState({

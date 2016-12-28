@@ -19882,7 +19882,7 @@
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
 	
 	      // All mobs still alive can move.
-	      population.mobs = (0, _moveMobs.moveMobs)(population.mobs);
+	      population.mobs = (0, _moveMobs.moveMobs)(population.mobs, this.state.world);
 	
 	      // Update state for all mobs, corpses and log.
 	      this.setState({
@@ -20538,11 +20538,12 @@
 	
 	  }, {
 	    key: 'move',
-	    value: function move() {
-	      // todo: pick a free hexagon coordinates here, the code
+	    value: function move(world) {
+	      // Pick a free hexagon coordinates here, the code
 	      // to animate to it with x, y will be elsewhere.
-	      this.position.x = this.position.x + this.randomNumber(-6, 6);
-	      this.position.y = this.position.y + this.randomNumber(-6, 6);
+	      var destinationY = this.randomNumber(0, world.tiles.length);
+	      var destinationX = this.randomNumber(0, world.tiles[destinationY].length);
+	      this.destination = world.tiles[destinationY][destinationX];
 	      this.changed = true;
 	
 	      return this;
@@ -21122,13 +21123,13 @@
 	  value: true
 	});
 	// Return a population of mobs with updated position x and y.
-	var moveMobs = exports.moveMobs = function moveMobs(mobs) {
+	var moveMobs = exports.moveMobs = function moveMobs(mobs, world) {
 	  if (!mobs || mobs.length === 0) {
 	    return [];
 	  }
 	
 	  return mobs.map(function (mob) {
-	    return mob.move();
+	    return mob.move(world);
 	  });
 	};
 
