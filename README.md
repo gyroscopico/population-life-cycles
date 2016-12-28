@@ -41,8 +41,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 
 ### Must have tasks
 
-- mobs moving around (no collision is allowed):
-  -> work on mob.pickDestination()
+- prevent collisions (one mob per hexagon).
 - mobs procreate when they are close, the female mob becomes pregnant and eventually gives birth to a number of youngs.
 
 ### Low priority tasks
@@ -61,7 +60,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 ## Version planning
 
 - 1.4.0: mobs can procreate and give birth to new mobs.
-- 1.3.0: mobs don't collide.
+- 1.3.0: mobs don't collide (one mob per hexagon).
 
 ## Version history
 
