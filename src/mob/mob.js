@@ -25,6 +25,8 @@ export default class Mob extends BaseClass {
     // Category is related to age (young vs adult), so category should be defined after age.
     this.category = this._getCategory();
 
+    this.speed = this.speed || this.getSpeed();
+
     // Initial state of changed is true because I want to display the mob.
     this.changed = true;
 
@@ -114,8 +116,8 @@ export default class Mob extends BaseClass {
   pickDestination(world) {
     // Pick a free hexagon coordinates here, the code
     // to animate to it with x, y will be elsewhere.
-    const destinationY = this.randomNumber(0, world.tiles.length);
-    const destinationX = this.randomNumber(0, world.tiles[destinationY].length);
+    const destinationY = this.randomNumber(0, world.tiles.length - 1);
+    const destinationX = this.randomNumber(0, world.tiles[destinationY].length - 1);
     this.destination = world.tiles[destinationY][destinationX];
 
     return this;
@@ -159,6 +161,10 @@ export default class Mob extends BaseClass {
     }
 
     return this.isMature() ? this.getAdultColor() : this.getYoungColor();
+  }
+
+  getSpeed() {
+    return C.MOB_SPEED;
   }
 
   maxCreationAge() {

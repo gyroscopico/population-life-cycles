@@ -19779,17 +19779,17 @@
 	
 	var _ageMobs = __webpack_require__(171);
 	
-	var _pickDestinations = __webpack_require__(186);
+	var _pickDestinations = __webpack_require__(187);
 	
 	var _scrollToBottom = __webpack_require__(173);
 	
 	var _updateCanvas = __webpack_require__(174);
 	
-	var _world = __webpack_require__(180);
+	var _world = __webpack_require__(179);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(182);
+	__webpack_require__(181);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20157,6 +20157,7 @@
 	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
 	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
 	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
+	var MOB_SPEED = exports.MOB_SPEED = 2;
 	
 	// Cats pop default values.
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
@@ -20193,6 +20194,7 @@
 	var YOUNG_FAERY_COLOR = exports.YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 	var ADULT_FAERY_COLOR = exports.ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 	var DEAD_FAERY_COLOR = exports.DEAD_FAERY_COLOR = COLOR.PURPLE_L;
+	var FAERY_SPEED = exports.FAERY_SPEED = 10;
 	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
@@ -20438,6 +20440,8 @@
 	    // Category is related to age (young vs adult), so category should be defined after age.
 	    _this.category = _this._getCategory();
 	
+	    _this.speed = _this.speed || _this.getSpeed();
+	
 	    // Initial state of changed is true because I want to display the mob.
 	    _this.changed = true;
 	
@@ -20541,8 +20545,8 @@
 	    value: function pickDestination(world) {
 	      // Pick a free hexagon coordinates here, the code
 	      // to animate to it with x, y will be elsewhere.
-	      var destinationY = this.randomNumber(0, world.tiles.length);
-	      var destinationX = this.randomNumber(0, world.tiles[destinationY].length);
+	      var destinationY = this.randomNumber(0, world.tiles.length - 1);
+	      var destinationX = this.randomNumber(0, world.tiles[destinationY].length - 1);
 	      this.destination = world.tiles[destinationY][destinationX];
 	
 	      return this;
@@ -20595,6 +20599,11 @@
 	      }
 	
 	      return this.isMature() ? this.getAdultColor() : this.getYoungColor();
+	    }
+	  }, {
+	    key: 'getSpeed',
+	    value: function getSpeed() {
+	      return C.MOB_SPEED;
 	    }
 	  }, {
 	    key: 'maxCreationAge',
@@ -21064,6 +21073,11 @@
 	    value: function getDeadColor() {
 	      return C.DEAD_FAERY_COLOR;
 	    }
+	  }, {
+	    key: 'getSpeed',
+	    value: function getSpeed() {
+	      return C.FAERY_SPEED;
+	    }
 	  }]);
 	
 	  return Faery;
@@ -21141,7 +21155,7 @@
 	
 	var _paintTile = __webpack_require__(177);
 	
-	var _writeCoordinates = __webpack_require__(179);
+	var _writeCoordinates = __webpack_require__(186);
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -21169,8 +21183,8 @@
 	  mobs.filter(function (mob) {
 	    return mob.destination && mob.destination.coordinateY !== mob.position.coordinateY && mob.destination.coordinateX !== mob.position.coordinateX;
 	  }).map(function (mob) {
-	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + 1 : mob.position.y - 1;
-	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + 1 : mob.position.x - 1;
+	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
+	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
 	    mob.changed = true;
 	  });
 	
@@ -21195,8 +21209,6 @@
 	var _drawDisc = __webpack_require__(176);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob) {
-	  mob.changed = false; // Changed to false to prevent repainting the same change.
-	
 	  (0, _drawDisc.drawDisc)({
 	    context: context,
 	    x: mob.position.x,
@@ -21204,6 +21216,8 @@
 	    radius: mob.size,
 	    fillStyle: mob.color
 	  });
+	
+	  mob.changed = false; // Changed to false to prevent repainting the same change.
 	
 	  return mob;
 	};
@@ -21319,29 +21333,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.writeCoordinates = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
-	  context.fillStyle = C.COLOR.BLACK;
-	  context.font = '9px Handlee';
-	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
-	};
-
-/***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -21353,7 +21344,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(181);
+	var _tile = __webpack_require__(180);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21425,7 +21416,7 @@
 	exports.default = World;
 
 /***/ },
-/* 181 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21480,16 +21471,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 182 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(183);
+	var content = __webpack_require__(182);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(185)(content, {});
+	var update = __webpack_require__(184)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21506,10 +21497,10 @@
 	}
 
 /***/ },
-/* 183 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(184)();
+	exports = module.exports = __webpack_require__(183)();
 	// imports
 	
 	
@@ -21520,7 +21511,7 @@
 
 
 /***/ },
-/* 184 */
+/* 183 */
 /***/ function(module, exports) {
 
 	/*
@@ -21576,7 +21567,7 @@
 
 
 /***/ },
-/* 185 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21830,7 +21821,31 @@
 
 
 /***/ },
+/* 185 */,
 /* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  context.fillStyle = C.COLOR.BLACK;
+	  context.font = '9px Handlee';
+	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
+	};
+
+/***/ },
+/* 187 */
 /***/ function(module, exports) {
 
 	"use strict";
