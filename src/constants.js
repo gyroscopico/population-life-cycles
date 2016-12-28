@@ -48,7 +48,7 @@ export const ADULT_SIZE = 9; // young size * 1.5
 export const DEAD_COLOR = COLOR.GOLD_L;
 export const YOUNG_COLOR = COLOR.GOLD_M;
 export const ADULT_COLOR = COLOR.GOLD_D;
-export const MOB_SPEED = 2;
+export const MOB_SPEED = 1;
 
 // Cats pop default values.
 export const MIN_CAT_LONGEVITY = 4;

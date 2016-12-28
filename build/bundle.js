@@ -20157,7 +20157,7 @@
 	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
 	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
 	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
-	var MOB_SPEED = exports.MOB_SPEED = 2;
+	var MOB_SPEED = exports.MOB_SPEED = 1;
 	
 	// Cats pop default values.
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
@@ -21151,11 +21151,17 @@
 	});
 	exports.updateCanvas = undefined;
 	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
 	var _paintMob = __webpack_require__(175);
 	
 	var _paintTile = __webpack_require__(177);
 	
 	var _writeCoordinates = __webpack_require__(179);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -21183,8 +21189,12 @@
 	  mobs.filter(function (mob) {
 	    return mob.destination && mob.destination.coordinateY !== mob.position.coordinateY && mob.destination.coordinateX !== mob.position.coordinateX;
 	  }).map(function (mob) {
-	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed + mob.randomNumber(-6, 6) : mob.position.y - mob.speed + mob.randomNumber(-6, 6);
-	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed + mob.randomNumber(-6, 6) : mob.position.x - mob.speed + mob.randomNumber(-6, 6);
+	    (0, _paintMob.paintMob)(context, mob, C.COLOR.WHITE);
+	
+	    mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
+	
+	    mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
+	
 	    mob.changed = true;
 	
 	    return mob;
@@ -21210,13 +21220,13 @@
 	
 	var _drawDisc = __webpack_require__(176);
 	
-	var paintMob = exports.paintMob = function paintMob(context, mob) {
+	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
 	  (0, _drawDisc.drawDisc)({
 	    context: context,
 	    x: mob.position.x,
 	    y: mob.position.y,
-	    radius: mob.size,
-	    fillStyle: mob.color
+	    radius: mob.size + (fillStyle ? 1 : 0),
+	    fillStyle: fillStyle || mob.color
 	  });
 	
 	  mob.changed = false; // Changed to false to prevent repainting the same change.
