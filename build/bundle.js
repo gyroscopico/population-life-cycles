@@ -19785,11 +19785,11 @@
 	
 	var _updateCanvas = __webpack_require__(174);
 	
-	var _world = __webpack_require__(179);
+	var _world = __webpack_require__(180);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(181);
+	__webpack_require__(182);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21149,7 +21149,7 @@
 	
 	var _paintTile = __webpack_require__(177);
 	
-	var _writeCoordinates = __webpack_require__(186);
+	var _writeCoordinates = __webpack_require__(179);
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -21163,6 +21163,8 @@
 	  }).map(function (tile) {
 	    (0, _paintTile.paintTile)(context, tile);
 	    (0, _writeCoordinates.writeCoordinates)(context, tile);
+	
+	    return tile;
 	  });
 	
 	  corpses.filter(function (corpse) {
@@ -21193,6 +21195,7 @@
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob) {
 	  mob.changed = false; // Changed to false to prevent repainting the same change.
+	
 	  (0, _drawDisc.drawDisc)({
 	    context: context,
 	    x: mob.position.x,
@@ -21200,6 +21203,8 @@
 	    radius: mob.size,
 	    fillStyle: mob.color
 	  });
+	
+	  return mob;
 	};
 
 /***/ },
@@ -21241,6 +21246,7 @@
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  tile.changed = false; // Changed to false to prevent repainting the same change.
+	
 	  (0, _drawHexagon.drawHexagon)({
 	    context: context,
 	    x: tile.x,
@@ -21248,6 +21254,8 @@
 	    radius: tile.radius,
 	    fillStyle: tile.color
 	  });
+	
+	  return tile;
 	};
 
 /***/ },
@@ -21310,6 +21318,29 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  context.fillStyle = C.COLOR.BLACK;
+	  context.font = '9px Handlee';
+	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
+	};
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -21321,7 +21352,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(180);
+	var _tile = __webpack_require__(181);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21392,7 +21423,7 @@
 	exports.default = World;
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21447,16 +21478,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(182);
+	var content = __webpack_require__(183);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(184)(content, {});
+	var update = __webpack_require__(185)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21473,10 +21504,10 @@
 	}
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(183)();
+	exports = module.exports = __webpack_require__(184)();
 	// imports
 	
 	
@@ -21487,7 +21518,7 @@
 
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports) {
 
 	/*
@@ -21543,7 +21574,7 @@
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21795,30 +21826,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 185 */,
-/* 186 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.writeCoordinates = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
-	  context.fillStyle = C.COLOR.BLACK;
-	  context.font = '9px Handlee';
-	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
-	};
 
 /***/ }
 /******/ ]);

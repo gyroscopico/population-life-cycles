@@ -2,6 +2,7 @@ import { drawHexagon } from './draw-hexagon';
 
 export const paintTile = (context, tile) => {
   tile.changed = false; // Changed to false to prevent repainting the same change.
+
   drawHexagon({
     context,
     x: tile.x,
@@ -9,4 +10,6 @@ export const paintTile = (context, tile) => {
     radius: tile.radius,
     fillStyle: tile.color,
   });
+
+  return tile;
 };

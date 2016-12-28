@@ -15,6 +15,8 @@ export const updateCanvas = input => {
     .map(tile => {
       paintTile(context, tile);
       writeCoordinates(context, tile);
+
+      return tile;
     });
 
   corpses

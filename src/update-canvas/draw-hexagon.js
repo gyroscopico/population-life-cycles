@@ -9,7 +9,7 @@ const hexCorner = (center, radius, i) => {
     x: center.x + radius * Math.cos(angleRad),
     y: center.y + radius * Math.sin(angleRad),
   };
-}
+};
 
 export const drawHexagon = input => {
   const {
@@ -21,13 +21,13 @@ export const drawHexagon = input => {
   } = input;
 
   const numberOfSides = 6;
- 
+
   context.beginPath();
-  let corner = hexCorner({x, y}, radius, 0);
+  let corner = hexCorner({ x, y }, radius, 0);
   context.moveTo(corner.x, corner.y);
- 
+
   for (let i = 1; i <= numberOfSides; i += 1) {
-    corner = hexCorner({x, y}, radius, i);
+    corner = hexCorner({ x, y }, radius, i);
     context.lineTo(corner.x, corner.y);
   }
 
