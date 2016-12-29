@@ -26,29 +26,21 @@ export const updateCanvas = input => {
 
   // Update the position towards the destination, if any.
   mobs
-    .filter(mob => mob.destination &&
-        Math.floor(mob.destination.coordinateY) !== Math.floor(mob.position.coordinateY) &&
-        Math.floor(mob.destination.coordinateX) !== Math.floor(mob.position.coordinateX))
+    .filter(mob => mob.destination)
     .map(mob => {
+      // Paint over the spot the mob is about to leave.
       paintMob(context, mob, C.COLOR.WHITE);
 
-      if (Math.floor(mob.position.y) !== Math.floor(mob.destination.y)) {
-        mob.position.y =
-            mob.destination.y > mob.position.y ?
-            mob.position.y + mob.speed :
-            mob.position.y - mob.speed;
-      }
-
-      if (Math.floor(mob.position.x) !== Math.floor(mob.destination.x)) {
-        mob.position.x =
-            mob.destination.x > mob.position.x ?
-            mob.position.x + mob.speed :
-            mob.position.x - mob.speed;
-      }
+      // Update the position of the mob so that he can be painted there.
+      // This also makes it possible for the mob to move to a new set of adjacent tiles.
+      mob.position.y = mob.destination.y;
+      mob.position.x = mob.destination.x;
+      mob.position.coordinateY = mob.destination.coordinateY;
+      mob.position.coordinateX = mob.destination.coordinateX;
 
       return mob;
     });
 
-  // Paint live mobs.
+  // Paint live mobs in their current position where they moved to.
   mobs.map(mob => paintMob(context, mob));
 };

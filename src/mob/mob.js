@@ -59,6 +59,35 @@ export default class Mob extends BaseClass {
     return tile;
   }
 
+  // List all tiles around the mob current hexagon.
+  getAdjacentTiles(world) {
+    // The starting position of y is odd.
+    const directionsFromOddY = [[1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [0,1]];
+
+    // The starting position of y is even.
+    const directionsFromEvenY = [[1,1], [1,0], [0,-1], [-1,0], [-1,1], [0,1]];
+
+    const adjacentTiles = [];
+    const maxY = world.tiles.length - 1;
+    const maxX = world.tiles[0].length - 1;
+    let y;
+    let x;
+    const startYIsEven = this.position.coordinateY % 2 === 0;
+
+    for (let i = 0; i <= 5; i++) {
+      y = this.position.coordinateY + (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
+      x = this.position.coordinateX + (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
+
+      if (y < 0 || y > maxY || x < 0 || x > maxX) {
+        continue;
+      } else {
+        adjacentTiles.push(world.tiles[y][x]);
+      }
+    }
+
+    return adjacentTiles;
+  }
+
   positionMobInWorld() {
     const tile = this.getRandomTile();
 
@@ -84,34 +113,6 @@ export default class Mob extends BaseClass {
     // Return true if the mob could become older.
     // Return false and sets the age to the longevity (i.e. dead).
     return this.age < this.longevity;
-  }
-
-  // Try to pick a free hexagon where the mob wants to move to.
-  pickDestination(world) {
-    // Pick a free hexagon coordinates here, the code
-    // to animate to it with x, y will be elsewhere.
-    let destinationY = this.position.coordinateY + this.randomNumber(-1, 1);
-    let destinationX = this.position.coordinateX + this.randomNumber(-1, 1);
-
-    if (destinationY < 0) {
-      destinationY = 1;
-    }
-
-    if (destinationY > world.tiles.length - 1) {
-      destinationY = world.tiles.length - 2;
-    }
-
-    if (destinationX < 0) {
-      destinationX = 1;
-    }
-
-    if (destinationX > world.tiles[destinationY].length - 1) {
-      destinationX = world.tiles[destinationY].length - 2;
-    }
-
-    this.destination = world.tiles[destinationY][destinationX];
-
-    return this;
   }
 
   young() {

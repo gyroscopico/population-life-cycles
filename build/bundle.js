@@ -19779,17 +19779,17 @@
 	
 	var _ageMobs = __webpack_require__(171);
 	
-	var _pickDestinations = __webpack_require__(187);
-	
 	var _scrollToBottom = __webpack_require__(173);
 	
 	var _updateCanvas = __webpack_require__(174);
 	
-	var _world = __webpack_require__(179);
+	var _pickMobsNextTile2 = __webpack_require__(186);
+	
+	var _world = __webpack_require__(180);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(181);
+	__webpack_require__(182);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -19869,9 +19869,6 @@
 	  }, {
 	    key: 'updateGameLogic',
 	    value: function updateGameLogic() {
-	      // Log another tick in the world.
-	      this.updateLog('[world-tick] ' + (0, _now.now)() + '.');
-	
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
 	      var population = {
 	        mobs: this.state.mobs,
@@ -19881,12 +19878,18 @@
 	      // All mobs are getting older.
 	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
 	
-	      // All mobs still alive can pick their destinations.
-	      population.mobs = (0, _pickDestinations.pickDestinations)(population.mobs, this.state.world);
+	      // All mobs pick a next tile adjacent to the current one.
+	
+	      var _pickMobsNextTile = (0, _pickMobsNextTile2.pickMobsNextTile)(population.mobs, this.state.world),
+	          mobs = _pickMobsNextTile.mobs,
+	          world = _pickMobsNextTile.world;
 	
 	      // Update state for all mobs, corpses and log.
+	
+	
 	      this.setState({
-	        mobs: population.mobs,
+	        mobs: mobs,
+	        world: world,
 	        corpses: population.corpses,
 	        log: this.state.log.concat(population.log)
 	      });
@@ -19930,7 +19933,6 @@
 	
 	      // First instant tick.
 	      if (this.state.isFirstInstant) {
-	        this.updateLog('[world-tick] ' + (0, _now.now)() + '.');
 	        this.setState({
 	          isFirstInstant: false
 	        });
@@ -20003,8 +20005,8 @@
 	        );
 	      });
 	
-	      var mobsLabel = this.state.mobs.length > 1 ? 'mobs' : 'mob';
-	      var corpsesLabel = this.state.corpses.length > 1 ? 'corpses' : 'corpse';
+	      var mobsLabel = this.state.mobs && this.state.mobs.length > 1 ? 'mobs' : 'mob';
+	      var corpsesLabel = this.state.corpses && this.state.corpses.length > 1 ? 'corpses' : 'corpse';
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -20232,7 +20234,7 @@
 	var HEXAGON_LINE_WIDTH = exports.HEXAGON_LINE_WIDTH = 1;
 	
 	// World tiles.
-	var TILE_SIZE = exports.TILE_SIZE = 40;
+	var TILE_SIZE = exports.TILE_SIZE = 30;
 	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
 
 /***/ },
@@ -20477,6 +20479,38 @@
 	
 	      return tile;
 	    }
+	
+	    // List all tiles around the mob current hexagon.
+	
+	  }, {
+	    key: 'getAdjacentTiles',
+	    value: function getAdjacentTiles(world) {
+	      // The starting position of y is odd.
+	      var directionsFromOddY = [[1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [0, 1]];
+	
+	      // The starting position of y is even.
+	      var directionsFromEvenY = [[1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1], [0, 1]];
+	
+	      var adjacentTiles = [];
+	      var maxY = world.tiles.length - 1;
+	      var maxX = world.tiles[0].length - 1;
+	      var y = void 0;
+	      var x = void 0;
+	      var startYIsEven = this.position.coordinateY % 2 === 0;
+	
+	      for (var i = 0; i <= 5; i++) {
+	        y = this.position.coordinateY + (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
+	        x = this.position.coordinateX + (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
+	
+	        if (y < 0 || y > maxY || x < 0 || x > maxX) {
+	          continue;
+	        } else {
+	          adjacentTiles.push(world.tiles[y][x]);
+	        }
+	      }
+	
+	      return adjacentTiles;
+	    }
 	  }, {
 	    key: 'positionMobInWorld',
 	    value: function positionMobInWorld() {
@@ -20507,37 +20541,6 @@
 	      // Return true if the mob could become older.
 	      // Return false and sets the age to the longevity (i.e. dead).
 	      return this.age < this.longevity;
-	    }
-	
-	    // Try to pick a free hexagon where the mob wants to move to.
-	
-	  }, {
-	    key: 'pickDestination',
-	    value: function pickDestination(world) {
-	      // Pick a free hexagon coordinates here, the code
-	      // to animate to it with x, y will be elsewhere.
-	      var destinationY = this.position.coordinateY + this.randomNumber(-1, 1);
-	      var destinationX = this.position.coordinateX + this.randomNumber(-1, 1);
-	
-	      if (destinationY < 0) {
-	        destinationY = 1;
-	      }
-	
-	      if (destinationY > world.tiles.length - 1) {
-	        destinationY = world.tiles.length - 2;
-	      }
-	
-	      if (destinationX < 0) {
-	        destinationX = 1;
-	      }
-	
-	      if (destinationX > world.tiles[destinationY].length - 1) {
-	        destinationX = world.tiles[destinationY].length - 2;
-	      }
-	
-	      this.destination = world.tiles[destinationY][destinationX];
-	
-	      return this;
 	    }
 	  }, {
 	    key: 'young',
@@ -21142,7 +21145,7 @@
 	
 	var _paintTile = __webpack_require__(177);
 	
-	var _writeCoordinates = __webpack_require__(186);
+	var _writeCoordinates = __webpack_require__(179);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21170,22 +21173,22 @@
 	
 	  // Update the position towards the destination, if any.
 	  mobs.filter(function (mob) {
-	    return mob.destination && Math.floor(mob.destination.coordinateY) !== Math.floor(mob.position.coordinateY) && Math.floor(mob.destination.coordinateX) !== Math.floor(mob.position.coordinateX);
+	    return mob.destination;
 	  }).map(function (mob) {
+	    // Paint over the spot the mob is about to leave.
 	    (0, _paintMob.paintMob)(context, mob, C.COLOR.WHITE);
 	
-	    if (Math.floor(mob.position.y) !== Math.floor(mob.destination.y)) {
-	      mob.position.y = mob.destination.y > mob.position.y ? mob.position.y + mob.speed : mob.position.y - mob.speed;
-	    }
-	
-	    if (Math.floor(mob.position.x) !== Math.floor(mob.destination.x)) {
-	      mob.position.x = mob.destination.x > mob.position.x ? mob.position.x + mob.speed : mob.position.x - mob.speed;
-	    }
+	    // Update the position of the mob so that he can be painted there.
+	    // This also makes it possible for the mob to move to a new set of adjacent tiles.
+	    mob.position.y = mob.destination.y;
+	    mob.position.x = mob.destination.x;
+	    mob.position.coordinateY = mob.destination.coordinateY;
+	    mob.position.coordinateX = mob.destination.coordinateX;
 	
 	    return mob;
 	  });
 	
-	  // Paint live mobs.
+	  // Paint live mobs in their current position where they moved to.
 	  mobs.map(function (mob) {
 	    return (0, _paintMob.paintMob)(context, mob);
 	  });
@@ -21325,6 +21328,29 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  context.fillStyle = C.COLOR.BLACK;
+	  context.font = '16px Handlee';
+	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
+	};
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -21336,7 +21362,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(180);
+	var _tile = __webpack_require__(181);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21373,8 +21399,6 @@
 	      var tiles = [];
 	      var fullTile = C.TILE_SIZE;
 	      var halfTile = fullTile / 2;
-	      var limitX = this.width - C.CONTROLS_WIDTH;
-	      var limitY = this.height - C.CONTROLS_HEIGHT - C.SCROLLABLE_WINDOW_HEIGHT;
 	      var angleDeg = 30;
 	      var angleRad = angleDeg * Math.PI / 180;
 	      var horizontalIncrement = fullTile * Math.cos(angleRad);
@@ -21386,12 +21410,8 @@
 	      for (var y = 0; y <= this.height + halfTile; y = y + verticalIncrement) {
 	        tiles.push([]);
 	        for (var x = shift ? 0 : horizontalIncrement / 2; x <= this.width + halfTile; x = x + horizontalIncrement) {
-	          if (x > limitX && y > limitY) {
-	            continue;
-	          } else {
-	            tiles[coordinateY].push(new _tile2.default({ x: x, y: y, coordinateX: coordinateX, coordinateY: coordinateY }));
-	            coordinateX++;
-	          }
+	          tiles[coordinateY].push(new _tile2.default({ x: x, y: y, coordinateX: coordinateX, coordinateY: coordinateY }));
+	          coordinateX++;
 	        }
 	        shift = !shift;
 	        coordinateX = 0;
@@ -21408,7 +21428,7 @@
 	exports.default = World;
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21459,16 +21479,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(182);
+	var content = __webpack_require__(183);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(184)(content, {});
+	var update = __webpack_require__(185)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21485,10 +21505,10 @@
 	}
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(183)();
+	exports = module.exports = __webpack_require__(184)();
 	// imports
 	
 	
@@ -21499,7 +21519,7 @@
 
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports) {
 
 	/*
@@ -21555,7 +21575,7 @@
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21809,31 +21829,7 @@
 
 
 /***/ },
-/* 185 */,
 /* 186 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.writeCoordinates = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
-	  context.fillStyle = C.COLOR.BLACK;
-	  context.font = '9px Handlee';
-	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
-	};
-
-/***/ },
-/* 187 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21841,15 +21837,28 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Return a population of mobs with the destinations they picked.
-	var pickDestinations = exports.pickDestinations = function pickDestinations(mobs, world) {
-	  if (!mobs || mobs.length === 0) {
-	    return [];
-	  }
+	// Try to pick free tiles where the mobs will move to.
+	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
+	  mobs = mobs.map(function (mob) {
+	    var adjacentTiles = mob.getAdjacentTiles(world);
+	    var tile = adjacentTiles[mob.randomNumber(0, adjacentTiles.length - 1)];
 	
-	  return mobs.map(function (mob) {
-	    return mob.pickDestination(world);
+	    // Leave the current tile.
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	
+	    // Occupy the next tile.
+	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+	
+	    // Update the destination of the mob.
+	    mob.destination = tile;
+	
+	    return mob;
 	  });
+	
+	  return {
+	    mobs: mobs,
+	    world: world
+	  };
 	};
 
 /***/ }

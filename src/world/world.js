@@ -18,8 +18,6 @@ export default class World extends BaseClass {
     const tiles = [];
     const fullTile = C.TILE_SIZE;
     const halfTile = fullTile / 2;
-    const limitX = this.width - C.CONTROLS_WIDTH;
-    const limitY = this.height - C.CONTROLS_HEIGHT - C.SCROLLABLE_WINDOW_HEIGHT;
     const angleDeg = 30;
     const angleRad = angleDeg * Math.PI / 180;
     const horizontalIncrement = fullTile * Math.cos(angleRad);
@@ -33,12 +31,8 @@ export default class World extends BaseClass {
       for (let x = shift ? 0 : horizontalIncrement / 2;
           x <= this.width + halfTile;
           x = x + horizontalIncrement) {
-        if (x > limitX && y > limitY) {
-          continue;
-        } else {
-          tiles[coordinateY].push(new Tile({ x, y, coordinateX, coordinateY }));
-          coordinateX++;
-        }
+        tiles[coordinateY].push(new Tile({ x, y, coordinateX, coordinateY }));
+        coordinateX++;
       }
       shift = !shift;
       coordinateX = 0;

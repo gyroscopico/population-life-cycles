@@ -4,9 +4,9 @@ import * as C from '../constants';
 import { now } from '../utils/now';
 import { popMobs } from '../mob/pop-mobs';
 import { ageMobs } from '../mob/age-mobs';
-import { pickDestinations } from '../mob/pick-destinations';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
+import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 import World from '../world/world';
 import './app.scss';
 
@@ -63,9 +63,6 @@ export default class App extends Component {
 
   // Called every "tick", see C.ONE_TICK for this length of time.
   updateGameLogic() {
-    // Log another tick in the world.
-    this.updateLog(`[world-tick] ${now()}.`);
-
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     let population = {
       mobs: this.state.mobs,
@@ -75,12 +72,16 @@ export default class App extends Component {
     // All mobs are getting older.
     population = ageMobs(population, C.AGE_INCREMENT);
 
-    // All mobs still alive can pick their destinations.
-    population.mobs = pickDestinations(population.mobs, this.state.world);
+    // All mobs pick a next tile adjacent to the current one.
+    const {
+      mobs,
+      world,
+    } = pickMobsNextTile(population.mobs, this.state.world);
 
     // Update state for all mobs, corpses and log.
     this.setState({
-      mobs: population.mobs,
+      mobs,
+      world,
       corpses: population.corpses,
       log: this.state.log.concat(population.log),
     });
@@ -117,7 +118,6 @@ export default class App extends Component {
 
     // First instant tick.
     if (this.state.isFirstInstant) {
-      this.updateLog(`[world-tick] ${now()}.`);
       this.setState({
         isFirstInstant: false,
       });
@@ -186,8 +186,8 @@ export default class App extends Component {
       return <li key={key}>{message}</li>
     });
 
-    const mobsLabel = this.state.mobs.length > 1 ? 'mobs' : 'mob';
-    const corpsesLabel = this.state.corpses.length > 1 ? 'corpses' : 'corpse';
+    const mobsLabel = this.state.mobs && this.state.mobs.length > 1 ? 'mobs' : 'mob';
+    const corpsesLabel = this.state.corpses && this.state.corpses.length > 1 ? 'corpses' : 'corpse';
 
     return (
       <div>
