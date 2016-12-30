@@ -192,7 +192,7 @@ export default class App extends Component {
             <option value="Human">Humans</option>
             <option value="Faery">Faery</option>
           </select>
-          <input type="submit" value="Add" />
+          <input type="submit" value="Pop" />
         </form>
 
         <ul id="header" className="horizontal">

@@ -20032,7 +20032,7 @@
 	              'Faery'
 	            )
 	          ),
-	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
+	          _react2.default.createElement('input', { type: 'submit', value: 'Pop' })
 	        ),
 	        _react2.default.createElement(
 	          'ul',
