@@ -19779,11 +19779,11 @@
 	
 	var _ageMobs = __webpack_require__(171);
 	
-	var _scrollToBottom = __webpack_require__(173);
+	var _scrollToBottom = __webpack_require__(172);
 	
-	var _updateCanvas = __webpack_require__(174);
+	var _updateCanvas = __webpack_require__(173);
 	
-	var _pickMobsNextTile2 = __webpack_require__(186);
+	var _pickMobsNextTile2 = __webpack_require__(179);
 	
 	var _world = __webpack_require__(180);
 	
@@ -21113,8 +21113,7 @@
 	};
 
 /***/ },
-/* 172 */,
-/* 173 */
+/* 172 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21127,7 +21126,7 @@
 	};
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21141,13 +21140,48 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintMob = __webpack_require__(175);
+	var _paintMob = __webpack_require__(174);
 	
-	var _paintTile = __webpack_require__(177);
+	var _paintTile = __webpack_require__(176);
 	
-	var _writeCoordinates = __webpack_require__(179);
+	var _writeCoordinates = __webpack_require__(178);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var animateMobMovement = function animateMobMovement(mob) {
+	  // Make position and destination comparable.
+	  var posY = Math.floor(mob.position.y);
+	  var posX = Math.floor(mob.position.x);
+	  var desY = Math.floor(mob.destination.y);
+	  var desX = Math.floor(mob.destination.x);
+	
+	  // Has mob arrived at destination?
+	  if (posY === desY && posX === desX) {
+	    mob.position.y = mob.destination.y;
+	    mob.position.x = mob.destination.x;
+	    mob.position.coordinateY = mob.destination.coordinateY;
+	    mob.position.coordinateX = mob.destination.coordinateX;
+	    mob.arrivedAtDestination = true;
+	
+	    return mob;
+	  }
+	
+	  // Animate movement.
+	  if (posY > desY) {
+	    mob.position.y = mob.position.y - 1;
+	  }
+	  if (posY < desY) {
+	    mob.position.y = mob.position.y + 1;
+	  }
+	  if (posX > desX) {
+	    mob.position.x = mob.position.x - 1;
+	  }
+	  if (posX < desX) {
+	    mob.position.x = mob.position.x + 1;
+	  }
+	
+	  return mob;
+	};
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -21180,10 +21214,9 @@
 	
 	    // Update the position of the mob so that he can be painted there.
 	    // This also makes it possible for the mob to move to a new set of adjacent tiles.
-	    mob.position.y = mob.destination.y;
-	    mob.position.x = mob.destination.x;
-	    mob.position.coordinateY = mob.destination.coordinateY;
-	    mob.position.coordinateX = mob.destination.coordinateX;
+	    if (!mob.arrivedAtDestination) {
+	      mob = animateMobMovement(mob);
+	    }
 	
 	    return mob;
 	  });
@@ -21195,7 +21228,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21205,7 +21238,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(176);
+	var _drawDisc = __webpack_require__(175);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
 	  (0, _drawDisc.drawDisc)({
@@ -21220,7 +21253,7 @@
 	};
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21244,7 +21277,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21254,7 +21287,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(178);
+	var _drawHexagon = __webpack_require__(177);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  (0, _drawHexagon.drawHexagon)({
@@ -21269,7 +21302,7 @@
 	};
 
 /***/ },
-/* 178 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21320,7 +21353,7 @@
 	};
 
 /***/ },
-/* 179 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21340,6 +21373,40 @@
 	  context.fillStyle = C.COLOR.BLACK;
 	  context.font = '16px Handlee';
 	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
+	};
+
+/***/ },
+/* 179 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Try to pick free tiles where the mobs will move to.
+	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
+	  mobs = mobs.map(function (mob) {
+	    var adjacentTiles = mob.getAdjacentTiles(world);
+	    var tile = adjacentTiles[mob.randomNumber(0, adjacentTiles.length - 1)];
+	
+	    // Leave the current tile.
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	
+	    // Occupy the next tile.
+	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+	
+	    // Update the destination of the mob.
+	    mob.destination = tile;
+	    mob.arrivedAtDestination = false;
+	
+	    return mob;
+	  });
+	
+	  return {
+	    mobs: mobs,
+	    world: world
+	  };
 	};
 
 /***/ },
@@ -21827,39 +21894,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 186 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Try to pick free tiles where the mobs will move to.
-	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
-	  mobs = mobs.map(function (mob) {
-	    var adjacentTiles = mob.getAdjacentTiles(world);
-	    var tile = adjacentTiles[mob.randomNumber(0, adjacentTiles.length - 1)];
-	
-	    // Leave the current tile.
-	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
-	
-	    // Occupy the next tile.
-	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
-	
-	    // Update the destination of the mob.
-	    mob.destination = tile;
-	
-	    return mob;
-	  });
-	
-	  return {
-	    mobs: mobs,
-	    world: world
-	  };
-	};
 
 /***/ }
 /******/ ]);

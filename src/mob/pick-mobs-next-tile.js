@@ -12,6 +12,7 @@ export const pickMobsNextTile = (mobs, world) => {
 
     // Update the destination of the mob.
     mob.destination = tile;
+    mob.arrivedAtDestination = false;
 
     return mob;
   });

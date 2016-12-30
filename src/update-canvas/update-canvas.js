@@ -3,6 +3,41 @@ import { paintMob } from './paint-mob';
 import { paintTile } from './paint-tile';
 import { writeCoordinates } from './write-coordinates';
 
+const animateMobMovement = mob => {
+  // Make position and destination comparable.
+  const posY = Math.floor(mob.position.y);
+  const posX = Math.floor(mob.position.x);
+  const desY = Math.floor(mob.destination.y);
+  const desX = Math.floor(mob.destination.x);
+
+  // Has mob arrived at destination?
+  if (posY === desY && posX === desX) {
+    mob.position.y = mob.destination.y;
+    mob.position.x = mob.destination.x;
+    mob.position.coordinateY = mob.destination.coordinateY;
+    mob.position.coordinateX = mob.destination.coordinateX;
+    mob.arrivedAtDestination = true;
+
+    return mob;
+  }
+
+  // Animate movement.
+  if (posY > desY) {
+    mob.position.y = mob.position.y - 1;
+  }
+  if (posY < desY) {
+    mob.position.y = mob.position.y + 1;
+  }
+  if (posX > desX) {
+    mob.position.x = mob.position.x - 1;
+  }
+  if (posX < desX) {
+    mob.position.x = mob.position.x + 1;
+  }
+
+  return mob;
+}
+
 export const updateCanvas = input => {
   const {
     context,
@@ -33,10 +68,9 @@ export const updateCanvas = input => {
 
       // Update the position of the mob so that he can be painted there.
       // This also makes it possible for the mob to move to a new set of adjacent tiles.
-      mob.position.y = mob.destination.y;
-      mob.position.x = mob.destination.x;
-      mob.position.coordinateY = mob.destination.coordinateY;
-      mob.position.coordinateX = mob.destination.coordinateX;
+      if (!mob.arrivedAtDestination) {
+        mob = animateMobMovement(mob);
+      }
 
       return mob;
     });
