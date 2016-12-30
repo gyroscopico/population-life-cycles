@@ -19773,7 +19773,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _popMobs = __webpack_require__(162);
+	var _popMobs = __webpack_require__(161);
 	
 	var _ageMobs = __webpack_require__(171);
 	
@@ -19781,13 +19781,13 @@
 	
 	var _updateCanvas = __webpack_require__(173);
 	
-	var _pickMobsNextTile2 = __webpack_require__(179);
+	var _pickMobsNextTile = __webpack_require__(180);
 	
-	var _world = __webpack_require__(180);
+	var _world = __webpack_require__(181);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(182);
+	__webpack_require__(183);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -19865,28 +19865,23 @@
 	    key: 'updateGameLogic',
 	    value: function updateGameLogic() {
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
-	      var population = {
-	        mobs: this.state.mobs,
-	        corpses: this.state.corpses
-	      };
-	
-	      // All mobs are getting older.
-	      population = (0, _ageMobs.ageMobs)(population, C.AGE_INCREMENT);
+	      var ageingResult = (0, _ageMobs.ageMobs)(this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
+	      var mobs = ageingResult.mobs;
+	      var corpses = ageingResult.corpses;
+	      var world = ageingResult.world;
+	      var log = ageingResult.log;
 	
 	      // All mobs pick a next tile adjacent to the current one.
+	      var destinationsResult = (0, _pickMobsNextTile.pickMobsNextTile)(mobs, world);
+	      mobs = destinationsResult.mobs;
+	      world = destinationsResult.world;
 	
-	      var _pickMobsNextTile = (0, _pickMobsNextTile2.pickMobsNextTile)(population.mobs, this.state.world),
-	          mobs = _pickMobsNextTile.mobs,
-	          world = _pickMobsNextTile.world;
-	
-	      // Update state for all mobs, corpses and log.
-	
-	
+	      // Update state for all mobs, world, corpses and log.
 	      this.setState({
 	        mobs: mobs,
+	        corpses: corpses,
 	        world: world,
-	        corpses: population.corpses,
-	        log: this.state.log.concat(population.log)
+	        log: this.state.log.concat(log)
 	      });
 	    }
 	  }, {
@@ -20228,20 +20223,6 @@
 
 /***/ },
 /* 161 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Return a formatted date and time string for the moment it is called. 
-	var now = exports.now = function now() {
-	  return new Date().toLocaleString('en-GB');
-	};
-
-/***/ },
-/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20255,7 +20236,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _orc = __webpack_require__(163);
+	var _orc = __webpack_require__(162);
 	
 	var _orc2 = _interopRequireDefault(_orc);
 	
@@ -20325,7 +20306,7 @@
 	};
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20336,7 +20317,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20375,7 +20356,7 @@
 	exports.default = Orc;
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20390,7 +20371,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -20404,7 +20385,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	// Note: methods starting with an underscore are meant to be private, i.e. not called outside this class.
+	// Note: methods starting with an underscore are meant to be private,
+	// i.e. not called outside this class.
 	var Mob = function (_BaseClass) {
 	  _inherits(Mob, _BaseClass);
 	
@@ -20651,7 +20633,7 @@
 	exports.default = Mob;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20660,9 +20642,9 @@
 	  value: true
 	});
 	
-	var _guid = __webpack_require__(166);
+	var _guid = __webpack_require__(165);
 	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(166);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20679,7 +20661,7 @@
 	exports.default = BaseClass;
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20694,6 +20676,20 @@
 	// Return a global unique id.
 	var guid = exports.guid = function guid() {
 	  return "" + s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+	};
+
+/***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a formatted date and time string for the moment it is called. 
+	var now = exports.now = function now() {
+	  return new Date().toLocaleString('en-GB');
 	};
 
 /***/ },
@@ -20712,7 +20708,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20793,7 +20789,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20894,7 +20890,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20975,7 +20971,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -21075,28 +21071,37 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(166);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	// Return an aged population of mobs and corpses.
-	var ageMobs = exports.ageMobs = function ageMobs(population, years) {
+	var ageMobs = exports.ageMobs = function ageMobs(mobs, corpses, world) {
+	  var years = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+	
 	  var log = [];
 	
-	  population.mobs = population.mobs.filter(function (mob) {
+	  mobs = mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
 	      return mob; // This mob is years older but still alive.
 	    } else {
 	      mob.timeOfDeath = (0, _now.now)();
 	      mob.causeOfDeath = C.OLD_AGE;
-	      population.corpses.push(mob); // This mob just died.
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ', ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
+	
+	      // This mob just died.
+	      corpses.push(mob);
+	
+	      // A corpse doesn't count as a mob on a world tile (tile is free).
+	      world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	
+	      log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n        ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
 	    }
 	  });
 	
 	  return {
-	    mobs: population.mobs,
-	    corpses: population.corpses,
+	    mobs: mobs,
+	    corpses: corpses,
+	    world: world,
 	    log: log
 	  };
 	};
@@ -21135,42 +21140,9 @@
 	
 	var _writeCoordinates = __webpack_require__(178);
 	
+	var _animateMobMovement = __webpack_require__(179);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var animateMobMovement = function animateMobMovement(mob) {
-	  // Make position and destination comparable.
-	  var posY = Math.floor(mob.position.y);
-	  var posX = Math.floor(mob.position.x);
-	  var desY = Math.floor(mob.destination.y);
-	  var desX = Math.floor(mob.destination.x);
-	
-	  // Has mob arrived at destination?
-	  if (posY === desY && posX === desX) {
-	    mob.position.y = mob.destination.y;
-	    mob.position.x = mob.destination.x;
-	    mob.position.coordinateY = mob.destination.coordinateY;
-	    mob.position.coordinateX = mob.destination.coordinateX;
-	    mob.arrivedAtDestination = true;
-	
-	    return mob;
-	  }
-	
-	  // Animate movement.
-	  if (posY > desY) {
-	    mob.position.y = mob.position.y - mob.speed;
-	  }
-	  if (posY < desY) {
-	    mob.position.y = mob.position.y + mob.speed;
-	  }
-	  if (posX > desX) {
-	    mob.position.x = mob.position.x - mob.speed;
-	  }
-	  if (posX < desX) {
-	    mob.position.x = mob.position.x + mob.speed;
-	  }
-	
-	  return mob;
-	};
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
 	  var context = input.context,
@@ -21204,7 +21176,9 @@
 	    // Update the position of the mob so that he can be painted there.
 	    // This also makes it possible for the mob to move to a new set of adjacent tiles.
 	    if (!mob.arrivedAtDestination) {
-	      mob = animateMobMovement(mob);
+	      mob = (0, _animateMobMovement.animateMobMovement)(mob);
+	    } else {
+	      console.log('time to pick a new destination!');
 	    }
 	
 	    return mob;
@@ -21373,6 +21347,50 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
+	  // Make position and destination comparable.
+	  var posY = Math.floor(mob.position.y);
+	  var posX = Math.floor(mob.position.x);
+	  var desY = Math.floor(mob.destination.y);
+	  var desX = Math.floor(mob.destination.x);
+	
+	  // Has mob arrived at destination?
+	  if (posY === desY && posX === desX) {
+	    mob.position.y = mob.destination.y;
+	    mob.position.x = mob.destination.x;
+	    mob.position.coordinateY = mob.destination.coordinateY;
+	    mob.position.coordinateX = mob.destination.coordinateX;
+	    mob.arrivedAtDestination = true;
+	
+	    return mob;
+	  }
+	
+	  // Animate movement.
+	  if (posY > desY) {
+	    mob.position.y = mob.position.y - mob.speed;
+	  }
+	  if (posY < desY) {
+	    mob.position.y = mob.position.y + mob.speed;
+	  }
+	  if (posX > desX) {
+	    mob.position.x = mob.position.x - mob.speed;
+	  }
+	  if (posX < desX) {
+	    mob.position.x = mob.position.x + mob.speed;
+	  }
+	
+	  return mob;
+	};
+
+/***/ },
+/* 180 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	// Try to pick free tiles where the mobs will move to.
 	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
 	  mobs = mobs.map(function (mob) {
@@ -21399,7 +21417,7 @@
 	};
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21414,11 +21432,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(181);
+	var _tile = __webpack_require__(182);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21484,7 +21502,7 @@
 	exports.default = World;
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21497,7 +21515,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -21535,16 +21553,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(183);
+	var content = __webpack_require__(184);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(185)(content, {});
+	var update = __webpack_require__(186)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21561,10 +21579,10 @@
 	}
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(184)();
+	exports = module.exports = __webpack_require__(185)();
 	// imports
 	
 	
@@ -21575,7 +21593,7 @@
 
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports) {
 
 	/*
@@ -21631,7 +21649,7 @@
 
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

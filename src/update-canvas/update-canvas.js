@@ -2,41 +2,7 @@ import * as C from '../constants';
 import { paintMob } from './paint-mob';
 import { paintTile } from './paint-tile';
 import { writeCoordinates } from './write-coordinates';
-
-const animateMobMovement = mob => {
-  // Make position and destination comparable.
-  const posY = Math.floor(mob.position.y);
-  const posX = Math.floor(mob.position.x);
-  const desY = Math.floor(mob.destination.y);
-  const desX = Math.floor(mob.destination.x);
-
-  // Has mob arrived at destination?
-  if (posY === desY && posX === desX) {
-    mob.position.y = mob.destination.y;
-    mob.position.x = mob.destination.x;
-    mob.position.coordinateY = mob.destination.coordinateY;
-    mob.position.coordinateX = mob.destination.coordinateX;
-    mob.arrivedAtDestination = true;
-
-    return mob;
-  }
-
-  // Animate movement.
-  if (posY > desY) {
-    mob.position.y = mob.position.y - mob.speed;
-  }
-  if (posY < desY) {
-    mob.position.y = mob.position.y + mob.speed;
-  }
-  if (posX > desX) {
-    mob.position.x = mob.position.x - mob.speed;
-  }
-  if (posX < desX) {
-    mob.position.x = mob.position.x + mob.speed;
-  }
-
-  return mob;
-}
+import { animateMobMovement } from './animate-mob-movement';
 
 export const updateCanvas = input => {
   const {
@@ -70,6 +36,8 @@ export const updateCanvas = input => {
       // This also makes it possible for the mob to move to a new set of adjacent tiles.
       if (!mob.arrivedAtDestination) {
         mob = animateMobMovement(mob);
+      } else {
+        console.log('time to pick a new destination!');
       }
 
       return mob;

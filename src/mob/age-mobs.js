@@ -2,23 +2,31 @@ import * as C from '../constants';
 import { now } from '../utils/now';
 
 // Return an aged population of mobs and corpses.
-export const ageMobs = (population, years) => {
+export const ageMobs = (mobs, corpses, world, years = 1) => {
   const log = [];
 
-  population.mobs = population.mobs.filter(mob => {
+  mobs = mobs.filter(mob => {
     if (mob.becomeOlder(years)) {
       return mob; // This mob is years older but still alive.
     } else {
       mob.timeOfDeath = now();
       mob.causeOfDeath = C.OLD_AGE;
-      population.corpses.push(mob);  // This mob just died.
-      log.push(`[death] ${mob.gender} ${mob.category}, ${mob.age} years old, died ${mob.causeOfDeath}.`);
+
+      // This mob just died.
+      corpses.push(mob);
+
+      // A corpse doesn't count as a mob on a world tile (tile is free).
+      world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+
+      log.push(`[death] ${mob.gender} ${mob.category},
+        ${mob.age} years old, died ${mob.causeOfDeath}.`);
     }
   });
 
   return {
-    mobs: population.mobs,
-    corpses: population.corpses,
+    mobs,
+    corpses,
+    world,
     log,
   };
-}
+};

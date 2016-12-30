@@ -1,7 +1,8 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
 
-// Note: methods starting with an underscore are meant to be private, i.e. not called outside this class.
+// Note: methods starting with an underscore are meant to be private,
+// i.e. not called outside this class.
 export default class Mob extends BaseClass {
   constructor(input) {
     super(input);

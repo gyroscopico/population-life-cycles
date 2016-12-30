@@ -60,26 +60,24 @@ export default class App extends Component {
   // Called every "tick", see C.ONE_TICK for this length of time.
   updateGameLogic() {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
-    let population = {
-      mobs: this.state.mobs,
-      corpses: this.state.corpses,
-    };
-
-    // All mobs are getting older.
-    population = ageMobs(population, C.AGE_INCREMENT);
+    const ageingResult = ageMobs(
+      this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
+    let mobs = ageingResult.mobs;
+    const corpses = ageingResult.corpses;
+    let world = ageingResult.world;
+    const log = ageingResult.log;
 
     // All mobs pick a next tile adjacent to the current one.
-    const {
-      mobs,
-      world,
-    } = pickMobsNextTile(population.mobs, this.state.world);
+    const destinationsResult = pickMobsNextTile(mobs, world);
+    mobs = destinationsResult.mobs;
+    world = destinationsResult.world;
 
-    // Update state for all mobs, corpses and log.
+    // Update state for all mobs, world, corpses and log.
     this.setState({
       mobs,
+      corpses,
       world,
-      corpses: population.corpses,
-      log: this.state.log.concat(population.log),
+      log: this.state.log.concat(log),
     });
   }
 
