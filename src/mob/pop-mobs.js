@@ -40,13 +40,15 @@ export const popMobs = (event, input) => {
         throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
     }
 
-    const age = newMob.age >= newMob.maturity() ? `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';
+    const age = newMob.age >= newMob.maturity() ?
+        `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';
     mobs.push(newMob);
     log.push(`[pop] ${newMob.gender} ${newMob.category} (${age}, \u2625${newMob.longevity}).`);
   }
 
   return {
     mobs,
+    world,
     log,
   };
 };

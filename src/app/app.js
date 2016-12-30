@@ -62,15 +62,10 @@ export default class App extends Component {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     const ageingResult = ageMobs(
       this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
-    let mobs = ageingResult.mobs;
+    const mobs = ageingResult.mobs;
     const corpses = ageingResult.corpses;
-    let world = ageingResult.world;
+    const world = ageingResult.world;
     const log = ageingResult.log;
-
-    // All mobs pick a next tile adjacent to the current one.
-    const destinationsResult = pickMobsNextTile(mobs, world);
-    mobs = destinationsResult.mobs;
-    world = destinationsResult.world;
 
     // Update state for all mobs, world, corpses and log.
     this.setState({
@@ -161,8 +156,12 @@ export default class App extends Component {
     // Add a given number of mobs.
     const newMobs = popMobs(event, input);
 
+    // All mobs pick a next tile adjacent to the current one.
+    const result = pickMobsNextTile(newMobs.mobs, newMobs.world);
+
     this.setState({
-      mobs: this.state.mobs.concat(newMobs.mobs),
+      mobs: this.state.mobs.concat(result.mobs),
+      world: result.world,
       log: this.state.log.concat(newMobs.log),
     });
   }

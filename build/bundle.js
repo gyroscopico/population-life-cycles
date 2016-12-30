@@ -19871,11 +19871,6 @@
 	      var world = ageingResult.world;
 	      var log = ageingResult.log;
 	
-	      // All mobs pick a next tile adjacent to the current one.
-	      var destinationsResult = (0, _pickMobsNextTile.pickMobsNextTile)(mobs, world);
-	      mobs = destinationsResult.mobs;
-	      world = destinationsResult.world;
-	
 	      // Update state for all mobs, world, corpses and log.
 	      this.setState({
 	        mobs: mobs,
@@ -19971,8 +19966,12 @@
 	      // Add a given number of mobs.
 	      var newMobs = (0, _popMobs.popMobs)(event, input);
 	
+	      // All mobs pick a next tile adjacent to the current one.
+	      var result = (0, _pickMobsNextTile.pickMobsNextTile)(newMobs.mobs, newMobs.world);
+	
 	      this.setState({
-	        mobs: this.state.mobs.concat(newMobs.mobs),
+	        mobs: this.state.mobs.concat(result.mobs),
+	        world: result.world,
 	        log: this.state.log.concat(newMobs.log)
 	      });
 	    }
@@ -20301,6 +20300,7 @@
 	
 	  return {
 	    mobs: mobs,
+	    world: world,
 	    log: log
 	  };
 	};
@@ -21084,18 +21084,18 @@
 	  mobs = mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
 	      return mob; // This mob is years older but still alive.
-	    } else {
-	      mob.timeOfDeath = (0, _now.now)();
-	      mob.causeOfDeath = C.OLD_AGE;
-	
-	      // This mob just died.
-	      corpses.push(mob);
-	
-	      // A corpse doesn't count as a mob on a world tile (tile is free).
-	      world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
-	
-	      log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n        ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
 	    }
+	
+	    // This mob just died.
+	    mob.timeOfDeath = (0, _now.now)();
+	    mob.causeOfDeath = C.OLD_AGE;
+	    corpses.push(mob);
+	
+	    // A corpse doesn't count as a mob on a world tile (tile is free).
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	
+	    // Log the death.
+	    log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n      ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
 	  });
 	
 	  return {
@@ -21142,6 +21142,8 @@
 	
 	var _animateMobMovement = __webpack_require__(179);
 	
+	var _pickMobsNextTile = __webpack_require__(180);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
@@ -21177,12 +21179,14 @@
 	    // This also makes it possible for the mob to move to a new set of adjacent tiles.
 	    if (!mob.arrivedAtDestination) {
 	      mob = (0, _animateMobMovement.animateMobMovement)(mob);
-	    } else {
-	      console.log('time to pick a new destination!');
 	    }
 	
 	    return mob;
 	  });
+	
+	  (0, _pickMobsNextTile.pickMobsNextTile)(mobs.filter(function (mob) {
+	    return mob.arrivedAtDestination;
+	  }), world);
 	
 	  // Paint live mobs in their current position where they moved to.
 	  mobs.map(function (mob) {

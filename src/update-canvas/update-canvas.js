@@ -3,6 +3,7 @@ import { paintMob } from './paint-mob';
 import { paintTile } from './paint-tile';
 import { writeCoordinates } from './write-coordinates';
 import { animateMobMovement } from './animate-mob-movement';
+import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 
 export const updateCanvas = input => {
   const {
@@ -36,12 +37,14 @@ export const updateCanvas = input => {
       // This also makes it possible for the mob to move to a new set of adjacent tiles.
       if (!mob.arrivedAtDestination) {
         mob = animateMobMovement(mob);
-      } else {
-        console.log('time to pick a new destination!');
       }
 
       return mob;
     });
+
+  pickMobsNextTile(
+      mobs.filter(mob => mob.arrivedAtDestination),
+      world);
 
   // Paint live mobs in their current position where they moved to.
   mobs.map(mob => paintMob(context, mob));
