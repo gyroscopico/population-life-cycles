@@ -127,6 +127,7 @@ input[type=submit] {
   background-color: $green-l;
   font-weight: 600;
   text-transform: uppercase;
+  height: 30px;
 
   &:hover {
     color: $green-d;

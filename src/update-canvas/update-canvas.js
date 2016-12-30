@@ -23,16 +23,16 @@ const animateMobMovement = mob => {
 
   // Animate movement.
   if (posY > desY) {
-    mob.position.y = mob.position.y - 1;
+    mob.position.y = mob.position.y - mob.speed;
   }
   if (posY < desY) {
-    mob.position.y = mob.position.y + 1;
+    mob.position.y = mob.position.y + mob.speed;
   }
   if (posX > desX) {
-    mob.position.x = mob.position.x - 1;
+    mob.position.x = mob.position.x - mob.speed;
   }
   if (posX < desX) {
-    mob.position.x = mob.position.x + 1;
+    mob.position.x = mob.position.x + mob.speed;
   }
 
   return mob;

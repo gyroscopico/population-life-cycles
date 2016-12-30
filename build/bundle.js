@@ -19773,8 +19773,6 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _now = __webpack_require__(161);
-	
 	var _popMobs = __webpack_require__(162);
 	
 	var _ageMobs = __webpack_require__(171);
@@ -19836,10 +19834,7 @@
 	        frameRate: 0,
 	
 	        // Keep track of all messages that should be logged and displayed.
-	        log: [],
-	
-	        // Flag the game world has just started ticking.
-	        isFirstInstant: true
+	        log: []
 	      });
 	
 	      // Functions of the game.
@@ -19931,18 +19926,12 @@
 	        lastTime: currentTime
 	      });
 	
-	      // First instant tick.
-	      if (this.state.isFirstInstant) {
-	        this.setState({
-	          isFirstInstant: false
-	        });
-	      }
-	
 	      // Update the game every tick (regular intervals),
 	      // not every heartbeat (too fast and varies based on client).
 	      if (this.state.tick >= C.ONE_TICK) {
 	        // The heartbeat is not allowed to make any game update
-	        // or any DOM operation, only other functions called by updateGameLogic or updateAnimation can.
+	        // or any DOM operation, only other functions called by
+	        // updateGameLogic or updateAnimation can.
 	        this.updateGameLogic();
 	        this.setState({
 	          tick: 0 });
@@ -21168,16 +21157,16 @@
 	
 	  // Animate movement.
 	  if (posY > desY) {
-	    mob.position.y = mob.position.y - 1;
+	    mob.position.y = mob.position.y - mob.speed;
 	  }
 	  if (posY < desY) {
-	    mob.position.y = mob.position.y + 1;
+	    mob.position.y = mob.position.y + mob.speed;
 	  }
 	  if (posX > desX) {
-	    mob.position.x = mob.position.x - 1;
+	    mob.position.x = mob.position.x - mob.speed;
 	  }
 	  if (posX < desX) {
-	    mob.position.x = mob.position.x + 1;
+	    mob.position.x = mob.position.x + mob.speed;
 	  }
 	
 	  return mob;
@@ -21580,7 +21569,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D;\n  line-height: 29px; }\n\ninput[type=submit] {\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase; }\n  input[type=submit]:hover {\n    color: #009701; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  margin: 0;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\n#main-controls {\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  margin: 0;\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n#header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n#total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n#total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n#number-mobs-to-add,\n#mob-category {\n  margin: 0 .5em 0 0; }\n\nli {\n  list-style-type: none; }\n\ninput,\nselect {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D;\n  line-height: 29px; }\n\ninput[type=submit] {\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 30px; }\n  input[type=submit]:hover {\n    color: #009701; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  margin: 0;\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 

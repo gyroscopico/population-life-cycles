@@ -62,10 +62,10 @@ export default class Mob extends BaseClass {
   // List all tiles around the mob current hexagon.
   getAdjacentTiles(world) {
     // The starting position of y is odd.
-    const directionsFromOddY = [[1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [0,1]];
+    const directionsFromOddY = [[1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [0, 1]];
 
     // The starting position of y is even.
-    const directionsFromEvenY = [[1,1], [1,0], [0,-1], [-1,0], [-1,1], [0,1]];
+    const directionsFromEvenY = [[1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1], [0, 1]];
 
     const adjacentTiles = [];
     const maxY = world.tiles.length - 1;
@@ -75,8 +75,10 @@ export default class Mob extends BaseClass {
     const startYIsEven = this.position.coordinateY % 2 === 0;
 
     for (let i = 0; i <= 5; i++) {
-      y = this.position.coordinateY + (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
-      x = this.position.coordinateX + (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
+      y = this.position.coordinateY +
+          (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
+      x = this.position.coordinateX +
+          (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
 
       if (y < 0 || y > maxY || x < 0 || x > maxX) {
         continue;
