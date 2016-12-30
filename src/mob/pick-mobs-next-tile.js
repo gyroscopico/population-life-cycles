@@ -2,7 +2,16 @@
 export const pickMobsNextTile = (mobs, world) => {
   mobs = mobs.map(mob => {
     const adjacentTiles = mob.getAdjacentTiles(world);
-    const tile = adjacentTiles[mob.randomNumber(0, adjacentTiles.length - 1)];
+
+    // Only pick a tile that doesn't currently have a mob on it.
+    const freeTiles = adjacentTiles.filter(tile => !tile.hasMob);
+
+    if (freeTiles.length === 0) {
+      return mob;
+    }
+
+    // A valid tile (free, no mob) can be selected.
+    const tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
 
     // Leave the current tile.
     world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;

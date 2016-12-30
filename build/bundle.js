@@ -21399,7 +21399,18 @@
 	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
 	  mobs = mobs.map(function (mob) {
 	    var adjacentTiles = mob.getAdjacentTiles(world);
-	    var tile = adjacentTiles[mob.randomNumber(0, adjacentTiles.length - 1)];
+	
+	    // Only pick a tile that doesn't currently have a mob on it.
+	    var freeTiles = adjacentTiles.filter(function (tile) {
+	      return !tile.hasMob;
+	    });
+	
+	    if (freeTiles.length === 0) {
+	      return mob;
+	    }
+	
+	    // A valid tile (free, no mob) can be selected.
+	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
 	
 	    // Leave the current tile.
 	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
