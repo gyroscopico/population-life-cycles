@@ -48,6 +48,7 @@ Publish any changes to the gh-pages branch and browse to https://ebabel-eu.githu
 
 ### Low priority tasks
 
+- only scroll to the bottom if the user is already at the bottom. See http://blog.vjeux.com/2013/javascript/scroll-position-with-react.html
 - automated testing (unit test, test coverage, end to end with web driver).
 - debounce and redefine the size of the canvas when window is resized.
 - gzip the bundle with https://www.npmjs.com/package/compression-webpack-plugin
