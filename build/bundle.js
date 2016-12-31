@@ -19773,23 +19773,23 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _popMobs = __webpack_require__(162);
+	var _popMobs = __webpack_require__(161);
 	
-	var _ageMobs = __webpack_require__(171);
+	var _ageMobs = __webpack_require__(172);
 	
-	var _scrollToBottom = __webpack_require__(172);
+	var _scrollToBottom = __webpack_require__(173);
 	
-	var _updateCanvas = __webpack_require__(173);
+	var _updateCanvas = __webpack_require__(174);
 	
-	var _pickMobsNextTile = __webpack_require__(179);
+	var _pickMobsNextTile = __webpack_require__(167);
 	
-	var _popDefaultMobs = __webpack_require__(187);
+	var _popDefaultMobs = __webpack_require__(181);
 	
-	var _world = __webpack_require__(180);
+	var _world = __webpack_require__(182);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	__webpack_require__(182);
+	__webpack_require__(184);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -20235,20 +20235,6 @@
 
 /***/ },
 /* 161 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Return a formatted date and time string for the moment it is called. 
-	var now = exports.now = function now() {
-	  return new Date().toLocaleString('en-GB');
-	};
-
-/***/ },
-/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20262,23 +20248,23 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _orc = __webpack_require__(163);
+	var _orc = __webpack_require__(162);
 	
 	var _orc2 = _interopRequireDefault(_orc);
 	
-	var _goblin = __webpack_require__(167);
+	var _goblin = __webpack_require__(168);
 	
 	var _goblin2 = _interopRequireDefault(_goblin);
 	
-	var _cat = __webpack_require__(168);
+	var _cat = __webpack_require__(169);
 	
 	var _cat2 = _interopRequireDefault(_cat);
 	
-	var _human = __webpack_require__(169);
+	var _human = __webpack_require__(170);
 	
 	var _human2 = _interopRequireDefault(_human);
 	
-	var _faery = __webpack_require__(170);
+	var _faery = __webpack_require__(171);
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
@@ -20335,7 +20321,7 @@
 	};
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20346,7 +20332,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20385,7 +20371,7 @@
 	exports.default = Orc;
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20400,11 +20386,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _pickMobsNextTile = __webpack_require__(179);
+	var _pickMobsNextTile = __webpack_require__(167);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -20667,7 +20653,7 @@
 	exports.default = Mob;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20676,9 +20662,9 @@
 	  value: true
 	});
 	
-	var _guid = __webpack_require__(166);
+	var _guid = __webpack_require__(165);
 	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(166);
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -20695,7 +20681,7 @@
 	exports.default = BaseClass;
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -20713,7 +20699,66 @@
 	};
 
 /***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Return a formatted date and time string for the moment it is called. 
+	var now = exports.now = function now() {
+	  return new Date().toLocaleString('en-GB');
+	};
+
+/***/ },
 /* 167 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Try to pick free tiles where the mobs will move to.
+	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
+	  mobs = mobs.map(function (mob) {
+	    var adjacentTiles = mob.getAdjacentTiles(world);
+	
+	    // Only pick a tile that doesn't currently have a mob on it.
+	    var freeTiles = adjacentTiles.filter(function (tile) {
+	      return !tile.hasMob;
+	    });
+	
+	    if (freeTiles.length === 0) {
+	      return mob;
+	    }
+	
+	    // A valid tile (free, no mob) can be selected.
+	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
+	
+	    // Leave the current tile.
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	
+	    // Occupy the next tile.
+	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+	
+	    // Update the destination of the mob.
+	    mob.destination = tile;
+	    mob.arrivedAtDestination = false;
+	
+	    return mob;
+	  });
+	
+	  return {
+	    mobs: mobs,
+	    world: world
+	  };
+	};
+
+/***/ },
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20728,7 +20773,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20794,7 +20839,7 @@
 	exports.default = Goblin;
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20809,7 +20854,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20895,7 +20940,7 @@
 	exports.default = Cat;
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20910,7 +20955,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -20976,7 +21021,7 @@
 	exports.default = Human;
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20991,7 +21036,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _mob = __webpack_require__(164);
+	var _mob = __webpack_require__(163);
 	
 	var _mob2 = _interopRequireDefault(_mob);
 	
@@ -21077,7 +21122,7 @@
 	exports.default = Faery;
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21091,7 +21136,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _now = __webpack_require__(161);
+	var _now = __webpack_require__(166);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21127,7 +21172,7 @@
 	};
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21140,7 +21185,7 @@
 	};
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21154,15 +21199,15 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintMob = __webpack_require__(174);
+	var _paintMob = __webpack_require__(175);
 	
-	var _paintTile = __webpack_require__(176);
+	var _paintTile = __webpack_require__(177);
 	
-	var _writeCoordinates = __webpack_require__(178);
+	var _writeCoordinates = __webpack_require__(179);
 	
-	var _animateMobMovement = __webpack_require__(186);
+	var _animateMobMovement = __webpack_require__(180);
 	
-	var _pickMobsNextTile = __webpack_require__(179);
+	var _pickMobsNextTile = __webpack_require__(167);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21215,7 +21260,7 @@
 	};
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21225,7 +21270,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(175);
+	var _drawDisc = __webpack_require__(176);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
 	  (0, _drawDisc.drawDisc)({
@@ -21240,7 +21285,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21264,7 +21309,7 @@
 	};
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21274,7 +21319,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(177);
+	var _drawHexagon = __webpack_require__(178);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  (0, _drawHexagon.drawHexagon)({
@@ -21289,7 +21334,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21340,7 +21385,7 @@
 	};
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21363,7 +21408,7 @@
 	};
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -21371,44 +21416,114 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Try to pick free tiles where the mobs will move to.
-	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
-	  mobs = mobs.map(function (mob) {
-	    var adjacentTiles = mob.getAdjacentTiles(world);
+	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
+	  // Make position and destination comparable.
+	  var posY = Math.floor(mob.position.y);
+	  var posX = Math.floor(mob.position.x);
+	  var desY = Math.floor(mob.destination.y);
+	  var desX = Math.floor(mob.destination.x);
 	
-	    // Only pick a tile that doesn't currently have a mob on it.
-	    var freeTiles = adjacentTiles.filter(function (tile) {
-	      return !tile.hasMob;
-	    });
-	
-	    if (freeTiles.length === 0) {
-	      return mob;
-	    }
-	
-	    // A valid tile (free, no mob) can be selected.
-	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
-	
-	    // Leave the current tile.
-	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
-	
-	    // Occupy the next tile.
-	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
-	
-	    // Update the destination of the mob.
-	    mob.destination = tile;
-	    mob.arrivedAtDestination = false;
+	  // Has mob arrived at destination?
+	  if (posY === desY && posX === desX) {
+	    mob.position.y = mob.destination.y;
+	    mob.position.x = mob.destination.x;
+	    mob.position.coordinateY = mob.destination.coordinateY;
+	    mob.position.coordinateX = mob.destination.coordinateX;
+	    mob.arrivedAtDestination = true;
 	
 	    return mob;
-	  });
+	  }
 	
-	  return {
-	    mobs: mobs,
-	    world: world
-	  };
+	  // Animate movement.
+	  if (posY > desY) {
+	    mob.position.y = mob.position.y - mob.speed;
+	  }
+	  if (posY < desY) {
+	    mob.position.y = mob.position.y + mob.speed;
+	  }
+	  if (posX > desX) {
+	    mob.position.x = mob.position.x - mob.speed;
+	  }
+	  if (posX < desX) {
+	    mob.position.x = mob.position.x + mob.speed;
+	  }
+	
+	  return mob;
 	};
 
 /***/ },
-/* 180 */
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.popDefaultMobs = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _faery = __webpack_require__(171);
+	
+	var _faery2 = _interopRequireDefault(_faery);
+	
+	var _human = __webpack_require__(170);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
+	var _orc = __webpack_require__(162);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _goblin = __webpack_require__(168);
+	
+	var _goblin2 = _interopRequireDefault(_goblin);
+	
+	var _cat = __webpack_require__(169);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var popDefaultMobs = exports.popDefaultMobs = function popDefaultMobs(world) {
+	  var mobs = [];
+	  var i = void 0;
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.FAERY; i++) {
+	    var faery = new _faery2.default({ world: world });
+	    mobs.push(faery);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.HUMAN; i++) {
+	    var human = new _human2.default({ world: world });
+	    mobs.push(human);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.ORC; i++) {
+	    var orc = new _orc2.default({ world: world });
+	    mobs.push(orc);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.GOBLIN; i++) {
+	    var goblin = new _goblin2.default({ world: world });
+	    mobs.push(goblin);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.CAT; i++) {
+	    var cat = new _cat2.default({ world: world });
+	    mobs.push(cat);
+	  }
+	
+	  return mobs;
+	};
+
+/***/ },
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21423,11 +21538,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(181);
+	var _tile = __webpack_require__(183);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -21493,7 +21608,7 @@
 	exports.default = World;
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21506,7 +21621,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _baseClass = __webpack_require__(165);
+	var _baseClass = __webpack_require__(164);
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
@@ -21544,16 +21659,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(183);
+	var content = __webpack_require__(185);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(185)(content, {});
+	var update = __webpack_require__(187)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -21570,10 +21685,10 @@
 	}
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(184)();
+	exports = module.exports = __webpack_require__(186)();
 	// imports
 	
 	
@@ -21584,7 +21699,7 @@
 
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports) {
 
 	/*
@@ -21640,7 +21755,7 @@
 
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -21892,121 +22007,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 186 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
-	  // Make position and destination comparable.
-	  var posY = Math.floor(mob.position.y);
-	  var posX = Math.floor(mob.position.x);
-	  var desY = Math.floor(mob.destination.y);
-	  var desX = Math.floor(mob.destination.x);
-	
-	  // Has mob arrived at destination?
-	  if (posY === desY && posX === desX) {
-	    mob.position.y = mob.destination.y;
-	    mob.position.x = mob.destination.x;
-	    mob.position.coordinateY = mob.destination.coordinateY;
-	    mob.position.coordinateX = mob.destination.coordinateX;
-	    mob.arrivedAtDestination = true;
-	
-	    return mob;
-	  }
-	
-	  // Animate movement.
-	  if (posY > desY) {
-	    mob.position.y = mob.position.y - mob.speed;
-	  }
-	  if (posY < desY) {
-	    mob.position.y = mob.position.y + mob.speed;
-	  }
-	  if (posX > desX) {
-	    mob.position.x = mob.position.x - mob.speed;
-	  }
-	  if (posX < desX) {
-	    mob.position.x = mob.position.x + mob.speed;
-	  }
-	
-	  return mob;
-	};
-
-/***/ },
-/* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.popDefaultMobs = undefined;
-	
-	var _constants = __webpack_require__(160);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _faery = __webpack_require__(170);
-	
-	var _faery2 = _interopRequireDefault(_faery);
-	
-	var _human = __webpack_require__(169);
-	
-	var _human2 = _interopRequireDefault(_human);
-	
-	var _orc = __webpack_require__(163);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _goblin = __webpack_require__(167);
-	
-	var _goblin2 = _interopRequireDefault(_goblin);
-	
-	var _cat = __webpack_require__(168);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var popDefaultMobs = exports.popDefaultMobs = function popDefaultMobs(world) {
-	  var mobs = [];
-	  var i = void 0;
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.FAERY; i++) {
-	    var faery = new _faery2.default({ world: world });
-	    mobs.push(faery);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.HUMAN; i++) {
-	    var human = new _human2.default({ world: world });
-	    mobs.push(human);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.ORC; i++) {
-	    var orc = new _orc2.default({ world: world });
-	    mobs.push(orc);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.GOBLIN; i++) {
-	    var goblin = new _goblin2.default({ world: world });
-	    mobs.push(goblin);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.CAT; i++) {
-	    var cat = new _cat2.default({ world: world });
-	    mobs.push(cat);
-	  }
-	
-	  return mobs;
-	};
 
 /***/ }
 /******/ ]);
