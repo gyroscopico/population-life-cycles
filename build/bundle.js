@@ -19783,6 +19783,8 @@
 	
 	var _pickMobsNextTile = __webpack_require__(179);
 	
+	var _popDefaultMobs = __webpack_require__(187);
+	
 	var _world = __webpack_require__(180);
 	
 	var _world2 = _interopRequireDefault(_world);
@@ -19812,16 +19814,19 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
+	      var world = new _world2.default({ window: window });
+	      var mobs = (0, _popDefaultMobs.popDefaultMobs)(world);
+	
 	      // Keep track of all log messages.
 	      this.setState({
 	        // Mobs that are currently alive.
-	        mobs: [],
+	        mobs: mobs,
 	
 	        // Mobs that used to be alive but are now dead.
 	        corpses: [],
 	
 	        // World models all environment parameters (not mobs).
-	        world: new _world2.default({ window: window }),
+	        world: world,
 	
 	        // In heartbeat, lastTime keeps track of the last time the function was run.
 	        lastTime: undefined,
@@ -19966,12 +19971,9 @@
 	      // Add a given number of mobs.
 	      var newMobs = (0, _popMobs.popMobs)(event, input);
 	
-	      // All mobs pick a next tile adjacent to the current one.
-	      var result = (0, _pickMobsNextTile.pickMobsNextTile)(newMobs.mobs, newMobs.world);
-	
 	      this.setState({
-	        mobs: this.state.mobs.concat(result.mobs),
-	        world: result.world,
+	        mobs: this.state.mobs.concat(newMobs.mobs),
+	        world: newMobs.world,
 	        log: this.state.log.concat(newMobs.log)
 	      });
 	    }
@@ -19988,8 +19990,10 @@
 	        );
 	      });
 	
-	      var mobsLabel = this.state.mobs && this.state.mobs.length > 1 ? 'mobs' : 'mob';
-	      var corpsesLabel = this.state.corpses && this.state.corpses.length > 1 ? 'corpses' : 'corpse';
+	      var mobsTotal = this.state.mobs && this.state.mobs.length || 0;
+	      var corpsesTotal = this.state.corpses && this.state.corpses.length || 0;
+	      var mobsLabel = mobsTotal > 1 ? 'mobs' : 'mob';
+	      var corpsesLabel = corpsesTotal > 1 ? 'corpses' : 'corpse';
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -20029,7 +20033,7 @@
 	            _react2.default.createElement(
 	              'option',
 	              { value: 'Faery' },
-	              'Faery'
+	              'Faeries'
 	            )
 	          ),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Pop' })
@@ -20052,7 +20056,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { id: 'total-mobs', className: 'big-number' },
-	              this.state.mobs.length.toString()
+	              mobsTotal.toString()
 	            ),
 	            ' ',
 	            mobsLabel
@@ -20063,7 +20067,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { id: 'total-corpses', className: 'big-number' },
-	              this.state.corpses.length.toString()
+	              corpsesTotal.toString()
 	            ),
 	            ' ',
 	            corpsesLabel
@@ -20274,7 +20278,9 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var popMobs = exports.popMobs = function popMobs(event, input) {
-	  event.preventDefault();
+	  if (event !== undefined) {
+	    event.preventDefault();
+	  }
 	
 	  var mobs = [];
 	  var log = [];
@@ -20389,6 +20395,8 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
+	var _pickMobsNextTile = __webpack_require__(179);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -20436,6 +20444,9 @@
 	    }
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
+	
+	    // All mobs pick a next tile adjacent to the current one.
+	    (0, _pickMobsNextTile.pickMobsNextTile)([_this], _this.world);
 	    return _this;
 	  }
 	
@@ -21915,6 +21926,39 @@
 	  }
 	
 	  return mob;
+	};
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.popDefaultMobs = undefined;
+	
+	var _constants = __webpack_require__(160);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _faery = __webpack_require__(170);
+	
+	var _faery2 = _interopRequireDefault(_faery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var popDefaultMobs = exports.popDefaultMobs = function popDefaultMobs(world) {
+	  var mobs = [];
+	
+	  var faery = new _faery2.default({ world: world });
+	
+	  mobs.push(faery);
+	
+	  return mobs;
 	};
 
 /***/ }

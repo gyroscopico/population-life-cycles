@@ -6,7 +6,9 @@ import Human from './human/human';
 import Faery from './faery/faery';
 
 export const popMobs = (event, input) => {
-  event.preventDefault();
+  if (event !== undefined) {
+    event.preventDefault();
+  }
 
   const mobs = [];
   const log = [];

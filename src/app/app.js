@@ -6,22 +6,26 @@ import { ageMobs } from '../mob/age-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
 import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
+import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
 import './app.scss';
 
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
+    const world = new World({ window });
+    const mobs = popDefaultMobs(world);
+
     // Keep track of all log messages.
     this.setState({
       // Mobs that are currently alive.
-      mobs: [],
+      mobs,
 
       // Mobs that used to be alive but are now dead.
       corpses: [],
 
       // World models all environment parameters (not mobs).
-      world: new World({ window }),
+      world,
 
       // In heartbeat, lastTime keeps track of the last time the function was run.
       lastTime: undefined,
@@ -156,12 +160,9 @@ export default class App extends Component {
     // Add a given number of mobs.
     const newMobs = popMobs(event, input);
 
-    // All mobs pick a next tile adjacent to the current one.
-    const result = pickMobsNextTile(newMobs.mobs, newMobs.world);
-
     this.setState({
-      mobs: this.state.mobs.concat(result.mobs),
-      world: result.world,
+      mobs: this.state.mobs.concat(newMobs.mobs),
+      world: newMobs.world,
       log: this.state.log.concat(newMobs.log),
     });
   }
@@ -173,8 +174,10 @@ export default class App extends Component {
       return <li key={key}>{message}</li>;
     });
 
-    const mobsLabel = this.state.mobs && this.state.mobs.length > 1 ? 'mobs' : 'mob';
-    const corpsesLabel = this.state.corpses && this.state.corpses.length > 1 ? 'corpses' : 'corpse';
+    const mobsTotal = this.state.mobs && this.state.mobs.length || 0;
+    const corpsesTotal = this.state.corpses && this.state.corpses.length || 0;
+    const mobsLabel = mobsTotal > 1 ? 'mobs' : 'mob';
+    const corpsesLabel = corpsesTotal > 1 ? 'corpses' : 'corpse';
 
     return (
       <div>
@@ -190,7 +193,7 @@ export default class App extends Component {
             <option value="Goblin">Goblins</option>
             <option value="Cat">Cats</option>
             <option value="Human">Humans</option>
-            <option value="Faery">Faery</option>
+            <option value="Faery">Faeries</option>
           </select>
           <input type="submit" value="Pop" />
         </form>
@@ -199,12 +202,12 @@ export default class App extends Component {
           <li><h1>Population Game</h1></li>
           <li>
             <span id="total-mobs" className="big-number">
-              {this.state.mobs.length.toString()}
+              {mobsTotal.toString()}
             </span> {mobsLabel}
           </li>
           <li>
             <span id="total-corpses" className="big-number">
-              {this.state.corpses.length.toString()}
+              {corpsesTotal.toString()}
             </span> {corpsesLabel}
           </li>
         </ul>

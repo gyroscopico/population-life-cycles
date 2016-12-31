@@ -1,5 +1,6 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
+import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
 // i.e. not called outside this class.
@@ -34,6 +35,9 @@ export default class Mob extends BaseClass {
     }
     this.size = this._getSize();
     this.color = this._getColor();
+
+    // All mobs pick a next tile adjacent to the current one.
+    pickMobsNextTile([ this ], this.world);
   }
 
   getRandomTile() {
