@@ -124,6 +124,7 @@ select {
 }
 
 input[type=submit] {
+  -webkit-appearance: none;
   background-color: $green-l;
   font-weight: 600;
   text-transform: uppercase;
