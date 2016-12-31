@@ -90,11 +90,20 @@ export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
 
 // Mob categories.
 export const CATEGORY = {
-  CAT: 'Cat',
-  GOBLIN: 'Goblin',
-  ORC: 'Orc',
-  HUMAN: 'Human',
   FAERY: 'Faery',
+  HUMAN: 'Human',
+  ORC: 'Orc',
+  GOBLIN: 'Goblin',
+  CAT: 'Cat',
+};
+
+// Default mobs poped in the world.
+export const DEFAULT_MOBS = {
+  FAERY: 1,
+  HUMAN: 2,
+  ORC: 5,
+  GOBLIN: 7,
+  CAT: 11,
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).

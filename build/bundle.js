@@ -20188,11 +20188,20 @@
 	
 	// Mob categories.
 	var CATEGORY = exports.CATEGORY = {
-	  CAT: 'Cat',
-	  GOBLIN: 'Goblin',
-	  ORC: 'Orc',
+	  FAERY: 'Faery',
 	  HUMAN: 'Human',
-	  FAERY: 'Faery'
+	  ORC: 'Orc',
+	  GOBLIN: 'Goblin',
+	  CAT: 'Cat'
+	};
+	
+	// Default mobs poped in the world.
+	var DEFAULT_MOBS = exports.DEFAULT_MOBS = {
+	  FAERY: 1,
+	  HUMAN: 2,
+	  ORC: 5,
+	  GOBLIN: 7,
+	  CAT: 11
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
@@ -21947,16 +21956,54 @@
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
+	var _human = __webpack_require__(169);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
+	var _orc = __webpack_require__(163);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _goblin = __webpack_require__(167);
+	
+	var _goblin2 = _interopRequireDefault(_goblin);
+	
+	var _cat = __webpack_require__(168);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var popDefaultMobs = exports.popDefaultMobs = function popDefaultMobs(world) {
 	  var mobs = [];
+	  var i = void 0;
 	
-	  var faery = new _faery2.default({ world: world });
+	  for (i = 0; i < C.DEFAULT_MOBS.FAERY; i++) {
+	    var faery = new _faery2.default({ world: world });
+	    mobs.push(faery);
+	  }
 	
-	  mobs.push(faery);
+	  for (i = 0; i < C.DEFAULT_MOBS.HUMAN; i++) {
+	    var human = new _human2.default({ world: world });
+	    mobs.push(human);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.ORC; i++) {
+	    var orc = new _orc2.default({ world: world });
+	    mobs.push(orc);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.GOBLIN; i++) {
+	    var goblin = new _goblin2.default({ world: world });
+	    mobs.push(goblin);
+	  }
+	
+	  for (i = 0; i < C.DEFAULT_MOBS.CAT; i++) {
+	    var cat = new _cat2.default({ world: world });
+	    mobs.push(cat);
+	  }
 	
 	  return mobs;
 	};
