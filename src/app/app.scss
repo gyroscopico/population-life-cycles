@@ -124,7 +124,7 @@ select {
 }
 
 input[type=submit] {
-  -webkit-appearance: none;
+  -webkit-appearance: none; // Needs to stay first line of this style.
   background-color: $green-l;
   font-weight: 600;
   text-transform: uppercase;
