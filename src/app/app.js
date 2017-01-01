@@ -5,7 +5,6 @@ import { popMobs } from '../mob/pop-mobs';
 import { ageMobs } from '../mob/age-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
-import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
 import './app.scss';

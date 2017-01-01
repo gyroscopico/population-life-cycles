@@ -60,6 +60,7 @@ export default class Mob extends BaseClass {
     const tile = freeTiles[randomIndex];
 
     tile.hasMob = true;
+    tile.mobId = this.id;
 
     return tile;
   }

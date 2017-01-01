@@ -19781,8 +19781,6 @@
 	
 	var _updateCanvas = __webpack_require__(174);
 	
-	var _pickMobsNextTile = __webpack_require__(167);
-	
 	var _popDefaultMobs = __webpack_require__(181);
 	
 	var _world = __webpack_require__(182);
@@ -20467,6 +20465,7 @@
 	      var tile = freeTiles[randomIndex];
 	
 	      tile.hasMob = true;
+	      tile.mobId = this.id;
 	
 	      return tile;
 	    }
@@ -20740,9 +20739,11 @@
 	
 	    // Leave the current tile.
 	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].mobId = undefined;
 	
 	    // Occupy the next tile.
 	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+	    world.tiles[tile.coordinateY][tile.coordinateX].mobId = mob.id;
 	
 	    // Update the destination of the mob.
 	    mob.destination = tile;
@@ -21156,11 +21157,31 @@
 	    mob.causeOfDeath = C.OLD_AGE;
 	    corpses.push(mob);
 	
+	    // Is the mob tracked on the current tile?
+	    var currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
+	    if (currentTile.mobId === mob.id) {
+	      // Remove the mob from the current tile tracking.
+	      currentTile.hasMob = false;
+	      currentTile.mobId = undefined;
+	    }
+	
+	    // Is the mob tracked on the destination tile?
+	    if (mob.destination !== undefined) {
+	      var destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
+	      if (destinationTile.mobId === mob.id) {
+	        // Remove the mob from the destination tile tracking.
+	        destinationTile.hasMob = false;
+	        destinationTile.mobId = undefined;
+	      }
+	    }
+	
 	    // A corpse doesn't count as a mob on a world tile (tile is free).
-	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
 	
 	    // Log the death.
 	    log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n      ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
+	
+	    return null;
 	  });
 	
 	  return {
@@ -21650,6 +21671,7 @@
 	    _this.color = _this.color || C.TILE_COLOR;
 	
 	    _this.hasMob = false;
+	    _this.mobId = undefined;
 	    return _this;
 	  }
 	

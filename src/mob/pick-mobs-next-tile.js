@@ -15,9 +15,11 @@ export const pickMobsNextTile = (mobs, world) => {
 
     // Leave the current tile.
     world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+    world.tiles[mob.position.coordinateY][mob.position.coordinateX].mobId = undefined;
 
     // Occupy the next tile.
     world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+    world.tiles[tile.coordinateY][tile.coordinateX].mobId = mob.id;
 
     // Update the destination of the mob.
     mob.destination = tile;

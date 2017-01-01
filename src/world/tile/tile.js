@@ -12,5 +12,6 @@ export default class Tile extends BaseClass {
     this.color = this.color || C.TILE_COLOR;
 
     this.hasMob = false;
+    this.mobId = undefined;
   }
 }
