@@ -22396,8 +22396,8 @@
 	  // Assign all inputs as properties (if any).
 	  Object.assign(this, input);
 	
-	  this.id = (0, _guid.guid)();
-	  this.spawned = (0, _now.now)();
+	  this.id = this.id || (0, _guid.guid)();
+	  this.spawned = this.spawned || (0, _now.now)();
 	};
 	
 	exports.default = BaseClass;

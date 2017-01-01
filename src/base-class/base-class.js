@@ -6,7 +6,7 @@ export default class BaseClass {
     // Assign all inputs as properties (if any).
     Object.assign(this, input);
 
-    this.id = guid();
-    this.spawned = now();
+    this.id = this.id || guid();
+    this.spawned = this.spawned || now();
   }
 }
