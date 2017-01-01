@@ -27,10 +27,16 @@ Browse to http://localhost:8080 or whichever port is available.
 npm run dev
 ```
 
-## Linting and testing
+## Unit testing
 
 ```
 npm test
+```
+
+## Linting
+
+```
+npm run lint
 ```
 
 ## Deploy to production
