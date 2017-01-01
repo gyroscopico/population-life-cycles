@@ -185,7 +185,7 @@ export default class App extends Component {
           <input
             type="number" id="number-mobs-to-add"
             defaultValue="9" min="1" max="100"
-            pattern="\d"
+            pattern="\d*"
           />
           <select name="mob-category" id="mob-category">
             <option value="Orc">Orcs</option>

@@ -21726,7 +21726,7 @@
 	          _react2.default.createElement('input', {
 	            type: 'number', id: 'number-mobs-to-add',
 	            defaultValue: '9', min: '1', max: '100',
-	            pattern: '\\d'
+	            pattern: '\\d*'
 	          }),
 	          _react2.default.createElement(
 	            'select',
