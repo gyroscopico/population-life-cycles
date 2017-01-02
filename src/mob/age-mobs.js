@@ -5,7 +5,7 @@ import { now } from '../utils/now';
 export const ageMobs = (mobs, corpses, world, years = 1) => {
   const log = [];
 
-  mobs = mobs.filter(mob => {
+  const agedMobs = mobs.filter(mob => {
     if (mob.becomeOlder(years)) {
       return mob; // This mob is years older but still alive.
     }
@@ -44,7 +44,7 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
   });
 
   return {
-    mobs,
+    mobs: agedMobs,
     corpses,
     world,
     log,

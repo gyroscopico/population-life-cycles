@@ -22870,7 +22870,7 @@
 	
 	  var log = [];
 	
-	  mobs = mobs.filter(function (mob) {
+	  var agedMobs = mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
 	      return mob; // This mob is years older but still alive.
 	    }
@@ -22908,7 +22908,7 @@
 	  });
 	
 	  return {
-	    mobs: mobs,
+	    mobs: agedMobs,
 	    corpses: corpses,
 	    world: world,
 	    log: log
