@@ -32,4 +32,4 @@ export const pickMobsNextTile = (mobs, world) => {
     mobs,
     world,
   };
-}
+};

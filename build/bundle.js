@@ -22429,7 +22429,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Return a formatted date and time string for the moment it is called. 
+	// Return a formatted date and time string for the moment it is called.
 	var now = exports.now = function now() {
 	  return new Date().toLocaleString('en-GB');
 	};
@@ -22987,7 +22987,7 @@
 	    // Update the position of the mob so that he can be painted there.
 	    // This also makes it possible for the mob to move to a new set of adjacent tiles.
 	    if (!mob.arrivedAtDestination) {
-	      mob = (0, _animateMobMovement.animateMobMovement)(mob);
+	      return (0, _animateMobMovement.animateMobMovement)(mob);
 	    }
 	
 	    return mob;

@@ -37,7 +37,7 @@ export default class Mob extends BaseClass {
     this.color = this._getColor();
 
     // All mobs pick a next tile adjacent to the current one.
-    pickMobsNextTile([ this ], this.world);
+    pickMobsNextTile([this], this.world);
   }
 
   getRandomTile() {

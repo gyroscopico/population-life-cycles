@@ -2,7 +2,9 @@
   "globals": {
     "Stats": true,
     "dat": true,
-    "module": true
+    "module": true,
+    "test": true,
+    "expect": true
   },
   "env": {
     "browser": true
@@ -16,11 +18,11 @@
     "sourceType": "module"
   },
   "extends": [
-    "eslint:recommended",
     "airbnb"
   ],
   "rules": {
     "comma-dangle" : 0,
-    "no-console": 1
+    "no-console": 1,
+    "no-param-reassign": ["error", { "props": false }]
   }
 }

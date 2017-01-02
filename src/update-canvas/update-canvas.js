@@ -36,7 +36,7 @@ export const updateCanvas = input => {
       // Update the position of the mob so that he can be painted there.
       // This also makes it possible for the mob to move to a new set of adjacent tiles.
       if (!mob.arrivedAtDestination) {
-        mob = animateMobMovement(mob);
+        return animateMobMovement(mob);
       }
 
       return mob;
