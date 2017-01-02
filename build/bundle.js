@@ -21560,7 +21560,7 @@
 	        frameRate: 0,
 	
 	        // Keep track of all messages that should be logged and displayed.
-	        log: []
+	        log: [C.WELCOME]
 	      });
 	
 	      // Functions of the game.
@@ -21848,6 +21848,9 @@
 	  WHITE: '#F9F7ED',
 	  BLACK: '#33170D'
 	};
+	
+	// Welcome message.
+	var WELCOME = exports.WELCOME = 'Welcome to Population Game.\n    Influence this worlds population and observe its evolution.';
 	
 	// Keys.
 	var MALE = exports.MALE = 'male';
@@ -22926,6 +22929,8 @@
 	});
 	var scrollToBottom = exports.scrollToBottom = function scrollToBottom(element) {
 	  element.scrollTop = element.scrollHeight;
+	
+	  return element;
 	};
 
 /***/ },

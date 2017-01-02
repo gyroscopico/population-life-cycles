@@ -37,7 +37,7 @@ export default class App extends Component {
       frameRate: 0,
 
       // Keep track of all messages that should be logged and displayed.
-      log: [],
+      log: [C.WELCOME],
     });
 
     // Functions of the game.

@@ -30,6 +30,10 @@ export const COLOR = {
   BLACK: '#33170D',
 };
 
+// Welcome message.
+export const WELCOME = `Welcome to Population Game.
+    Influence this worlds population and observe its evolution.`;
+
 // Keys.
 export const MALE = 'male';
 export const FEMALE = 'female';
