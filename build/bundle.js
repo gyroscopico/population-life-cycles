@@ -22445,7 +22445,7 @@
 	});
 	// Try to pick free tiles where the mobs will move to.
 	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
-	  mobs = mobs.map(function (mob) {
+	  var orientedMobs = mobs.map(function (mob) {
 	    var adjacentTiles = mob.getAdjacentTiles(world);
 	
 	    // Only pick a tile that doesn't currently have a mob on it.
@@ -22476,7 +22476,7 @@
 	  });
 	
 	  return {
-	    mobs: mobs,
+	    mobs: orientedMobs,
 	    world: world
 	  };
 	};

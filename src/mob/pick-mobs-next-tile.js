@@ -1,6 +1,6 @@
 // Try to pick free tiles where the mobs will move to.
 export const pickMobsNextTile = (mobs, world) => {
-  mobs = mobs.map(mob => {
+  const orientedMobs = mobs.map(mob => {
     const adjacentTiles = mob.getAdjacentTiles(world);
 
     // Only pick a tile that doesn't currently have a mob on it.
@@ -29,7 +29,7 @@ export const pickMobsNextTile = (mobs, world) => {
   });
 
   return {
-    mobs,
+    mobs: orientedMobs,
     world,
   };
 };
