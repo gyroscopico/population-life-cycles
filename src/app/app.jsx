@@ -75,13 +75,7 @@ export default class App extends Component {
       mobs,
       corpses,
       world,
-      log: this.state.log.concat(log),
-    });
-  }
-
-  updateLog(message) {
-    this.setState({
-      log: this.state.log.concat(message),
+      log: this.state.log.concat(log).splice(- C.MAX_LOG_MESSAGES),
     });
   }
 
@@ -162,7 +156,7 @@ export default class App extends Component {
     this.setState({
       mobs: this.state.mobs.concat(newMobs.mobs),
       world: newMobs.world,
-      log: this.state.log.concat(newMobs.log),
+      log: this.state.log.concat(newMobs.log).splice(- C.MAX_LOG_MESSAGES),
     });
   }
 

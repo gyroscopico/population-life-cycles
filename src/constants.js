@@ -34,6 +34,9 @@ export const COLOR = {
 export const WELCOME = `Welcome to Population Game.
     Influence this worlds population and observe its evolution.`;
 
+// Maximum number of messages that are logged.
+export const MAX_LOG_MESSAGES = 9;
+
 // Keys.
 export const MALE = 'male';
 export const FEMALE = 'female';
