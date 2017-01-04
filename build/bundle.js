@@ -22142,7 +22142,6 @@
 	    _this.gender = input && input.gender || _this.randomGender();
 	
 	    // Was this mob spawned by a player?
-	    // Note: Object.assign can give a value, if not default to true.
 	    _this.isCreatedByPlayer = input && input.isCreatedByPlayer || true;
 	
 	    // Is this mob born from other mobs?

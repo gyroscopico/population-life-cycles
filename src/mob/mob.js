@@ -17,7 +17,6 @@ export default class Mob extends BaseClass {
     this.gender = input && input.gender || this.randomGender();
 
     // Was this mob spawned by a player?
-    // Note: Object.assign can give a value, if not default to true.
     this.isCreatedByPlayer = input && input.isCreatedByPlayer || true;
 
     // Is this mob born from other mobs?
