@@ -30,9 +30,3 @@ test('Unexpected property of BaseClass instance is undefined.', () => {
 
   expect(result.unexpectedProperty).toBe(undefined);
 });
-
-test('Custom property of BaseClass instance can be created when instanciated', () => {
-  const result = new BaseClass({ customProperty: Math.PI });
-
-  expect(result.customProperty).toBe(Math.PI);
-});
