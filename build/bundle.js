@@ -21810,8 +21810,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var DEBUG = exports.DEBUG = false;
-	
 	// Colour scheme. See scss too.
 	var COLOR = exports.COLOR = {
 	  GOLD_L: '#FFFFC5',
@@ -22965,8 +22963,6 @@
 	
 	var _paintTile = __webpack_require__(196);
 	
-	var _writeCoordinates = __webpack_require__(198);
-	
 	var _animateMobMovement = __webpack_require__(199);
 	
 	var _pickMobsNextTile = __webpack_require__(186);
@@ -22984,9 +22980,6 @@
 	  for (var y = 0; y < world.tiles.length; y++) {
 	    for (var x = 0; x < world.tiles[y].length; x++) {
 	      (0, _paintTile.paintTile)(context, world.tiles[y][x]);
-	      if (C.DEBUG) {
-	        (0, _writeCoordinates.writeCoordinates)(context, world.tiles[y][x]);
-	      }
 	    }
 	  }
 	
@@ -23147,29 +23140,7 @@
 	};
 
 /***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.writeCoordinates = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
-	  context.fillStyle = C.COLOR.BLACK;
-	  context.font = '16px Handlee';
-	  context.fillText(tile.coordinateX + ':' + tile.coordinateY, tile.x - 10, tile.y + 2.5);
-	};
-
-/***/ },
+/* 198 */,
 /* 199 */
 /***/ function(module, exports) {
 

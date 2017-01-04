@@ -1,7 +1,6 @@
 import * as C from '../constants';
 import { paintMob } from './paint-mob';
 import { paintTile } from './paint-tile';
-import { writeCoordinates } from './write-coordinates';
 import { animateMobMovement } from './animate-mob-movement';
 import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 
@@ -17,9 +16,6 @@ export const updateCanvas = input => {
   for (let y = 0; y < world.tiles.length; y++) {
     for (let x = 0; x < world.tiles[y].length; x++) {
       paintTile(context, world.tiles[y][x]);
-      if (C.DEBUG) {
-        writeCoordinates(context, world.tiles[y][x]);
-      }
     }
   }
 
