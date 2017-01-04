@@ -21939,7 +21939,8 @@
 	var ERROR = exports.ERROR = {
 	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
 	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
-	  WORLD_IS_FULL: 'World is full'
+	  WORLD_IS_FULL: 'World is full',
+	  INVALID_INPUT: 'Invalid input'
 	};
 	
 	// World.
@@ -22130,50 +22131,53 @@
 	  function Mob(input) {
 	    _classCallCheck(this, Mob);
 	
-	    // Assign all inputs as properties (if any).
 	    var _this = _possibleConstructorReturn(this, (Mob.__proto__ || Object.getPrototypeOf(Mob)).call(this, input));
 	
-	    Object.assign(_this, input);
+	    var world = input && input.world;
 	
-	    _this.gender = _this.gender || _this.randomGender();
+	    if (!world) {
+	      throw new Error(C.ERROR.INVALID_INPUT);
+	    }
+	
+	    _this.gender = input && input.gender || _this.randomGender();
 	
 	    // Was this mob spawned by a player?
 	    // Note: Object.assign can give a value, if not default to true.
-	    _this.isCreatedByPlayer = _this.isCreatedByPlayer || true;
+	    _this.isCreatedByPlayer = input && input.isCreatedByPlayer || true;
 	
 	    // Is this mob born from other mobs?
-	    _this.isBornFromMobs = _this.isBornFromMobs || false;
+	    _this.isBornFromMobs = input && input.isBornFromMobs || false;
 	
 	    // A newborn mob from existing mobs who procreated is always 0 years of age.
-	    _this.age = _this.isBornFromMobs ? 0 : _this.randomNumber(0, _this.maxCreationAge());
+	    _this.age = input && input.isBornFromMobs ? 0 : _this.randomNumber(0, _this.maxCreationAge());
 	    _this.longevity = _this.randomNumber(_this.minLongevity(), _this.maxLongevity());
 	
 	    // Category is related to age (young vs adult), so category should be defined after age.
 	    _this.category = _this._getCategory();
 	
-	    _this.speed = _this.speed || _this.getSpeed();
+	    _this.speed = input && input.speed || _this.getSpeed();
 	
 	    // Position, size and color are properties used on canvas.
 	    if (_this.position === undefined) {
-	      _this.positionMobInWorld();
+	      _this.positionMobInWorld(world);
 	    }
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
 	
 	    // All mobs pick a next tile adjacent to the current one.
-	    (0, _pickMobsNextTile.pickMobsNextTile)([_this], _this.world);
+	    (0, _pickMobsNextTile.pickMobsNextTile)([_this], world);
 	    return _this;
 	  }
 	
 	  _createClass(Mob, [{
 	    key: 'getRandomTile',
-	    value: function getRandomTile() {
+	    value: function getRandomTile(world) {
 	      var freeTiles = [];
 	
-	      for (var y = 0; y < this.world.tiles.length; y++) {
-	        for (var x = 0; x < this.world.tiles[y].length; x++) {
-	          if (!this.world.tiles[y][x].hasMob) {
-	            freeTiles.push(this.world.tiles[y][x]);
+	      for (var y = 0; y < world.tiles.length; y++) {
+	        for (var x = 0; x < world.tiles[y].length; x++) {
+	          if (!world.tiles[y][x].isBlocked) {
+	            freeTiles.push(world.tiles[y][x]);
 	          }
 	        }
 	      }
@@ -22186,7 +22190,7 @@
 	
 	      var tile = freeTiles[randomIndex];
 	
-	      tile.hasMob = true;
+	      tile.isBlocked = true;
 	      tile.mobId = this.id;
 	
 	      return tile;
@@ -22225,8 +22229,8 @@
 	    }
 	  }, {
 	    key: 'positionMobInWorld',
-	    value: function positionMobInWorld() {
-	      var tile = this.getRandomTile();
+	    value: function positionMobInWorld(world) {
+	      var tile = this.getRandomTile(world);
 	
 	      this.position = {
 	        x: tile.x,
@@ -22392,11 +22396,8 @@
 	var BaseClass = function BaseClass(input) {
 	  _classCallCheck(this, BaseClass);
 	
-	  // Assign all inputs as properties (if any).
-	  Object.assign(this, input);
-	
-	  this.id = this.id || (0, _guid.guid)();
-	  this.spawned = this.spawned || (0, _now.now)();
+	  this.id = input && input.id || (0, _guid.guid)();
+	  this.spawned = input && input.spawned || (0, _now.now)();
 	};
 	
 	exports.default = BaseClass;
@@ -22435,21 +22436,33 @@
 
 /***/ },
 /* 186 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.pickMobsNextTile = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	// Try to pick free tiles where the mobs will move to.
 	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
+	  if (!world || !world.tiles || world.tiles.length === 0) {
+	    throw new Error(C.ERROR.INVALID_INPUT);
+	  }
+	
 	  var orientedMobs = mobs.map(function (mob) {
 	    var adjacentTiles = mob.getAdjacentTiles(world);
 	
 	    // Only pick a tile that doesn't currently have a mob on it.
 	    var freeTiles = adjacentTiles.filter(function (tile) {
-	      return !tile.hasMob;
+	      return !tile.isBlocked;
 	    });
 	
 	    if (freeTiles.length === 0) {
@@ -22460,15 +22473,20 @@
 	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
 	
 	    // Leave the current tile.
-	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
 	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].mobId = undefined;
 	
 	    // Occupy the next tile.
-	    world.tiles[tile.coordinateY][tile.coordinateX].hasMob = true;
+	    world.tiles[tile.coordinateY][tile.coordinateX].isBlocked = true;
 	    world.tiles[tile.coordinateY][tile.coordinateX].mobId = mob.id;
 	
 	    // Update the destination of the mob.
-	    mob.destination = tile;
+	    mob.destination = {
+	      y: tile.y,
+	      x: tile.x,
+	      coordinateY: tile.coordinateY,
+	      coordinateX: tile.coordinateX
+	    };
 	    mob.arrivedAtDestination = false;
 	
 	    return mob;
@@ -22883,7 +22901,7 @@
 	    var currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
 	    if (currentTile.mobId === mob.id) {
 	      // Remove the mob from the current tile tracking.
-	      currentTile.hasMob = false;
+	      currentTile.isBlocked = false;
 	      currentTile.mobId = undefined;
 	    }
 	
@@ -22892,13 +22910,13 @@
 	      var destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
 	      if (destinationTile.mobId === mob.id) {
 	        // Remove the mob from the destination tile tracking.
-	        destinationTile.hasMob = false;
+	        destinationTile.isBlocked = false;
 	        destinationTile.mobId = undefined;
 	      }
 	    }
 	
 	    // A corpse doesn't count as a mob on a world tile (tile is free).
-	    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+	    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
 	
 	    // Log the death.
 	    log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n      ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
@@ -23389,13 +23407,18 @@
 	    // Full size on one side.
 	    var _this = _possibleConstructorReturn(this, (Tile.__proto__ || Object.getPrototypeOf(Tile)).call(this, input));
 	
-	    _this.size = _this.size || C.TILE_SIZE;
+	    _this.size = input && input.size || C.TILE_SIZE;
 	    _this.radius = _this.size / 2;
 	
-	    _this.color = _this.color || C.TILE_COLOR;
+	    _this.color = input && input.color || C.TILE_COLOR;
 	
-	    _this.hasMob = false;
+	    _this.isBlocked = false;
 	    _this.mobId = undefined;
+	
+	    _this.y = input && input.y || 0;
+	    _this.x = input && input.x || 0;
+	    _this.coordinateY = input && input.coordinateY || 0;
+	    _this.coordinateX = input && input.coordinateX || 0;
 	    return _this;
 	  }
 	

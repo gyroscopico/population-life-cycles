@@ -129,6 +129,7 @@ export const ERROR = {
   INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
   UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
   WORLD_IS_FULL: 'World is full',
+  INVALID_INPUT: 'Invalid input',
 };
 
 // World.

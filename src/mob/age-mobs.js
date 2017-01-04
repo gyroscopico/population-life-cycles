@@ -19,7 +19,7 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
     const currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
     if (currentTile.mobId === mob.id) {
       // Remove the mob from the current tile tracking.
-      currentTile.hasMob = false;
+      currentTile.isBlocked = false;
       currentTile.mobId = undefined;
     }
 
@@ -28,13 +28,13 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
       const destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
       if (destinationTile.mobId === mob.id) {
         // Remove the mob from the destination tile tracking.
-        destinationTile.hasMob = false;
+        destinationTile.isBlocked = false;
         destinationTile.mobId = undefined;
       }
     }
 
     // A corpse doesn't count as a mob on a world tile (tile is free).
-    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].hasMob = false;
+    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
 
     // Log the death.
     log.push(`[death] ${mob.gender} ${mob.category},

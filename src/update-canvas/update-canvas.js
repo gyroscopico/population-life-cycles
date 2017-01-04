@@ -24,7 +24,8 @@ export const updateCanvas = input => {
   }
 
   // Paint corpses.
-  corpses.map(corpse => paintMob(context, corpse));
+  corpses
+    .map(corpse => paintMob(context, corpse));
 
   // Update the position towards the destination, if any.
   mobs

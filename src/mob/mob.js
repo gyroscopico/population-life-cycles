@@ -8,45 +8,48 @@ export default class Mob extends BaseClass {
   constructor(input) {
     super(input);
 
-    // Assign all inputs as properties (if any).
-    Object.assign(this, input);
+    const world = input && input.world;
 
-    this.gender = this.gender || this.randomGender();
+    if (!world) {
+      throw new Error(C.ERROR.INVALID_INPUT);
+    }
+
+    this.gender = input && input.gender || this.randomGender();
 
     // Was this mob spawned by a player?
     // Note: Object.assign can give a value, if not default to true.
-    this.isCreatedByPlayer = this.isCreatedByPlayer || true;
+    this.isCreatedByPlayer = input && input.isCreatedByPlayer || true;
 
     // Is this mob born from other mobs?
-    this.isBornFromMobs = this.isBornFromMobs || false;
+    this.isBornFromMobs = input && input.isBornFromMobs || false;
 
     // A newborn mob from existing mobs who procreated is always 0 years of age.
-    this.age = this.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+    this.age = input && input.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
 
     // Category is related to age (young vs adult), so category should be defined after age.
     this.category = this._getCategory();
 
-    this.speed = this.speed || this.getSpeed();
+    this.speed = input && input.speed || this.getSpeed();
 
     // Position, size and color are properties used on canvas.
     if (this.position === undefined) {
-      this.positionMobInWorld();
+      this.positionMobInWorld(world);
     }
     this.size = this._getSize();
     this.color = this._getColor();
 
     // All mobs pick a next tile adjacent to the current one.
-    pickMobsNextTile([this], this.world);
+    pickMobsNextTile([this], world);
   }
 
-  getRandomTile() {
+  getRandomTile(world) {
     const freeTiles = [];
 
-    for (let y = 0; y < this.world.tiles.length; y++) {
-      for (let x = 0; x < this.world.tiles[y].length; x++) {
-        if (!this.world.tiles[y][x].hasMob) {
-          freeTiles.push(this.world.tiles[y][x]);
+    for (let y = 0; y < world.tiles.length; y++) {
+      for (let x = 0; x < world.tiles[y].length; x++) {
+        if (!world.tiles[y][x].isBlocked) {
+          freeTiles.push(world.tiles[y][x]);
         }
       }
     }
@@ -59,7 +62,7 @@ export default class Mob extends BaseClass {
 
     const tile = freeTiles[randomIndex];
 
-    tile.hasMob = true;
+    tile.isBlocked = true;
     tile.mobId = this.id;
 
     return tile;
@@ -96,8 +99,8 @@ export default class Mob extends BaseClass {
     return adjacentTiles;
   }
 
-  positionMobInWorld() {
-    const tile = this.getRandomTile();
+  positionMobInWorld(world) {
+    const tile = this.getRandomTile(world);
 
     this.position = {
       x: tile.x,

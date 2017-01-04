@@ -3,10 +3,7 @@ import { now } from '../utils/now';
 
 export default class BaseClass {
   constructor(input) {
-    // Assign all inputs as properties (if any).
-    Object.assign(this, input);
-
-    this.id = this.id || guid();
-    this.spawned = this.spawned || now();
+    this.id = input && input.id || guid();
+    this.spawned = input && input.spawned || now();
   }
 }
