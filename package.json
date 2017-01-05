@@ -27,7 +27,11 @@
     "verbose": true,
     "rootDir": ".",
     "collectCoverage": true,
-    "collectCoverageFrom": ["**/src/**/*.js", "!**/src/**/*.test.js"],
+    "collectCoverageFrom": [
+      "**/src/**/*.js",
+      "**/src/**/*.jsx",
+      "!**/src/**/*.test.js"
+    ],
     "scriptPreprocessor": "<rootDir>/node_modules/webpack-babel-jest",
     "moduleFileExtensions": ["js", "json", "es6"]
   },
