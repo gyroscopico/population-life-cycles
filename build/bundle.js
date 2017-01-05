@@ -23019,7 +23019,7 @@
 	  }), world);
 	
 	  // Paint live mobs in their current position where they moved to.
-	  mobs.map(function (mob) {
+	  return mobs.map(function (mob) {
 	    return (0, _paintMob.paintMob)(context, mob);
 	  });
 	};
@@ -23038,15 +23038,13 @@
 	var _drawDisc = __webpack_require__(195);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
-	  (0, _drawDisc.drawDisc)({
+	  return (0, _drawDisc.drawDisc)({
 	    context: context,
 	    x: mob.position.x,
 	    y: mob.position.y,
 	    radius: mob.size + (fillStyle ? 1 : 0),
 	    fillStyle: fillStyle || mob.color
 	  });
-	
-	  return mob;
 	};
 
 /***/ },
@@ -23071,6 +23069,8 @@
 	  context.fillStyle = fillStyle;
 	  context.fill();
 	  context.closePath();
+	
+	  return context;
 	};
 
 /***/ },
@@ -23087,15 +23087,13 @@
 	var _drawHexagon = __webpack_require__(197);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
-	  (0, _drawHexagon.drawHexagon)({
+	  return (0, _drawHexagon.drawHexagon)({
 	    context: context,
 	    x: tile.x,
 	    y: tile.y,
 	    radius: tile.radius,
 	    fillStyle: tile.color
 	  });
-	
-	  return tile;
 	};
 
 /***/ },
@@ -23113,17 +23111,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
+	var _hexCorner = __webpack_require__(207);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	var hexCorner = function hexCorner(center, radius, i) {
-	  var angleDeg = 60 * i + 30;
-	  var angleRad = angleDeg * Math.PI / 180;
-	
-	  return {
-	    x: center.x + radius * Math.cos(angleRad),
-	    y: center.y + radius * Math.sin(angleRad)
-	  };
-	}; // See http://www.redblobgames.com/grids/hexagons/
+	// See http://www.redblobgames.com/grids/hexagons/
 	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
 	  var context = input.context,
 	      x = input.x,
@@ -23135,11 +23127,11 @@
 	  var numberOfSides = 6;
 	
 	  context.beginPath();
-	  var corner = hexCorner({ x: x, y: y }, radius, 0);
+	  var corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, 0);
 	  context.moveTo(corner.x, corner.y);
 	
 	  for (var i = 1; i <= numberOfSides; i += 1) {
-	    corner = hexCorner({ x: x, y: y }, radius, i);
+	    corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, i);
 	    context.lineTo(corner.x, corner.y);
 	  }
 	
@@ -23147,6 +23139,8 @@
 	  context.lineWidth = C.HEXAGON_LINE_WIDTH;
 	  context.stroke();
 	  context.closePath();
+	
+	  return context;
 	};
 
 /***/ },
@@ -23756,6 +23750,25 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 207 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var hexCorner = exports.hexCorner = function hexCorner(center, radius, i) {
+	  var angleDeg = 60 * i + 30;
+	  var angleRad = angleDeg * Math.PI / 180;
+	
+	  return {
+	    x: center.x + radius * Math.cos(angleRad),
+	    y: center.y + radius * Math.sin(angleRad)
+	  };
+	};
 
 /***/ }
 /******/ ]);

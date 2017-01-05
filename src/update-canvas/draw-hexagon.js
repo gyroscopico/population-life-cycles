@@ -1,15 +1,6 @@
 // See http://www.redblobgames.com/grids/hexagons/
 import * as C from '../constants';
-
-const hexCorner = (center, radius, i) => {
-  const angleDeg = 60 * i + 30;
-  const angleRad = angleDeg * Math.PI / 180;
-
-  return {
-    x: center.x + radius * Math.cos(angleRad),
-    y: center.y + radius * Math.sin(angleRad),
-  };
-};
+import { hexCorner } from './hex-corner';
 
 export const drawHexagon = input => {
   const {
@@ -35,4 +26,6 @@ export const drawHexagon = input => {
   context.lineWidth = C.HEXAGON_LINE_WIDTH;
   context.stroke();
   context.closePath();
+
+  return context;
 };

@@ -1,15 +1,15 @@
-import { drawCircle } from './draw-circle';
+import { drawDisc } from './draw-disc';
 
 // Mock context object.
 const context = {
   beginPath: () => {},
   arc: () => {},
-  stroke: () => {},
+  fill: () => {},
   closePath: () => {},
 };
 
-test('drawCircle sets lineWidth to 1.', () => {
-  const result = drawCircle({
+test('drawDisc sets fillStyle to #ffccff.', () => {
+  const result = drawDisc({
     context,
     x: 50,
     y: 35,
@@ -17,5 +17,5 @@ test('drawCircle sets lineWidth to 1.', () => {
     fillStyle: '#ffccff',
   });
 
-  expect(result.lineWidth).toBe(1);
+  expect(result.fillStyle).toBe('#ffccff');
 });

@@ -44,5 +44,5 @@ export const updateCanvas = input => {
       world);
 
   // Paint live mobs in their current position where they moved to.
-  mobs.map(mob => paintMob(context, mob));
+  return mobs.map(mob => paintMob(context, mob));
 };

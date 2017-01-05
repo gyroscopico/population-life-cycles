@@ -12,4 +12,6 @@ export const drawDisc = input => {
   context.fillStyle = fillStyle;
   context.fill();
   context.closePath();
+
+  return context;
 };
