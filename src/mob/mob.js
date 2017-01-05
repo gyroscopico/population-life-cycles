@@ -23,7 +23,11 @@ export default class Mob extends BaseClass {
     this.isBornFromMobs = input && input.isBornFromMobs || false;
 
     // A newborn mob from existing mobs who procreated is always 0 years of age.
-    this.age = input && input.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+    if (input && input.age !== undefined) {
+      this.age = input.age;
+    } else {
+      this.age = input && input.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+    }
     this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
 
     // Category is related to age (young vs adult), so category should be defined after age.
