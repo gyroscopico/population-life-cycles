@@ -13,4 +13,6 @@ export const drawCircle = input => {
   context.lineWidth = 1;
   context.stroke();
   context.closePath();
+
+  return context;
 };

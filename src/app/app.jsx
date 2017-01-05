@@ -48,6 +48,10 @@ export default class App extends Component {
   componentDidMount() {
     this.heartbeat(); // Start the heartbeat.
 
+    if (!this.refs.canvas) {
+      return;
+    }
+
     this.context = this.refs.canvas.getContext('2d');
     this.context.canvas.width = this.state.world.width;
     this.context.canvas.height = this.state.world.height;
@@ -93,7 +97,9 @@ export default class App extends Component {
   // Heartbeat runs faster than the ticks and guarentees
   // an animation consistent with as smooth a framerate as possible.
   heartbeat(currentTime) {
-    window.requestAnimationFrame(this.heartbeat);
+    if (window && window.requestAnimationFrame) {
+      window.requestAnimationFrame(this.heartbeat);
+    }
 
     // Delta is amount of time since last heartbeat,
     // which can be fast depending on the client.
