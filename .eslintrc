@@ -23,6 +23,7 @@
   "rules": {
     "comma-dangle" : 0,
     "no-console": 1,
-    "no-param-reassign": ["error", { "props": false }]
+    "no-param-reassign": ["error", { "props": false }],
+    "max-len": ["error", 80]
   }
 }

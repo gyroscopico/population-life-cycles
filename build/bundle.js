@@ -21850,6 +21850,7 @@
 	var WELCOME = exports.WELCOME = 'Welcome to Population Game.\n    Influence this worlds population and observe its evolution.';
 	
 	// Maximum number of messages that are logged.
+	var LOG_MASTER_KEY = exports.LOG_MASTER_KEY = 'log';
 	var MAX_LOG_MESSAGES = exports.MAX_LOG_MESSAGES = 9;
 	
 	// Keys.
@@ -21944,7 +21945,8 @@
 	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
 	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
 	  WORLD_IS_FULL: 'World is full',
-	  INVALID_INPUT: 'Invalid input'
+	  INVALID_INPUT: 'Invalid input',
+	  LOCAL_STORAGE_NOT_SUPPORTED: 'localStorage is not supported.'
 	};
 	
 	// World.
@@ -21993,6 +21995,10 @@
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
+	var _storage = __webpack_require__(209);
+	
+	var _storage2 = _interopRequireDefault(_storage);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -22037,6 +22043,12 @@
 	    mobs.push(newMob);
 	    log.push('[pop] ' + newMob.gender + ' ' + newMob.category + ' (' + age + ', \u2625' + newMob.longevity + ').');
 	  }
+	
+	  // Persist the new log messages to localStorage.
+	  var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
+	  log.map(function (message) {
+	    return logStorage.setItem(message);
+	  });
 	
 	  return {
 	    mobs: mobs,
@@ -22886,6 +22898,12 @@
 	
 	var _now = __webpack_require__(185);
 	
+	var _storage = __webpack_require__(209);
+	
+	var _storage2 = _interopRequireDefault(_storage);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	// Return an aged population of mobs and corpses.
@@ -22926,9 +22944,15 @@
 	    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
 	
 	    // Log the death.
-	    log.push('[death] ' + mob.gender + ' ' + mob.category + ',\n      ' + mob.age + ' years old, died ' + mob.causeOfDeath + '.');
+	    log.push('[death] ' + mob.gender + ' ' + mob.category + ', died ' + mob.causeOfDeath + ' \u2625' + mob.age + '.');
 	
 	    return null;
+	  });
+	
+	  // Persist the new log messages to localStorage.
+	  var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
+	  log.map(function (message) {
+	    return logStorage.setItem(message);
 	  });
 	
 	  return {
@@ -23769,6 +23793,95 @@
 	    y: center.y + radius * Math.sin(angleRad)
 	  };
 	};
+
+/***/ },
+/* 208 */,
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	// A Storage uses a masterKey to persist more than one localStorage key value pairs.
+	var Storage = function () {
+	  function Storage(input) {
+	    _classCallCheck(this, Storage);
+	
+	    if (!input) {
+	      throw new Error(C.ERROR.INVALID_INPUT);
+	    }
+	
+	    if (!window || !window.localStorage) {
+	      throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
+	    }
+	
+	    var masterKey = input.masterKey;
+	
+	
+	    this.masterKey = masterKey;
+	
+	    this.existsKey = masterKey + '_exists';
+	    this.lengthKey = masterKey + '_length';
+	
+	    this.exists = this._doesExist();
+	    this.length = this._getLength();
+	  }
+	
+	  // Has the master key ever been used to store data, even
+	  // if now it may no longer have any pairs using its master key.
+	
+	
+	  _createClass(Storage, [{
+	    key: '_doesExist',
+	    value: function _doesExist() {
+	      return localStorage.getItem(this.existsKey) !== null;
+	    }
+	  }, {
+	    key: '_getLength',
+	    value: function _getLength() {
+	      if (this.exists) {
+	        return parseInt(localStorage.getItem(this.lengthKey), 10);
+	      }
+	
+	      return 0;
+	    }
+	
+	    // Append a new member to the storage array.
+	
+	  }, {
+	    key: 'setItem',
+	    value: function setItem(value) {
+	      // The currently available index is equal to the length (starts with 0).
+	      var key = '' + this.masterKey + this.length;
+	      localStorage.setItem(key, value);
+	
+	      // Increment the length now that a new array member has been added.
+	      this.length = this.length + 1;
+	      localStorage.setItem(this.lengthKey, this.length);
+	
+	      // Update the exists property.
+	      this.exists = true;
+	      localStorage.setItem(this.existsKey, this.exists);
+	    }
+	  }]);
+	
+	  return Storage;
+	}();
+	
+	exports.default = Storage;
 
 /***/ }
 /******/ ]);

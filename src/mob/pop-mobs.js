@@ -4,6 +4,7 @@ import Goblin from './goblin/goblin';
 import Cat from './cat/cat';
 import Human from './human/human';
 import Faery from './faery/faery';
+import Storage from '../storage/storage';
 
 export const popMobs = (event, input) => {
   if (event !== undefined) {
@@ -47,6 +48,10 @@ export const popMobs = (event, input) => {
     mobs.push(newMob);
     log.push(`[pop] ${newMob.gender} ${newMob.category} (${age}, \u2625${newMob.longevity}).`);
   }
+
+  // Persist the new log messages to localStorage.
+  const logStorage = new Storage({ masterKey: C.LOG_MASTER_KEY });
+  log.map(message => logStorage.setItem(message));
 
   return {
     mobs,

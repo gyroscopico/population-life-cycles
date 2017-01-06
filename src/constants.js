@@ -33,6 +33,7 @@ export const WELCOME = `Welcome to Population Game.
     Influence this worlds population and observe its evolution.`;
 
 // Maximum number of messages that are logged.
+export const LOG_MASTER_KEY = 'log';
 export const MAX_LOG_MESSAGES = 9;
 
 // Keys.
@@ -128,6 +129,7 @@ export const ERROR = {
   UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
   WORLD_IS_FULL: 'World is full',
   INVALID_INPUT: 'Invalid input',
+  LOCAL_STORAGE_NOT_SUPPORTED: 'localStorage is not supported.',
 };
 
 // World.
