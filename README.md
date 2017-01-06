@@ -49,7 +49,7 @@ Browse to ./linters/ for the html reports.
 npm run lint_scss
 ```
 
-Browse to ./linters/sass-lint.html to view the Sass linting report.
+Browse to ./linters/scss-report.html to view the Sass linting report.
 
 ## Lint the Javascript
 
@@ -57,7 +57,7 @@ Browse to ./linters/sass-lint.html to view the Sass linting report.
 npm run lint_js
 ```
 
-Browse to ./linters/es-lint.html to view the Javascript linting report.
+Browse to ./linters/js-report.html to view the Javascript linting report.
 
 ## Deploy to production
 

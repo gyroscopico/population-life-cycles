@@ -15,7 +15,7 @@ const world = new World({
   innerHeight: 50,
 });
 
-test('updateCanvas returns an empty array when there is no mob to put on it.', () => {
+test('updateCanvas returns an empty array when there is no mob.', () => {
   const result = updateCanvas({
     context,
     world,

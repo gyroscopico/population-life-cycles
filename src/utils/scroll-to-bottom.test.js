@@ -1,6 +1,6 @@
 import { scrollToBottom } from './scroll-to-bottom';
 
-test('scrollToBottom() updates scrollTop value to the scrollHeight of a given element.', () => {
+test('scrollToBottom updates scrollTop value to scrollHeight.', () => {
   const input = {
     scrollHeight: 5,
     scrollTop: 3,

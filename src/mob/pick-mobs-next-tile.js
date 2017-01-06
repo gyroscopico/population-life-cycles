@@ -20,8 +20,12 @@ export const pickMobsNextTile = (mobs, world) => {
     const tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
 
     // Leave the current tile.
-    world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
-    world.tiles[mob.position.coordinateY][mob.position.coordinateX].mobId = undefined;
+    world
+      .tiles[mob.position.coordinateY][mob.position.coordinateX]
+      .isBlocked = false;
+    world
+      .tiles[mob.position.coordinateY][mob.position.coordinateX]
+      .mobId = undefined;
 
     // Occupy the next tile.
     world.tiles[tile.coordinateY][tile.coordinateX].isBlocked = true;

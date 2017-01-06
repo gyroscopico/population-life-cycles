@@ -6,7 +6,7 @@ test('Instance of BaseClass has an id property when instanciated.', () => {
   expect(result.id).not.toBe(undefined);
 });
 
-test('Instance of BaseClass has an id property that is 36 characters long.', () => {
+test('Instance of BaseClass has a 36 characters long id property.', () => {
   const result = new BaseClass();
 
   expect(result.id.length).toBe(36);

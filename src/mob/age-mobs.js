@@ -17,7 +17,9 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
     corpses.push(mob);
 
     // Is the mob tracked on the current tile?
-    const currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
+    const currentTile = world
+        .tiles[mob.position.coordinateY][mob.position.coordinateX];
+
     if (currentTile.mobId === mob.id) {
       // Remove the mob from the current tile tracking.
       currentTile.isBlocked = false;
@@ -26,7 +28,8 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
 
     // Is the mob tracked on the destination tile?
     if (mob.destination !== undefined) {
-      const destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
+      const destinationTile = world
+          .tiles[mob.destination.coordinateY][mob.destination.coordinateX];
       if (destinationTile.mobId === mob.id) {
         // Remove the mob from the destination tile tracking.
         destinationTile.isBlocked = false;
@@ -34,11 +37,11 @@ export const ageMobs = (mobs, corpses, world, years = 1) => {
       }
     }
 
-    // A corpse doesn't count as a mob on a world tile (tile is free).
-    // world.tiles[mob.position.coordinateY][mob.position.coordinateX].isBlocked = false;
-
     // Log the death.
-    log.push(`[death] ${mob.gender} ${mob.category}, died ${mob.causeOfDeath} \u2625${mob.age}.`);
+    log.push([
+      `[death] ${mob.gender} ${mob.category},`,
+      `died ${mob.causeOfDeath} \u2625${mob.age}.`
+    ].join(' '));
 
     return null;
   });

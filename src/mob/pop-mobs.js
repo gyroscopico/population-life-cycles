@@ -46,7 +46,10 @@ export const popMobs = (event, input) => {
     const age = newMob.age >= newMob.maturity() ?
         `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';
     mobs.push(newMob);
-    log.push(`[pop] ${newMob.gender} ${newMob.category} (${age}, \u2625${newMob.longevity}).`);
+    log.push([
+      `[pop] ${newMob.gender} ${newMob.category}`,
+      `(${age}, \u2625${newMob.longevity}).`
+    ].join(' '));
   }
 
   // Persist the new log messages to localStorage.

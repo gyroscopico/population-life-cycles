@@ -8,7 +8,7 @@ export default class World extends BaseClass {
 
     // Total world canvas width and height in pixels.
     this.width = window.innerWidth;
-    this.height = window.innerHeight - C.HEADER_HEIGHT; // height minus the header.
+    this.height = window.innerHeight - C.HEADER_HEIGHT;
 
     // Array of tile objects.
     this.tiles = this._fillWorldWithTiles();

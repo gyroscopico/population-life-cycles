@@ -3,4 +3,5 @@ const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
   .substring(1);
 
 // Return a global unique id.
-export const guid = () => `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+export const guid = () =>
+  `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;

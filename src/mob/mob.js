@@ -26,11 +26,17 @@ export default class Mob extends BaseClass {
     if (input && input.age !== undefined) {
       this.age = input.age;
     } else {
-      this.age = input && input.isBornFromMobs ? 0 : this.randomNumber(0, this.maxCreationAge());
+      this.age = input && input.isBornFromMobs ?
+        0 :
+        this.randomNumber(0, this.maxCreationAge());
     }
-    this.longevity = this.randomNumber(this.minLongevity(), this.maxLongevity());
+    this.longevity = this.randomNumber(
+      this.minLongevity(),
+      this.maxLongevity()
+    );
 
-    // Category is related to age (young vs adult), so category should be defined after age.
+    // Category is related to age (young vs adult),
+    // so category should be defined after age.
     this.category = this._getCategory();
 
     this.speed = input && input.speed || this.getSpeed();
@@ -74,10 +80,24 @@ export default class Mob extends BaseClass {
   // List all tiles around the mob current hexagon.
   getAdjacentTiles(world) {
     // The starting position of y is odd.
-    const directionsFromOddY = [[1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [0, 1]];
+    const directionsFromOddY = [
+      [1, 0],
+      [1, -1],
+      [0, -1],
+      [-1, -1],
+      [-1, 0],
+      [0, 1]
+    ];
 
     // The starting position of y is even.
-    const directionsFromEvenY = [[1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1], [0, 1]];
+    const directionsFromEvenY = [
+      [1, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, 1]
+    ];
 
     const adjacentTiles = [];
     const maxY = world.tiles.length - 1;
@@ -116,7 +136,9 @@ export default class Mob extends BaseClass {
   // Try to age a mob.
   becomeOlder(years) {
     // Age by a number of years or stop aging (dead).
-    this.age = this.age + years < this.longevity ? this.age + years : this.longevity;
+    this.age = this.age + years < this.longevity ?
+      this.age + years :
+      this.longevity;
 
     // Age related properties (will change based on age).
     // Warning: do not call the private _get methods outside this class.
