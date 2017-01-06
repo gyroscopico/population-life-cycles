@@ -21510,6 +21510,12 @@
 	
 	var _world2 = _interopRequireDefault(_world);
 	
+	var _storage = __webpack_require__(209);
+	
+	var _storage2 = _interopRequireDefault(_storage);
+	
+	var _now = __webpack_require__(185);
+	
 	__webpack_require__(203);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -21535,6 +21541,8 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
+	      var welcome = '[motd] ' + C.WELCOME + ' ' + (0, _now.now)();
+	
 	      var world = new _world2.default({ window: window });
 	      var mobs = (0, _popDefaultMobs.popDefaultMobs)(world);
 	
@@ -21549,19 +21557,26 @@
 	        // World models all environment parameters (not mobs).
 	        world: world,
 	
-	        // In heartbeat, lastTime keeps track of the last time the function was run.
+	        // In heartbeat, lastTime keeps track of
+	        // the last time the function was run.
 	        lastTime: undefined,
 	
-	        // In heartbeat, tick measures if enough time has elapsed since the last tick.
+	        // In heartbeat, tick measures if enough time
+	        // has elapsed since the last tick.
 	        tick: 0,
 	
-	        // In heartbeat, frame rate measures of enough time has elapsed since the last frame
+	        // In heartbeat, frame rate measures of enough time
+	        // has elapsed since the last frame
 	        // for a smooth animation (ex: 24 frames per second).
 	        frameRate: 0,
 	
 	        // Keep track of all messages that should be logged and displayed.
-	        log: [C.WELCOME]
+	        log: [welcome]
 	      });
+	
+	      // Persist the welcome message in log.
+	      var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
+	      logStorage.setItem(welcome);
 	
 	      // Functions of the game.
 	      this.heartbeat = this.heartbeat.bind(this);
@@ -21847,7 +21862,7 @@
 	};
 	
 	// Welcome message.
-	var WELCOME = exports.WELCOME = 'Welcome to Population Game.\n    Influence this worlds population and observe its evolution.';
+	var WELCOME = exports.WELCOME = 'Welcome to Population Game. Influence this worlds population and observe its evolution.';
 	
 	// Maximum number of messages that are logged.
 	var LOG_MASTER_KEY = exports.LOG_MASTER_KEY = 'log';
@@ -23815,7 +23830,8 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	// A Storage uses a masterKey to persist more than one localStorage key value pairs.
+	// A Storage uses a masterKey to persist more than one
+	// localStorage key value pairs.
 	var Storage = function () {
 	  function Storage(input) {
 	    _classCallCheck(this, Storage);
@@ -23866,7 +23882,7 @@
 	    value: function setItem(value) {
 	      // The currently available index is equal to the length (starts with 0).
 	      var key = '' + this.masterKey + this.length;
-	      localStorage.setItem(key, value);
+	      localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
 	
 	      // Increment the length now that a new array member has been added.
 	      this.length = this.length + 1;

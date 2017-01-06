@@ -7,11 +7,15 @@ import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvas } from '../update-canvas/update-canvas';
 import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
+import Storage from '../storage/storage';
+import { now } from '../utils/now';
 import './app.scss';
 
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
+    const welcome = `[motd] ${C.WELCOME} ${now()}`;
+
     const world = new World({ window });
     const mobs = popDefaultMobs(world);
 
@@ -26,19 +30,26 @@ export default class App extends Component {
       // World models all environment parameters (not mobs).
       world,
 
-      // In heartbeat, lastTime keeps track of the last time the function was run.
+      // In heartbeat, lastTime keeps track of
+      // the last time the function was run.
       lastTime: undefined,
 
-      // In heartbeat, tick measures if enough time has elapsed since the last tick.
+      // In heartbeat, tick measures if enough time
+      // has elapsed since the last tick.
       tick: 0,
 
-      // In heartbeat, frame rate measures of enough time has elapsed since the last frame
+      // In heartbeat, frame rate measures of enough time
+      // has elapsed since the last frame
       // for a smooth animation (ex: 24 frames per second).
       frameRate: 0,
 
       // Keep track of all messages that should be logged and displayed.
-      log: [C.WELCOME],
+      log: [welcome],
     });
+
+    // Persist the welcome message in log.
+    const logStorage = new Storage({ masterKey: C.LOG_MASTER_KEY });
+    logStorage.setItem(welcome);
 
     // Functions of the game.
     this.heartbeat = this.heartbeat.bind(this);

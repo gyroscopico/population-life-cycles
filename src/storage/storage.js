@@ -1,6 +1,7 @@
 import * as C from '../constants';
 
-// A Storage uses a masterKey to persist more than one localStorage key value pairs.
+// A Storage uses a masterKey to persist more than one
+// localStorage key value pairs.
 export default class Storage {
   constructor(input) {
     if (!input) {
@@ -42,7 +43,10 @@ export default class Storage {
   setItem(value) {
     // The currently available index is equal to the length (starts with 0).
     const key = `${this.masterKey}${this.length}`;
-    localStorage.setItem(key, value);
+    localStorage.setItem(
+      key,
+      typeof value === 'string' ? value : JSON.stringify(value)
+    );
 
     // Increment the length now that a new array member has been added.
     this.length = this.length + 1;

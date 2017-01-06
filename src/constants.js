@@ -29,8 +29,7 @@ export const COLOR = {
 };
 
 // Welcome message.
-export const WELCOME = `Welcome to Population Game.
-    Influence this worlds population and observe its evolution.`;
+export const WELCOME = 'Welcome to Population Game. Influence this worlds population and observe its evolution.';
 
 // Maximum number of messages that are logged.
 export const LOG_MASTER_KEY = 'log';
