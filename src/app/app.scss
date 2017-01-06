@@ -1,8 +1,5 @@
 @import '../scss/variables';
 
-// Dimensions.
-$min-size: 44px;
-
 // Main style.
 body {
   margin: 0;
@@ -22,7 +19,6 @@ button {
   font-family: 'Handlee', cursive;
   height: 32px;
   padding: 0 6px;
-  border: 0;
 }
 
 h1 {

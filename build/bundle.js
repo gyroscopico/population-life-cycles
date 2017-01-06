@@ -21498,25 +21498,25 @@
 	
 	var _popMobs = __webpack_require__(180);
 	
-	var _ageMobs = __webpack_require__(191);
+	var _ageMobs = __webpack_require__(192);
 	
-	var _scrollToBottom = __webpack_require__(192);
+	var _scrollToBottom = __webpack_require__(193);
 	
-	var _updateCanvas = __webpack_require__(193);
+	var _updateCanvas = __webpack_require__(194);
 	
-	var _popDefaultMobs = __webpack_require__(200);
+	var _popDefaultMobs = __webpack_require__(201);
 	
-	var _world = __webpack_require__(201);
+	var _world = __webpack_require__(202);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	var _storage = __webpack_require__(207);
+	var _storage = __webpack_require__(191);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
 	var _now = __webpack_require__(185);
 	
-	__webpack_require__(203);
+	__webpack_require__(204);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -22018,7 +22018,7 @@
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
-	var _storage = __webpack_require__(207);
+	var _storage = __webpack_require__(191);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
@@ -22914,6 +22914,95 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	// A Storage uses a masterKey to persist more than one
+	// localStorage key value pairs.
+	var Storage = function () {
+	  function Storage(input) {
+	    _classCallCheck(this, Storage);
+	
+	    if (!input) {
+	      throw new Error(C.ERROR.INVALID_INPUT);
+	    }
+	
+	    if (!window || !window.localStorage) {
+	      throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
+	    }
+	
+	    var masterKey = input.masterKey;
+	
+	
+	    this.masterKey = masterKey;
+	
+	    this.existsKey = masterKey + '_exists';
+	    this.lengthKey = masterKey + '_length';
+	
+	    this.exists = this._doesExist();
+	    this.length = this._getLength();
+	  }
+	
+	  // Has the master key ever been used to store data, even
+	  // if now it may no longer have any pairs using its master key.
+	
+	
+	  _createClass(Storage, [{
+	    key: '_doesExist',
+	    value: function _doesExist() {
+	      return window.localStorage.getItem(this.existsKey) !== null;
+	    }
+	  }, {
+	    key: '_getLength',
+	    value: function _getLength() {
+	      if (this.exists) {
+	        return parseInt(window.localStorage.getItem(this.lengthKey), 10);
+	      }
+	
+	      return 0;
+	    }
+	
+	    // Append a new member to the storage array.
+	
+	  }, {
+	    key: 'setItem',
+	    value: function setItem(value) {
+	      // The currently available index is equal to the length (starts with 0).
+	      var key = '' + this.masterKey + this.length;
+	      window.localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+	
+	      // Increment the length now that a new array member has been added.
+	      this.length = this.length + 1;
+	      window.localStorage.setItem(this.lengthKey, this.length);
+	
+	      // Update the exists property.
+	      this.exists = true;
+	      window.localStorage.setItem(this.existsKey, this.exists);
+	    }
+	  }]);
+	
+	  return Storage;
+	}();
+	
+	exports.default = Storage;
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.ageMobs = undefined;
 	
 	var _constants = __webpack_require__(179);
@@ -22922,7 +23011,7 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _storage = __webpack_require__(207);
+	var _storage = __webpack_require__(191);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
@@ -22986,7 +23075,7 @@
 	};
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23001,7 +23090,7 @@
 	};
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23015,11 +23104,11 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintMob = __webpack_require__(194);
+	var _paintMob = __webpack_require__(195);
 	
-	var _paintTile = __webpack_require__(196);
+	var _paintTile = __webpack_require__(197);
 	
-	var _animateMobMovement = __webpack_require__(199);
+	var _animateMobMovement = __webpack_require__(200);
 	
 	var _pickMobsNextTile = __webpack_require__(186);
 	
@@ -23072,7 +23161,7 @@
 	};
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23082,7 +23171,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(195);
+	var _drawDisc = __webpack_require__(196);
 	
 	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
 	  return (0, _drawDisc.drawDisc)({
@@ -23095,7 +23184,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23121,7 +23210,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23131,7 +23220,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(197);
+	var _drawHexagon = __webpack_require__(198);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23144,7 +23233,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23158,7 +23247,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(208);
+	var _hexCorner = __webpack_require__(199);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23191,8 +23280,26 @@
 	};
 
 /***/ },
-/* 198 */,
 /* 199 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var hexCorner = exports.hexCorner = function hexCorner(center, radius, i) {
+	  var angleDeg = 60 * i + 30;
+	  var angleRad = angleDeg * Math.PI / 180;
+	
+	  return {
+	    x: center.x + radius * Math.cos(angleRad),
+	    y: center.y + radius * Math.sin(angleRad)
+	  };
+	};
+
+/***/ },
+/* 200 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23236,7 +23343,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23307,7 +23414,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23326,7 +23433,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(202);
+	var _tile = __webpack_require__(203);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23392,7 +23499,7 @@
 	exports.default = World;
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23449,16 +23556,16 @@
 	exports.default = Tile;
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(204);
+	var content = __webpack_require__(205);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(206)(content, {});
+	var update = __webpack_require__(207)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23475,21 +23582,21 @@
 	}
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(205)();
+	exports = module.exports = __webpack_require__(206)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px;\n  border: 0; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\nli {\n  list-style-type: none; }\n\n.main-controls {\n  margin: 0;\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n.header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n.total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n.number-mobs-to-add,\n.mob-category {\n  margin: 0 .5em 0 0; }\n\n.number-mobs-to-add,\n.mob-category,\n.pop-mob {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D;\n  line-height: 29px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 30px; }\n  .pop-mob:hover {\n    color: #009701; }\n\n.scrollable-window {\n  margin: 0;\n  background-color: rgba(51, 23, 13, 0.2);\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  height: 32px;\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\nli {\n  list-style-type: none; }\n\n.main-controls {\n  margin: 0;\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n.header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n.total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n.number-mobs-to-add,\n.mob-category {\n  margin: 0 .5em 0 0; }\n\n.number-mobs-to-add,\n.mob-category,\n.pop-mob {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D;\n  line-height: 29px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 30px; }\n  .pop-mob:hover {\n    color: #009701; }\n\n.scrollable-window {\n  margin: 0;\n  background-color: rgba(51, 23, 13, 0.2);\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports) {
 
 	/*
@@ -23545,7 +23652,7 @@
 
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -23797,114 +23904,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 207 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	// A Storage uses a masterKey to persist more than one
-	// localStorage key value pairs.
-	var Storage = function () {
-	  function Storage(input) {
-	    _classCallCheck(this, Storage);
-	
-	    if (!input) {
-	      throw new Error(C.ERROR.INVALID_INPUT);
-	    }
-	
-	    if (!window || !window.localStorage) {
-	      throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
-	    }
-	
-	    var masterKey = input.masterKey;
-	
-	
-	    this.masterKey = masterKey;
-	
-	    this.existsKey = masterKey + '_exists';
-	    this.lengthKey = masterKey + '_length';
-	
-	    this.exists = this._doesExist();
-	    this.length = this._getLength();
-	  }
-	
-	  // Has the master key ever been used to store data, even
-	  // if now it may no longer have any pairs using its master key.
-	
-	
-	  _createClass(Storage, [{
-	    key: '_doesExist',
-	    value: function _doesExist() {
-	      return window.localStorage.getItem(this.existsKey) !== null;
-	    }
-	  }, {
-	    key: '_getLength',
-	    value: function _getLength() {
-	      if (this.exists) {
-	        return parseInt(window.localStorage.getItem(this.lengthKey), 10);
-	      }
-	
-	      return 0;
-	    }
-	
-	    // Append a new member to the storage array.
-	
-	  }, {
-	    key: 'setItem',
-	    value: function setItem(value) {
-	      // The currently available index is equal to the length (starts with 0).
-	      var key = '' + this.masterKey + this.length;
-	      window.localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
-	
-	      // Increment the length now that a new array member has been added.
-	      this.length = this.length + 1;
-	      window.localStorage.setItem(this.lengthKey, this.length);
-	
-	      // Update the exists property.
-	      this.exists = true;
-	      window.localStorage.setItem(this.existsKey, this.exists);
-	    }
-	  }]);
-	
-	  return Storage;
-	}();
-	
-	exports.default = Storage;
-
-/***/ },
-/* 208 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var hexCorner = exports.hexCorner = function hexCorner(center, radius, i) {
-	  var angleDeg = 60 * i + 30;
-	  var angleRad = angleDeg * Math.PI / 180;
-	
-	  return {
-	    x: center.x + radius * Math.cos(angleRad),
-	    y: center.y + radius * Math.sin(angleRad)
-	  };
-	};
 
 /***/ }
 /******/ ]);

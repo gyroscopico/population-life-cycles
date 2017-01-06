@@ -9,7 +9,7 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.scss', '.css'],
+    extensions: ['', '.js', '.jsx', '.scss'],
   },
   module: {
     loaders: [
@@ -24,10 +24,6 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: 'style!css!sass',
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!css?',
       },
     ],
   },
