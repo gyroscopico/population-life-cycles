@@ -21516,7 +21516,11 @@
 	
 	var _now = __webpack_require__(185);
 	
-	__webpack_require__(204);
+	var _gameCanvas = __webpack_require__(204);
+	
+	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
+	
+	__webpack_require__(205);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21587,13 +21591,33 @@
 	    value: function componentDidMount() {
 	      this.heartbeat(); // Start the heartbeat.
 	
-	      if (!this.refs.canvasWorld) {
+	      if (!this.refs[C.CANVAS_REFS.WORLD]) {
 	        return;
 	      }
 	
-	      this.context = this.refs.canvasWorld.getContext('2d');
-	      this.context.canvas.width = this.state.world.width;
-	      this.context.canvas.height = this.state.world.height;
+	      var width = this.state.world.width;
+	      var height = this.state.world.height;
+	
+	      this.context = new _gameCanvas2.default({
+	        ref: C.CANVAS_REFS.WORLD,
+	        refs: this.refs,
+	        width: width,
+	        height: height
+	      }).context;
+	
+	      this.contextCorpses = new _gameCanvas2.default({
+	        ref: C.CANVAS_REFS.CORPSES,
+	        refs: this.refs,
+	        width: width,
+	        height: height
+	      }).context;
+	
+	      this.contextMobs = new _gameCanvas2.default({
+	        ref: C.CANVAS_REFS.MOBS,
+	        refs: this.refs,
+	        width: width,
+	        height: height
+	      }).context;
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -21639,7 +21663,7 @@
 	      });
 	    }
 	
-	    // Heartbeat runs faster than the ticks and guarentees
+	    // Heartbeat runs faster than the ticks and guarantees
 	    // an animation consistent with as smooth a framerate as possible.
 	
 	  }, {
@@ -21733,9 +21757,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('canvas', { ref: 'canvasWorld' }),
-	        _react2.default.createElement('canvas', { ref: 'canvasCorpses' }),
-	        _react2.default.createElement('canvas', { ref: 'canvasMobs' }),
+	        _react2.default.createElement('canvas', { className: 'canvas canvas-world', ref: 'canvasWorld' }),
+	        _react2.default.createElement('canvas', { className: 'canvas canvas-corpses', ref: 'canvasCorpses' }),
+	        _react2.default.createElement('canvas', { className: 'canvas canvas-mobs', ref: 'canvasMobs' }),
 	        _react2.default.createElement(
 	          'form',
 	          { className: 'main-controls', action: '#', onSubmit: this.submitForm },
@@ -21984,6 +22008,13 @@
 	// World tiles.
 	var TILE_SIZE = exports.TILE_SIZE = 30;
 	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
+	
+	// Canvas.
+	var CANVAS_REFS = exports.CANVAS_REFS = {
+	  WORLD: 'canvasWorld',
+	  CORPSES: 'canvasCorpses',
+	  MOBS: 'canvasMobs'
+	};
 
 /***/ },
 /* 180 */
@@ -23567,15 +23598,43 @@
 
 /***/ },
 /* 204 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var GameCanvas = function GameCanvas(input) {
+	  _classCallCheck(this, GameCanvas);
+	
+	  var ref = input.ref,
+	      refs = input.refs,
+	      width = input.width,
+	      height = input.height;
+	
+	
+	  this.context = refs[ref].getContext('2d');
+	  this.context.canvas.width = width;
+	  this.context.canvas.height = height;
+	};
+	
+	exports.default = GameCanvas;
+
+/***/ },
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(205);
+	var content = __webpack_require__(206);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(207)(content, {});
+	var update = __webpack_require__(208)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23592,21 +23651,21 @@
 	}
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(206)();
+	exports = module.exports = __webpack_require__(207)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\ncanvas {\n  position: fixed;\n  top: 49px; }\n\nli {\n  list-style-type: none; }\n\n.main-controls {\n  margin: 0;\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n.header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n.total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n.number-mobs-to-add {\n  height: 30px; }\n\n.mob-category {\n  height: 32px; }\n\n.number-mobs-to-add,\n.mob-category {\n  margin: 0 .5em 0 0;\n  line-height: 29px; }\n\n.number-mobs-to-add,\n.mob-category,\n.pop-mob {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 30px; }\n  .pop-mob:hover {\n    color: #009701; }\n\n.scrollable-window {\n  margin: 0;\n  background-color: rgba(51, 23, 13, 0.2);\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
+	exports.push([module.id, "body {\n  margin: 0;\n  font-family: 'Handlee', cursive;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\ninput,\ntextarea,\nkeygen,\nselect,\nbutton {\n  font-family: 'Handlee', cursive;\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 24px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.main-controls,\n.header,\n.scrollable-window {\n  z-index: 4; }\n\n.main-controls {\n  margin: 0;\n  position: fixed;\n  bottom: 114px;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  padding: .625em;\n  width: 244px;\n  text-align: right; }\n\n.header {\n  position: fixed;\n  left: 0;\n  right: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #F9F7ED; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #C4FFCC; }\n\n.total-corpses {\n  color: #2C95C9;\n  background-color: #C5FFFF; }\n\n.number-mobs-to-add {\n  height: 30px; }\n\n.mob-category {\n  height: 32px; }\n\n.number-mobs-to-add,\n.mob-category {\n  margin: 0 .5em 0 0;\n  line-height: 29px; }\n\n.number-mobs-to-add,\n.mob-category,\n.pop-mob {\n  cursor: pointer;\n  min-width: 44px;\n  border-radius: .5em;\n  border: solid 1px;\n  background-color: #F9F7ED;\n  color: #33170D; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  background-color: #C4FFCC;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 30px; }\n  .pop-mob:hover {\n    color: #009701; }\n\n.scrollable-window {\n  margin: 0;\n  background-color: rgba(51, 23, 13, 0.2);\n  padding: .625em;\n  width: 250px;\n  height: 100px;\n  overflow: auto;\n  position: fixed;\n  bottom: 0;\n  right: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n\n.horizontal {\n  margin: 0;\n  padding: 0; }\n  .horizontal li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports) {
 
 	/*
@@ -23662,7 +23721,7 @@
 
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

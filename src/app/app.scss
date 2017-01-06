@@ -27,13 +27,31 @@ h1 {
   font-weight: 400;
 }
 
-canvas {
+li {
+  list-style-type: none;
+}
+
+.canvas {
   position: fixed;
   top: 49px;
 }
 
-li {
-  list-style-type: none;
+.canvas-world {
+  z-index: 1;
+}
+
+.canvas-corpses {
+  z-index: 2;
+}
+
+.canvas-mobs {
+  z-index: 3;
+}
+
+.main-controls,
+.header,
+.scrollable-window {
+  z-index: 4;
 }
 
 .main-controls {

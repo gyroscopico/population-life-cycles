@@ -144,3 +144,10 @@ export const HEXAGON_LINE_WIDTH = 1;
 // World tiles.
 export const TILE_SIZE = 30;
 export const TILE_COLOR = COLOR.RED_L;
+
+// Canvas.
+export const CANVAS_REFS = {
+  WORLD: 'canvasWorld',
+  CORPSES: 'canvasCorpses',
+  MOBS: 'canvasMobs',
+};

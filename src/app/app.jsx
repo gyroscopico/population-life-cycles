@@ -9,6 +9,7 @@ import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
 import Storage from '../storage/storage';
 import { now } from '../utils/now';
+import GameCanvas from '../game-canvas/game-canvas';
 import './app.scss';
 
 // Main starting point of the game.
@@ -59,13 +60,33 @@ export default class App extends Component {
   componentDidMount() {
     this.heartbeat(); // Start the heartbeat.
 
-    if (!this.refs.canvasWorld) {
+    if (!this.refs[C.CANVAS_REFS.WORLD]) {
       return;
     }
 
-    this.context = this.refs.canvasWorld.getContext('2d');
-    this.context.canvas.width = this.state.world.width;
-    this.context.canvas.height = this.state.world.height;
+    const width = this.state.world.width;
+    const height = this.state.world.height;
+
+    this.context = new GameCanvas({
+      ref: C.CANVAS_REFS.WORLD,
+      refs: this.refs,
+      width,
+      height,
+    }).context;
+
+    this.contextCorpses = new GameCanvas({
+      ref: C.CANVAS_REFS.CORPSES,
+      refs: this.refs,
+      width,
+      height,
+    }).context;
+
+    this.contextMobs = new GameCanvas({
+      ref: C.CANVAS_REFS.MOBS,
+      refs: this.refs,
+      width,
+      height,
+    }).context;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -107,7 +128,7 @@ export default class App extends Component {
     });
   }
 
-  // Heartbeat runs faster than the ticks and guarentees
+  // Heartbeat runs faster than the ticks and guarantees
   // an animation consistent with as smooth a framerate as possible.
   heartbeat(currentTime) {
     if (window && window.requestAnimationFrame) {
@@ -195,9 +216,9 @@ export default class App extends Component {
 
     return (
       <div>
-        <canvas ref="canvasWorld" />
-        <canvas ref="canvasCorpses" />
-        <canvas ref="canvasMobs" />
+        <canvas className="canvas canvas-world" ref="canvasWorld" />
+        <canvas className="canvas canvas-corpses" ref="canvasCorpses" />
+        <canvas className="canvas canvas-mobs" ref="canvasMobs" />
         <form className="main-controls" action="#" onSubmit={this.submitForm}>
           <input
             type="number"
