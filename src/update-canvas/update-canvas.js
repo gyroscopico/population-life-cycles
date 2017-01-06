@@ -1,7 +1,7 @@
 import * as C from '../constants';
-import { paintMob } from './paint-mob';
-import { paintTile } from './paint-tile';
-import { animateMobMovement } from './animate-mob-movement';
+import { paintMob } from './paint-mob/paint-mob';
+import { paintTile } from './paint-tile/paint-tile';
+import { animateMobMovement } from './animate-mob-movement/animate-mob-movement';
 import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
 
 export const updateCanvas = input => {

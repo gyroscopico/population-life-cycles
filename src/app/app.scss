@@ -17,7 +17,6 @@ keygen,
 select,
 button {
   font-family: 'Handlee', cursive;
-  height: 32px;
   padding: 0 6px;
 }
 
@@ -73,9 +72,18 @@ li {
   background-color: $blue-l;
 }
 
+.number-mobs-to-add {
+  height: 30px;
+}
+
+.mob-category {
+  height: 32px;
+}
+
 .number-mobs-to-add,
 .mob-category {
   margin: 0 .5em 0 0;
+  line-height: 29px;
 }
 
 .number-mobs-to-add,
@@ -87,7 +95,6 @@ li {
   border: solid 1px;
   background-color: $white;
   color: $black;
-  line-height: 29px;
 }
 
 .pop-mob {
@@ -95,7 +102,8 @@ li {
   background-color: $green-l;
   font-weight: 600;
   text-transform: uppercase;
-  height: 30px;
+  height: 32px;
+  line-height: 30px;
 
   &:hover {
     color: $green-d;

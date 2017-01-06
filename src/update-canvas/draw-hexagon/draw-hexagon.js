@@ -1,6 +1,6 @@
 // See http://www.redblobgames.com/grids/hexagons/
-import * as C from '../constants';
-import { hexCorner } from './hex-corner';
+import * as C from '../../constants';
+import { hexCorner } from '../hex-corner/hex-corner';
 
 export const drawHexagon = input => {
   const {

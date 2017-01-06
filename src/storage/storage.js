@@ -56,4 +56,9 @@ export default class Storage {
     this.exists = true;
     window.localStorage.setItem(this.existsKey, this.exists);
   }
+
+  // Return localStorage total size in Kilobytes.
+  totalSize() {
+    return Math.round(JSON.stringify(window.localStorage).length / 1024);
+  }
 }

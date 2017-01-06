@@ -1,4 +1,4 @@
-import { drawHexagon } from './draw-hexagon';
+import { drawHexagon } from '../draw-hexagon/draw-hexagon';
 
 export const paintTile = (context, tile) => drawHexagon({
   context,

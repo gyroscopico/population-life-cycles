@@ -1,4 +1,4 @@
-import { drawDisc } from './draw-disc';
+import { drawDisc } from '../draw-disc/draw-disc';
 
 export const paintMob = (context, mob, fillStyle) => drawDisc({
   context,
