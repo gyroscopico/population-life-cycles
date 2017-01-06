@@ -196,31 +196,39 @@ export default class App extends Component {
     return (
       <div>
         <canvas id="canvas" ref="canvas" />
-        <form id="main-controls" action="#" onSubmit={this.submitForm}>
+        <form className="main-controls" action="#" onSubmit={this.submitForm}>
           <input
-            type="number" id="number-mobs-to-add"
-            defaultValue="9" min="1" max="100"
+            type="number"
+            id="number-mobs-to-add"
+            className="number-mobs-to-add"
+            defaultValue="9"
+            min="1"
+            max="100"
             pattern="\d*"
           />
-          <select name="mob-category" id="mob-category">
+          <select
+            name="mob-category"
+            id="mob-category"
+            className="mob-category"
+          >
             <option value="Orc">Orcs</option>
             <option value="Goblin">Goblins</option>
             <option value="Cat">Cats</option>
             <option value="Human">Humans</option>
             <option value="Faery">Faeries</option>
           </select>
-          <input type="submit" value="Pop" />
+          <input type="submit" value="Pop" className="pop-mob" />
         </form>
 
-        <ul id="header" className="horizontal">
+        <ul className="header horizontal">
           <li><h1>Population Game</h1></li>
           <li>
-            <span id="total-mobs" className="big-number">
+            <span className="total-mobs big-number">
               {mobsTotal.toString()}
             </span> {mobsLabel}
           </li>
           <li>
-            <span id="total-corpses" className="big-number">
+            <span className="total-corpses big-number">
               {corpsesTotal.toString()}
             </span> {corpsesLabel}
           </li>

@@ -1,7 +1,7 @@
 # Linter Options
 options:
-  # Don't merge default rules
-  merge-default-rules: false
+  # Allows you to merge rules with the default config file from sass-lint
+  merge-default-rules: true
   # Set the formatter to 'html'
   formatter: html
   # Output file instead of logging results
