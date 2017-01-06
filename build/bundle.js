@@ -21587,11 +21587,11 @@
 	    value: function componentDidMount() {
 	      this.heartbeat(); // Start the heartbeat.
 	
-	      if (!this.refs.canvas) {
+	      if (!this.refs.canvasWorld) {
 	        return;
 	      }
 	
-	      this.context = this.refs.canvas.getContext('2d');
+	      this.context = this.refs.canvasWorld.getContext('2d');
 	      this.context.canvas.width = this.state.world.width;
 	      this.context.canvas.height = this.state.world.height;
 	    }
@@ -21733,7 +21733,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('canvas', { id: 'canvas', ref: 'canvas' }),
+	        _react2.default.createElement('canvas', { ref: 'canvasWorld' }),
+	        _react2.default.createElement('canvas', { ref: 'canvasCorpses' }),
+	        _react2.default.createElement('canvas', { ref: 'canvasMobs' }),
 	        _react2.default.createElement(
 	          'form',
 	          { className: 'main-controls', action: '#', onSubmit: this.submitForm },

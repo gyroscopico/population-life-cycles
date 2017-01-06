@@ -59,11 +59,11 @@ export default class App extends Component {
   componentDidMount() {
     this.heartbeat(); // Start the heartbeat.
 
-    if (!this.refs.canvas) {
+    if (!this.refs.canvasWorld) {
       return;
     }
 
-    this.context = this.refs.canvas.getContext('2d');
+    this.context = this.refs.canvasWorld.getContext('2d');
     this.context.canvas.width = this.state.world.width;
     this.context.canvas.height = this.state.world.height;
   }
@@ -195,7 +195,9 @@ export default class App extends Component {
 
     return (
       <div>
-        <canvas id="canvas" ref="canvas" />
+        <canvas ref="canvasWorld" />
+        <canvas ref="canvasCorpses" />
+        <canvas ref="canvasMobs" />
         <form className="main-controls" action="#" onSubmit={this.submitForm}>
           <input
             type="number"
