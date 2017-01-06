@@ -87,3 +87,11 @@ Note: only do this from the master branch after all code is ready to be publishe
 ```
 git tag -a 1.3.0 -m "Mobs don't collide (one mob per hexagon)."
 ```
+
+To write multiple lines:
+
+```
+git tag -a 1.4.0 -m "First line
+second line
+last line"
+```
