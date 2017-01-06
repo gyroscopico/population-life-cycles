@@ -33,11 +33,31 @@ npm run dev
 npm test
 ```
 
-## Linting
+Browse to ./coverage/lcov-report/index.html for the report.
+
+## Lint both Sass and Javascript
 
 ```
 npm run lint
 ```
+
+Browse to ./linters/ for the html reports.
+
+## Lint the Sass
+
+```
+npm run lint_scss
+```
+
+Browse to ./linters/sass-lint.html to view the Sass linting report.
+
+## Lint the Javascript
+
+```
+npm run lint_js
+```
+
+Browse to ./linters/es-lint.html to view the Javascript linting report.
 
 ## Deploy to production
 

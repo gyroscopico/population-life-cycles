@@ -35,11 +35,11 @@ $min-size: 44px;
 
 // Main style.
 body {
+  margin: 0;
   font-family: 'Handlee', cursive;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5em;
-  margin: 0;
   background-color: $white;
   color: $black;
 }
@@ -68,11 +68,11 @@ canvas {
 }
 
 #main-controls {
+  margin: 0;
   position: fixed;
   bottom: 114px;
   right: 0;
   background-color: $transparent-75;
-  margin: 0;
   padding: .625em;
   width: 244px;
   text-align: right;
@@ -136,8 +136,8 @@ input[type=submit] {
 }
 
 .scrollable-window {
-  background-color: $transparent-20;
   margin: 0;
+  background-color: $transparent-20;
   padding: .625em;
   width: 250px;
   height: 100px;
