@@ -7,7 +7,7 @@ Population life cycles simulates adding a group of individuals that will reprodu
 npm install
 ```
 
-## Build only once
+## Build only once for Production
 
 ```
 npm run build
@@ -21,7 +21,7 @@ npm start
 
 Browse to http://localhost:8080 or whichever port is available.
 
-## Develop and build continuously
+## Develop and build continuously for Development
 
 ```
 npm run dev
@@ -44,6 +44,8 @@ npm run lint
 Browse to ./linters/ for the html reports.
 
 ## Lint the Sass
+
+Note: when there is nothing to report, the output doesn't produce a file.
 
 ```
 npm run lint_scss
@@ -81,6 +83,12 @@ See https://github.com/ebabel-eu/population-life-cycles/milestones
 See https://github.com/ebabel-eu/population-life-cycles/releases
 
 ### Tag a new version for a release
+
+Before releasing, make sure to build for Production:
+
+```
+npm run build
+```
 
 Note: only do this from the master branch after all code is ready to be published.
 

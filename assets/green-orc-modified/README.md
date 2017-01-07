@@ -1,6 +1,8 @@
 # Green Orc modified
 
-![Green Orc modified](greenorc_modified.svg)
+![Green Orc modified](greenorc_modified.png)
+
+[Source SVG file](greenorc_modified.svg)
 
 ## Author
 
