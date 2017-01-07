@@ -1,0 +1,18 @@
+// Pop mob buttons.
+// @l: light color.
+// @m: medium color.
+// @d: dark color.
+@mixin pop-mob($l, $m, $d) {
+  background-color: $m;
+  color: $l;
+
+  &:hover {
+    background-color: $l;
+    color: $d;
+  }
+
+  &:active {
+    background-color: $d;
+    color: $l;
+  }
+}

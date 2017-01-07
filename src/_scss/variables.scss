@@ -8,7 +8,7 @@ $gold-m: #E3B446;
 $gold-d: #C99A2C;
 
 $green-l: #C4FFCC;
-$green-m: #5FFD67;
+$green-m: #49b64e;
 $green-d: #009701;
 
 $blue-l: #C5FFFF;
@@ -30,5 +30,30 @@ $pink-d: #D84B96;
 $white: #F9F7ED;
 $black: #33170D;  // rgb 51, 23, 13
 
+// Pop mob buttons
+
+// Clickable state background.
+$pop-orc-m: $gold-m;
+// Hover state background, text color on active and clickable state.
+$pop-orc-l: $gold-l;
+// Active state background and text color on clickable state.
+$pop-orc-d: $gold-d;
+
+$pop-goblin-m: $green-m;
+$pop-goblin-l: $green-l;
+$pop-goblin-d: $green-d;
+
+$pop-cat-m: $blue-m;
+$pop-cat-l: $blue-l;
+$pop-cat-d: $blue-d;
+
+$pop-human-m: $pink-m;
+$pop-human-l: $pink-l;
+$pop-human-d: $pink-d;
+
+$pop-faery-m: $purple-m;
+$pop-faery-l: $purple-l;
+$pop-faery-d: $purple-d;
+
 // Dimensions.
-$min-size: 44px;
+$min-size: 40px;

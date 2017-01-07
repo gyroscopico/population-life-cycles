@@ -1,9 +1,17 @@
-@import '../scss/variables';
+@import '../_scss/variables';
+@import '../_scss/mixins';
+
+// Mobile first: default stye is for the smallest viewport, 320px x 568px (iPhone 5).
 
 // Main style.
+body,
+input,
+button {
+  font-family: 'Handlee', cursive;
+}
+
 body {
   margin: 0;
-  font-family: 'Handlee', cursive;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5em;
@@ -12,19 +20,15 @@ body {
 }
 
 input,
-textarea,
-keygen,
-select,
 button {
-  font-family: 'Handlee', cursive;
   padding: 0 6px;
 }
 
 h1 {
   margin: 0 6px 0 0;
   line-height: 49px;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 400;  
 }
 
 li {
@@ -61,7 +65,7 @@ li {
   right: 0;
   background-color: $transparent-75;
   padding: .625em;
-  width: 244px;
+  width: 282px;
   text-align: right;
 }
 
@@ -91,48 +95,58 @@ li {
 }
 
 .number-mobs-to-add {
+  line-height: 29px;
+  background-color: $white;
+  color: $black;
   height: 30px;
 }
 
-.mob-category {
-  height: 32px;
-}
-
 .number-mobs-to-add,
-.mob-category {
-  margin: 0 .5em 0 0;
-  line-height: 29px;
-}
-
-.number-mobs-to-add,
-.mob-category,
 .pop-mob {
   cursor: pointer;
   min-width: $min-size;
   border-radius: .5em;
   border: solid 1px;
-  background-color: $white;
-  color: $black;
+  margin: 0 .5em 0 0;
 }
 
 .pop-mob {
   -webkit-appearance: none; // Needs to stay first line of this style.
-  background-color: $green-l;
   font-weight: 600;
   text-transform: uppercase;
   height: 32px;
   line-height: 30px;
+}
 
-  &:hover {
-    color: $green-d;
-  }
+.pop-mob-last {
+  margin-right: 0;
+}
+
+.pop-orc {
+  @include pop-mob($pop-orc-l, $pop-orc-m, $pop-orc-d);
+}
+
+.pop-goblin {
+  @include pop-mob($pop-goblin-l, $pop-goblin-m, $pop-goblin-d);
+}
+
+.pop-cat {
+  @include pop-mob($pop-cat-l, $pop-cat-m, $pop-cat-d);
+}
+
+.pop-human {
+  @include pop-mob($pop-human-l, $pop-human-m, $pop-human-d);
+}
+
+.pop-faery {
+  @include pop-mob($pop-faery-l, $pop-faery-m, $pop-faery-d);
 }
 
 .scrollable-window {
   margin: 0;
   background-color: $transparent-20;
   padding: .625em;
-  width: 250px;
+  width: 288px;
   height: 100px;
   overflow: auto;
   position: fixed;
@@ -152,5 +166,11 @@ li {
     margin-left: .5em;
     text-align: center;
     line-height: 3em;
+  }
+}
+
+@media (min-width: 321px) {
+  h1 {
+    font-size: 24px;
   }
 }

@@ -96,8 +96,9 @@ export const YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 export const ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
 
-// Mob categories.
+// Mob categories used for poping the right mob class.
 export const CATEGORY = {
+  DEFAULT: 'Orc',
   FAERY: 'Faery',
   HUMAN: 'Human',
   ORC: 'Orc',
@@ -115,7 +116,7 @@ export const DEFAULT_MOBS = {
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).
-export const FRAME_RATE = 1e3 / 24; // 24 frames per second.
+export const FRAME_RATE = 1e3 / 60; // 60 frames per second.
 
 // Game logic time measurement (ex: ageing of mobs).
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.

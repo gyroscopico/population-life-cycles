@@ -154,7 +154,8 @@ export default class App extends Component {
       });
     }
 
-    // Frame rate is used for moving sprites, camera controls or handling keyboard input.
+    // Frame rate is used for moving sprites, camera controls or
+    // handling keyboard input.
     // Note: for an animation, movements should be related to the delta.
     // See http://creativejs.com/resources/requestanimationframe/
     if (this.state.frameRate >= C.FRAME_RATE) {
@@ -171,15 +172,14 @@ export default class App extends Component {
     });
   }
 
-  submitForm(event) {
+  submitForm(category, event) {
     // Validate the number of mobs to add.
-    const toAdd = Number(event.currentTarget['number-mobs-to-add'].value);
+    const toAdd = Number(this.refs['number-mobs-to-add'].value);
     if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
       throw new Error(`${C.ERROR.INVALID_NUMBER_OF_MOBS}: ${toAdd}.`);
     }
 
     // Validate the category of the mobs to add.
-    const category = event.currentTarget['mob-category'].value;
     if (!category) {
       throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
     }
@@ -219,29 +219,6 @@ export default class App extends Component {
         <canvas className="canvas canvas-world" ref="canvasWorld" />
         <canvas className="canvas canvas-corpses" ref="canvasCorpses" />
         <canvas className="canvas canvas-mobs" ref="canvasMobs" />
-        <form className="main-controls" action="#" onSubmit={this.submitForm}>
-          <input
-            type="number"
-            id="number-mobs-to-add"
-            className="number-mobs-to-add"
-            defaultValue="9"
-            min="1"
-            max="100"
-            pattern="\d*"
-          />
-          <select
-            name="mob-category"
-            id="mob-category"
-            className="mob-category"
-          >
-            <option value="Orc">Orcs</option>
-            <option value="Goblin">Goblins</option>
-            <option value="Cat">Cats</option>
-            <option value="Human">Humans</option>
-            <option value="Faery">Faeries</option>
-          </select>
-          <input type="submit" value="Pop" className="pop-mob" />
-        </form>
 
         <ul className="header horizontal">
           <li><h1>Population Game</h1></li>
@@ -256,6 +233,52 @@ export default class App extends Component {
             </span> {corpsesLabel}
           </li>
         </ul>
+
+        <form
+          className="main-controls"
+          action="#"
+          onSubmit={event => this.submitForm(C.CATEGORY.DEFAULT, event)}
+        >
+          <input
+            type="number"
+            ref="number-mobs-to-add"
+            className="number-mobs-to-add"
+            defaultValue="9"
+            min="1"
+            max="100"
+            pattern="\d*"
+          />
+          <button
+            className="pop-mob pop-orc"
+            onClick={event => this.submitForm(C.CATEGORY.ORC, event)}
+          >
+            Orc
+          </button>
+          <button
+            className="pop-mob pop-goblin"
+            onClick={event => this.submitForm(C.CATEGORY.GOBLIN, event)}
+          >
+            Gob
+          </button>
+          <button
+            className="pop-mob pop-cat"
+            onClick={event => this.submitForm(C.CATEGORY.CAT, event)}
+          >
+            Cat
+          </button>
+          <button
+            className="pop-mob pop-human"
+            onClick={event => this.submitForm(C.CATEGORY.HUMAN, event)}
+          >
+            Man
+          </button>
+          <button
+            className="pop-mob pop-faery pop-mob-last"
+            onClick={event => this.submitForm(C.CATEGORY.FAERY, event)}
+          >
+            Fae
+          </button>
+        </form>
 
         <ol className="scrollable-window" ref="logWindow">
           {logMessages}
