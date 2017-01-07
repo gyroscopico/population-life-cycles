@@ -220,7 +220,7 @@ export default class App extends Component {
         <canvas className="canvas canvas-corpses" ref="canvasCorpses" />
         <canvas className="canvas canvas-mobs" ref="canvasMobs" />
 
-        <ul className="header horizontal">
+        <ul className="header">
           <li><h1>Population Game</h1></li>
           <li>
             <span className="total-mobs big-number">

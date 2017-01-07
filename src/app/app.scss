@@ -1,9 +1,10 @@
 @import '../_scss/variables';
 @import '../_scss/mixins';
 
-// Mobile first: default stye is for the smallest viewport, 320px x 568px (iPhone 5).
+// Mobile first: default style is for the smallest
+// device viewport; iPhone 5, 320px x 568px.
 
-// Main style.
+// Generic style.
 body,
 input,
 button {
@@ -24,6 +25,7 @@ button {
   padding: 0 6px;
 }
 
+// Note: the only h1 is the logo.
 h1 {
   margin: 0 6px 0 0;
   line-height: 49px;
@@ -34,6 +36,8 @@ h1 {
 li {
   list-style-type: none;
 }
+
+// Canvas style: layered game area below the UI components. 
 
 .canvas {
   position: fixed;
@@ -52,29 +56,37 @@ li {
   z-index: 3;
 }
 
-.main-controls,
+// Style shared by several UI components.
+
 .header,
+.main-controls,
 .scrollable-window {
-  z-index: 4;
-}
-
-.main-controls {
   margin: 0;
-  position: fixed;
-  bottom: 114px;
-  right: 0;
-  background-color: $transparent-75;
-  padding: .625em;
-  width: 282px;
-  text-align: right;
-}
-
-.header {
   position: fixed;
   left: 0;
   right: 0;
+  z-index: 4;
+}
+
+.main-controls,
+.scrollable-window {
+  padding: .625em;
+}
+
+// Header: top of the screen, display logo and
+// information about the game.
+
+.header {
+  padding: 0;
   background-color: $transparent-75;
   color: $white;
+
+  li {
+    float: left;
+    margin-left: .5em;
+    text-align: center;
+    line-height: 3em;
+  }
 }
 
 .big-number {
@@ -92,6 +104,14 @@ li {
 .total-corpses {
   color: $blue-d;
   background-color: $blue-l;
+}
+
+// Main controls: how many mobs to pop and which category.
+
+.main-controls {
+  bottom: 114px;
+  background-color: $transparent-75;
+  text-align: right;
 }
 
 .number-mobs-to-add {
@@ -115,7 +135,7 @@ li {
   font-weight: 600;
   text-transform: uppercase;
   height: 32px;
-  line-height: 30px;
+  line-height: 32px;
 }
 
 .pop-mob-last {
@@ -142,35 +162,34 @@ li {
   @include pop-mob($pop-faery-l, $pop-faery-m, $pop-faery-d);
 }
 
+// Scrollable window: log of game events.
 .scrollable-window {
-  margin: 0;
   background-color: $transparent-20;
-  padding: .625em;
-  width: 288px;
   height: 100px;
   overflow: auto;
-  position: fixed;
   bottom: 0;
-  right: 0;
   font-family: verdana, sans-serif;
   font-size: 11px;
   line-height: 15px;
 }
 
-.horizontal {
-  margin: 0;
-  padding: 0;
-
-  li {
-    float: left;
-    margin-left: .5em;
-    text-align: center;
-    line-height: 3em;
-  }
-}
-
+// Breakpoint: anything greater than the smallest
+// supported device; iPhone 5, 320px wide.
 @media (min-width: 321px) {
   h1 {
     font-size: 24px;
+  }
+
+  .main-controls,
+  .scrollable-window {
+    left: initial;
+  }
+
+  .main-controls {
+    width: 314px;
+  }
+
+  .scrollable-window {
+    width: 320px;
   }
 }
