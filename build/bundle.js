@@ -21500,13 +21500,13 @@
 	
 	var _ageMobs = __webpack_require__(192);
 	
-	var _scrollToBottom = __webpack_require__(193);
+	var _scrollToBottom = __webpack_require__(195);
 	
-	var _updateCanvasWorld = __webpack_require__(194);
+	var _updateCanvasWorld = __webpack_require__(196);
 	
-	var _updateCanvasCorpses = __webpack_require__(198);
+	var _updateCanvasCorpses = __webpack_require__(200);
 	
-	var _updateCanvasMobs = __webpack_require__(201);
+	var _updateCanvasMobs = __webpack_require__(203);
 	
 	var _popDefaultMobs = __webpack_require__(205);
 	
@@ -23106,7 +23106,7 @@
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
-	var _clearMob = __webpack_require__(202);
+	var _clearMob = __webpack_require__(193);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -23172,6 +23172,61 @@
 
 /***/ },
 /* 193 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.clearMob = undefined;
+	
+	var _clearCanvas = __webpack_require__(194);
+	
+	var clearMob = exports.clearMob = function clearMob(context, mob) {
+	  // Clear a square greater than mob by 1 pixel.
+	  var extraPixel = 1;
+	
+	  var topLeft = {
+	    x: Math.floor(mob.position.x - mob.size) - extraPixel,
+	    y: Math.floor(mob.position.y - mob.size) - extraPixel
+	  };
+	
+	  var bottomRight = {
+	    x: Math.floor(mob.position.x + mob.size) - extraPixel,
+	    y: Math.floor(mob.position.y + mob.size) - extraPixel
+	  };
+	
+	  return (0, _clearCanvas.clearCanvas)({
+	    context: context,
+	    topLeft: topLeft,
+	    bottomRight: bottomRight
+	  });
+	};
+
+/***/ },
+/* 194 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Clear a rectangle of canvas.
+	var clearCanvas = exports.clearCanvas = function clearCanvas(input) {
+	  var context = input.context,
+	      topLeft = input.topLeft,
+	      bottomRight = input.bottomRight;
+	
+	
+	  context.clearRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+	
+	  return context;
+	};
+
+/***/ },
+/* 195 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23186,7 +23241,7 @@
 	};
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23196,7 +23251,7 @@
 	});
 	exports.updateCanvasWorld = undefined;
 	
-	var _paintTile = __webpack_require__(195);
+	var _paintTile = __webpack_require__(197);
 	
 	var updateCanvasWorld = exports.updateCanvasWorld = function updateCanvasWorld(input) {
 	  var context = input.context,
@@ -23214,7 +23269,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23224,7 +23279,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(196);
+	var _drawHexagon = __webpack_require__(198);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23237,7 +23292,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23251,7 +23306,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(197);
+	var _hexCorner = __webpack_require__(199);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23284,7 +23339,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23303,7 +23358,7 @@
 	};
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23313,7 +23368,7 @@
 	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(199);
+	var _paintMob = __webpack_require__(201);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23329,7 +23384,7 @@
 	};
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23339,7 +23394,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(200);
+	var _drawDisc = __webpack_require__(202);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23354,7 +23409,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23381,7 +23436,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23391,9 +23446,9 @@
 	});
 	exports.updateCanvasMobs = undefined;
 	
-	var _clearMob = __webpack_require__(202);
+	var _clearMob = __webpack_require__(193);
 	
-	var _paintMob = __webpack_require__(199);
+	var _paintMob = __webpack_require__(201);
 	
 	var _animateMobMovement = __webpack_require__(204);
 	
@@ -23430,61 +23485,6 @@
 	  mobs.map(function (mob) {
 	    return (0, _paintMob.paintMob)(context, mob);
 	  });
-	
-	  return context;
-	};
-
-/***/ },
-/* 202 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.clearMob = undefined;
-	
-	var _clearCanvas = __webpack_require__(203);
-	
-	var clearMob = exports.clearMob = function clearMob(context, mob) {
-	  // Clear a square greater than mob by 1 pixel.
-	  var extraPixel = 1;
-	
-	  var topLeft = {
-	    x: Math.floor(mob.position.x - mob.size) - extraPixel,
-	    y: Math.floor(mob.position.y - mob.size) - extraPixel
-	  };
-	
-	  var bottomRight = {
-	    x: Math.floor(mob.position.x + mob.size) - extraPixel,
-	    y: Math.floor(mob.position.y + mob.size) - extraPixel
-	  };
-	
-	  return (0, _clearCanvas.clearCanvas)({
-	    context: context,
-	    topLeft: topLeft,
-	    bottomRight: bottomRight
-	  });
-	};
-
-/***/ },
-/* 203 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Clear a rectangle of canvas.
-	var clearCanvas = exports.clearCanvas = function clearCanvas(input) {
-	  var context = input.context,
-	      topLeft = input.topLeft,
-	      bottomRight = input.bottomRight;
-	
-	
-	  context.clearRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
 	
 	  return context;
 	};
