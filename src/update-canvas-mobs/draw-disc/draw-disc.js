@@ -7,8 +7,8 @@ export const drawDisc = input => {
     fillStyle,
   } = input;
 
-  context.moveTo(x, y);
   context.beginPath();
+  context.moveTo(x, y);
   context.arc(x, y, radius, 0, 2 * Math.PI);
   context.fillStyle = fillStyle;
   context.fill();

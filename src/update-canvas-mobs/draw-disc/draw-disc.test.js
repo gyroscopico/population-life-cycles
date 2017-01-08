@@ -3,6 +3,7 @@ import { drawDisc } from './draw-disc';
 // Mock context object.
 const context = {
   beginPath: () => {},
+  moveTo: () => {},
   arc: () => {},
   fill: () => {},
   closePath: () => {},

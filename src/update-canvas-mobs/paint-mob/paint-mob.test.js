@@ -3,6 +3,7 @@ import { paintMob } from './paint-mob';
 // Mock context object.
 const context = {
   beginPath: () => {},
+  moveTo: () => {},
   arc: () => {},
   fill: () => {},
   closePath: () => {},
