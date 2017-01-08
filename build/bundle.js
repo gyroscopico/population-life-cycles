@@ -22020,7 +22020,7 @@
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
-	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 60; // 60 frames per second.
+	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 30; // 30 frames per second.
 	
 	// Game logic time measurement (ex: ageing of mobs).
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
