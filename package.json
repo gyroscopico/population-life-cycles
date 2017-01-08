@@ -1,6 +1,6 @@
 {
   "name": "population-life-cycles",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Population life cycles simulates adding a group of individuals that will reproduce, grow old and die.",
   "main": "index.js",
   "scripts": {

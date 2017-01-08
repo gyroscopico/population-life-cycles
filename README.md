@@ -75,6 +75,19 @@ See https://github.com/ebabel-eu/population-life-cycles/milestones
 
 ## Version history
 
+### 1.4.0
+
+- Don't keep old log messages in DOM
+- mob object carries a copy of the whole world as a property
+- mob.destination property is a whole tile instance, this is too much data
+- IE11: Object doesn't support property or method 'assign'
+- Automated testing: unit test and test coverage
+- When a mob dies, its corpse should not take up a world tile with .hasMob flag
+- Start the game with a default population.
+- Multiple canvases
+
+### 1.0.0 to 1.3.0
+
 - 1.3.0: Mobs don't collide (one mob per hexagon).
 - 1.2.0: Mobs move around.
 - 1.1.0: Canvas world to see where mobs are.
