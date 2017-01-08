@@ -34,18 +34,9 @@ export default class App extends Component {
       // World models all environment parameters (not mobs).
       world,
 
-      // In heartbeat, lastTime keeps track of
-      // the last time the function was run.
-      lastTime: undefined,
-
       // In heartbeat, tick measures if enough time
       // has elapsed since the last tick.
       tick: 0,
-
-      // In heartbeat, frame rate measures of enough time
-      // has elapsed since the last frame
-      // for a smooth animation (ex: 24 frames per second).
-      frameRate: 0,
 
       // Keep track of all messages that should be logged and displayed.
       log: [welcome],
@@ -136,17 +127,17 @@ export default class App extends Component {
   }
 
   // Update the visual virtual world on the 2D canvas.
-  // Note: called 24 times per second, as per the constant C.FRAME_RATE
-  updateAnimation() {
+  updateAnimation(delta) {
     updateCanvasMobs({
       context: this.contextMobs,
       world: this.state.world,
       mobs: this.state.mobs,
+      delta,
     });
   }
 
   // Heartbeat runs faster than the ticks and guarantees
-  // an animation consistent with as smooth a framerate as possible.
+  // an animation consistent regardless of the device physical framerate.
   heartbeat(currentTime) {
     if (window && window.requestAnimationFrame) {
       window.requestAnimationFrame(this.heartbeat);
@@ -154,12 +145,10 @@ export default class App extends Component {
 
     // Delta is amount of time since last heartbeat,
     // which can be fast depending on the client.
-    const delta = this.state.lastTime === undefined ?
+    const delta = this.lastTime === undefined ?
       0 :
-      currentTime - this.state.lastTime;
-    this.setState({
-      lastTime: currentTime,
-    });
+      currentTime - this.lastTime;
+    this.lastTime = currentTime;
 
     // Update the game every tick (regular intervals),
     // not every heartbeat (too fast and varies based on client).
@@ -173,21 +162,12 @@ export default class App extends Component {
       });
     }
 
-    // Frame rate is used for moving sprites, camera controls or
-    // handling keyboard input.
-    // Note: for an animation, movements should be related to the delta.
-    // See http://creativejs.com/resources/requestanimationframe/
-    if (this.state.frameRate >= C.FRAME_RATE) {
-      this.updateAnimation();
-      this.setState({
-        frameRate: 0, // Reset the frame rate.
-      });
-    }
+    // Movements are related to the requestAnimationFrame delta.
+    this.updateAnimation(delta);
 
-    // Increment the tick and frame rate by the delta.
+    // Increment the game tick (every 6 seconds).
     this.setState({
       tick: this.state.tick + delta,
-      frameRate: this.state.frameRate + delta,
     });
   }
 

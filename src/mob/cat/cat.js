@@ -45,4 +45,8 @@ export default class Cat extends Mob {
   getDeadColor() {
     return C.DEAD_CAT_COLOR;
   }
+
+  getSpeed() {
+    return C.CAT_SPEED;
+  }
 }

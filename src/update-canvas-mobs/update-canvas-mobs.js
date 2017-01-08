@@ -9,6 +9,7 @@ export const updateCanvasMobs = input => {
     context,
     world,
     mobs,
+    delta
   } = input;
 
   // Update the position towards the destination, if any.
@@ -22,7 +23,7 @@ export const updateCanvasMobs = input => {
       // This also makes it possible for the mob to move to
       // a new set of adjacent tiles.
       if (!mob.arrivedAtDestination) {
-        return animateMobMovement(mob);
+        return animateMobMovement(mob, delta);
       }
 
       return mob;

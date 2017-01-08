@@ -61,7 +61,7 @@ export const ADULT_SIZE = 9; // young size * 1.5
 export const DEAD_COLOR = COLOR.GOLD_L;
 export const YOUNG_COLOR = COLOR.GOLD_M;
 export const ADULT_COLOR = COLOR.GOLD_D;
-export const MOB_SPEED = 1;
+export const MOB_SPEED = 6;
 
 // Cats pop default values.
 export const MIN_CAT_LONGEVITY = 4;
@@ -73,6 +73,7 @@ export const ADULT_CAT_SIZE = SMALL_SIZE_ADULT;
 export const DEAD_CAT_COLOR = COLOR.BLUE_L;
 export const YOUNG_CAT_COLOR = COLOR.BLUE_M;
 export const ADULT_CAT_COLOR = COLOR.BLUE_D;
+export const CAT_SPEED = 8;
 
 // Goblin pop default values.
 export const YOUNG_GOBLIN_SIZE = 4;
@@ -98,6 +99,7 @@ export const ADULT_FAERY_SIZE = SMALL_SIZE_ADULT;
 export const YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 export const ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
+export const FAERY_SPEED = 12;
 
 // Mob categories used for poping the right mob class.
 export const CATEGORY = {
@@ -117,9 +119,6 @@ export const DEFAULT_MOBS = {
   GOBLIN: 7,
   CAT: 11,
 };
-
-// Animation time measurement (ex: mob movements, pop mobs on screen).
-export const FRAME_RATE = 1e3 / 60; // 60 frames per second.
 
 // Game logic time measurement (ex: ageing of mobs).
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.

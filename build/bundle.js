@@ -21565,18 +21565,9 @@
 	        // World models all environment parameters (not mobs).
 	        world: world,
 	
-	        // In heartbeat, lastTime keeps track of
-	        // the last time the function was run.
-	        lastTime: undefined,
-	
 	        // In heartbeat, tick measures if enough time
 	        // has elapsed since the last tick.
 	        tick: 0,
-	
-	        // In heartbeat, frame rate measures of enough time
-	        // has elapsed since the last frame
-	        // for a smooth animation (ex: 24 frames per second).
-	        frameRate: 0,
 	
 	        // Keep track of all messages that should be logged and displayed.
 	        log: [welcome]
@@ -21664,20 +21655,20 @@
 	    }
 	
 	    // Update the visual virtual world on the 2D canvas.
-	    // Note: called 24 times per second, as per the constant C.FRAME_RATE
 	
 	  }, {
 	    key: 'updateAnimation',
-	    value: function updateAnimation() {
+	    value: function updateAnimation(delta) {
 	      (0, _updateCanvasMobs.updateCanvasMobs)({
 	        context: this.contextMobs,
 	        world: this.state.world,
-	        mobs: this.state.mobs
+	        mobs: this.state.mobs,
+	        delta: delta
 	      });
 	    }
 	
 	    // Heartbeat runs faster than the ticks and guarantees
-	    // an animation consistent with as smooth a framerate as possible.
+	    // an animation consistent regardless of the device physical framerate.
 	
 	  }, {
 	    key: 'heartbeat',
@@ -21688,10 +21679,8 @@
 	
 	      // Delta is amount of time since last heartbeat,
 	      // which can be fast depending on the client.
-	      var delta = this.state.lastTime === undefined ? 0 : currentTime - this.state.lastTime;
-	      this.setState({
-	        lastTime: currentTime
-	      });
+	      var delta = this.lastTime === undefined ? 0 : currentTime - this.lastTime;
+	      this.lastTime = currentTime;
 	
 	      // Update the game every tick (regular intervals),
 	      // not every heartbeat (too fast and varies based on client).
@@ -21704,20 +21693,12 @@
 	          tick: 0 });
 	      }
 	
-	      // Frame rate is used for moving sprites, camera controls or
-	      // handling keyboard input.
-	      // Note: for an animation, movements should be related to the delta.
-	      // See http://creativejs.com/resources/requestanimationframe/
-	      if (this.state.frameRate >= C.FRAME_RATE) {
-	        this.updateAnimation();
-	        this.setState({
-	          frameRate: 0 });
-	      }
+	      // Movements are related to the requestAnimationFrame delta.
+	      this.updateAnimation(delta);
 	
-	      // Increment the tick and frame rate by the delta.
+	      // Increment the game tick (every 6 seconds).
 	      this.setState({
-	        tick: this.state.tick + delta,
-	        frameRate: this.state.frameRate + delta
+	        tick: this.state.tick + delta
 	      });
 	    }
 	  }, {
@@ -21962,7 +21943,7 @@
 	var DEAD_COLOR = exports.DEAD_COLOR = COLOR.GOLD_L;
 	var YOUNG_COLOR = exports.YOUNG_COLOR = COLOR.GOLD_M;
 	var ADULT_COLOR = exports.ADULT_COLOR = COLOR.GOLD_D;
-	var MOB_SPEED = exports.MOB_SPEED = 1;
+	var MOB_SPEED = exports.MOB_SPEED = 6;
 	
 	// Cats pop default values.
 	var MIN_CAT_LONGEVITY = exports.MIN_CAT_LONGEVITY = 4;
@@ -21974,6 +21955,7 @@
 	var DEAD_CAT_COLOR = exports.DEAD_CAT_COLOR = COLOR.BLUE_L;
 	var YOUNG_CAT_COLOR = exports.YOUNG_CAT_COLOR = COLOR.BLUE_M;
 	var ADULT_CAT_COLOR = exports.ADULT_CAT_COLOR = COLOR.BLUE_D;
+	var CAT_SPEED = exports.CAT_SPEED = 8;
 	
 	// Goblin pop default values.
 	var YOUNG_GOBLIN_SIZE = exports.YOUNG_GOBLIN_SIZE = 4;
@@ -21999,6 +21981,7 @@
 	var YOUNG_FAERY_COLOR = exports.YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 	var ADULT_FAERY_COLOR = exports.ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 	var DEAD_FAERY_COLOR = exports.DEAD_FAERY_COLOR = COLOR.PURPLE_L;
+	var FAERY_SPEED = exports.FAERY_SPEED = 12;
 	
 	// Mob categories used for poping the right mob class.
 	var CATEGORY = exports.CATEGORY = {
@@ -22018,9 +22001,6 @@
 	  GOBLIN: 7,
 	  CAT: 11
 	};
-	
-	// Animation time measurement (ex: mob movements, pop mobs on screen).
-	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 60; // 60 frames per second.
 	
 	// Game logic time measurement (ex: ageing of mobs).
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
@@ -22799,6 +22779,11 @@
 	    value: function getDeadColor() {
 	      return C.DEAD_CAT_COLOR;
 	    }
+	  }, {
+	    key: 'getSpeed',
+	    value: function getSpeed() {
+	      return C.CAT_SPEED;
+	    }
 	  }]);
 	
 	  return Cat;
@@ -22980,6 +22965,11 @@
 	    key: 'getDeadColor',
 	    value: function getDeadColor() {
 	      return C.DEAD_FAERY_COLOR;
+	    }
+	  }, {
+	    key: 'getSpeed',
+	    value: function getSpeed() {
+	      return C.FAERY_SPEED;
 	    }
 	  }]);
 	
@@ -23457,7 +23447,8 @@
 	var updateCanvasMobs = exports.updateCanvasMobs = function updateCanvasMobs(input) {
 	  var context = input.context,
 	      world = input.world,
-	      mobs = input.mobs;
+	      mobs = input.mobs,
+	      delta = input.delta;
 	
 	  // Update the position towards the destination, if any.
 	
@@ -23471,7 +23462,7 @@
 	    // This also makes it possible for the mob to move to
 	    // a new set of adjacent tiles.
 	    if (!mob.arrivedAtDestination) {
-	      return (0, _animateMobMovement.animateMobMovement)(mob);
+	      return (0, _animateMobMovement.animateMobMovement)(mob, delta);
 	    }
 	
 	    return mob;
@@ -23498,12 +23489,12 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
+	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob, delta) {
 	  // Make position and destination comparable.
-	  var posY = Math.floor(mob.position.y);
-	  var posX = Math.floor(mob.position.x);
-	  var desY = Math.floor(mob.destination.y);
-	  var desX = Math.floor(mob.destination.x);
+	  var posY = Math.round(mob.position.y, 0);
+	  var posX = Math.round(mob.position.x, 0);
+	  var desY = Math.round(mob.destination.y, 0);
+	  var desX = Math.round(mob.destination.x, 0);
 	
 	  // Has mob arrived at destination?
 	  if (posY === desY && posX === desX) {
@@ -23518,16 +23509,19 @@
 	
 	  // Animate movement.
 	  if (posY > desY) {
-	    mob.position.y = mob.position.y - mob.speed;
+	    mob.position.y -= mob.speed / delta;
 	  }
+	
 	  if (posY < desY) {
-	    mob.position.y = mob.position.y + mob.speed;
+	    mob.position.y += mob.speed / delta;
 	  }
+	
 	  if (posX > desX) {
-	    mob.position.x = mob.position.x - mob.speed;
+	    mob.position.x -= mob.speed / delta;
 	  }
+	
 	  if (posX < desX) {
-	    mob.position.x = mob.position.x + mob.speed;
+	    mob.position.x += mob.speed / delta;
 	  }
 	
 	  return mob;
