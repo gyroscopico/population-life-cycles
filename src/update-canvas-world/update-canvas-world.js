@@ -1,4 +1,3 @@
-import * as C from '../constants';
 import { paintTile } from './paint-tile/paint-tile';
 
 export const updateCanvasWorld = input => {

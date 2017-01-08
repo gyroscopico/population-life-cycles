@@ -23939,13 +23939,7 @@
 	});
 	exports.updateCanvasWorld = undefined;
 	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
 	var _paintTile = __webpack_require__(214);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var updateCanvasWorld = exports.updateCanvasWorld = function updateCanvasWorld(input) {
 	  var context = input.context,
