@@ -1,5 +1,5 @@
 import World from '../world/world';
-import { updateCanvas } from './update-canvas';
+import { updateCanvasCorpses } from './update-canvas-corpses';
 
 // Mock context object.
 const context = {
@@ -15,13 +15,13 @@ const world = new World({
   innerHeight: 50,
 });
 
-test('updateCanvas returns an empty array when there is no mob.', () => {
-  const result = updateCanvas({
+test('updateCanvas returns a context.', () => {
+  const result = updateCanvasCorpses({
     context,
     world,
     corpses: [],
     mobs: [],
   });
 
-  expect(result).toEqual([]);
+  expect(result).toEqual(context);
 });

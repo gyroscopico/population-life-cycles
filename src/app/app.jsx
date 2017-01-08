@@ -4,7 +4,10 @@ import * as C from '../constants';
 import { popMobs } from '../mob/pop-mobs';
 import { ageMobs } from '../mob/age-mobs';
 import { scrollToBottom } from '../utils/scroll-to-bottom';
-import { updateCanvas } from '../update-canvas/update-canvas';
+import { updateCanvasWorld } from '../update-canvas-world/update-canvas-world';
+import { updateCanvasCorpses }
+  from '../update-canvas-corpses/update-canvas-corpses';
+import { updateCanvasMobs } from '../update-canvas-mobs/update-canvas-mobs';
 import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
 import Storage from '../storage/storage';
@@ -18,7 +21,7 @@ export default class App extends Component {
     const welcome = `[motd] ${C.WELCOME} ${now()}`;
 
     const world = new World({ window });
-    const mobs = popDefaultMobs(world);
+    const mobs = C.POP_DEFAULT_MOBS ? popDefaultMobs(world) : [];
 
     // Keep track of all log messages.
     this.setState({
@@ -67,7 +70,7 @@ export default class App extends Component {
     const width = this.state.world.width;
     const height = this.state.world.height;
 
-    this.context = new GameCanvas({
+    this.contextWorld = new GameCanvas({
       ref: C.CANVAS_REFS.WORLD,
       refs: this.refs,
       width,
@@ -87,6 +90,11 @@ export default class App extends Component {
       width,
       height,
     }).context;
+
+    updateCanvasWorld({
+      context: this.contextWorld,
+      world: this.state.world,
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -115,15 +123,19 @@ export default class App extends Component {
           .concat(log)
           .splice(- C.MAX_LOG_MESSAGES),
     });
+
+    updateCanvasCorpses({
+      context: this.contextCorpses,
+      corpses,
+    });
   }
 
   // Update the visual virtual world on the 2D canvas.
   // Note: called 24 times per second, as per the constant C.FRAME_RATE
   updateAnimation() {
-    updateCanvas({
-      context: this.context,
+    updateCanvasMobs({
+      context: this.contextMobs,
       world: this.state.world,
-      corpses: this.state.corpses,
       mobs: this.state.mobs,
     });
   }
@@ -137,7 +149,9 @@ export default class App extends Component {
 
     // Delta is amount of time since last heartbeat,
     // which can be fast depending on the client.
-    const delta = this.state.lastTime === undefined ? 0 : currentTime - this.state.lastTime;
+    const delta = this.state.lastTime === undefined ?
+      0 :
+      currentTime - this.state.lastTime;
     this.setState({
       lastTime: currentTime,
     });

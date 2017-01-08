@@ -34,6 +34,9 @@ export const WELCOME = [
   'Influence this worlds population and observe its evolution.',
 ].join(' ');
 
+// Flag if the world starts with a default population of mobs.
+export const POP_DEFAULT_MOBS = false;
+
 // Maximum number of messages that are logged.
 export const LOG_MASTER_KEY = 'log';
 export const MAX_LOG_MESSAGES = 9;

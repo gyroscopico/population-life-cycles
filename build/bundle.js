@@ -21502,7 +21502,11 @@
 	
 	var _scrollToBottom = __webpack_require__(193);
 	
-	var _updateCanvas = __webpack_require__(194);
+	var _updateCanvasWorld = __webpack_require__(213);
+	
+	var _updateCanvasCorpses = __webpack_require__(219);
+	
+	var _updateCanvasMobs = __webpack_require__(209);
 	
 	var _popDefaultMobs = __webpack_require__(201);
 	
@@ -21548,7 +21552,7 @@
 	      var welcome = '[motd] ' + C.WELCOME + ' ' + (0, _now.now)();
 	
 	      var world = new _world2.default({ window: window });
-	      var mobs = (0, _popDefaultMobs.popDefaultMobs)(world);
+	      var mobs = C.POP_DEFAULT_MOBS ? (0, _popDefaultMobs.popDefaultMobs)(world) : [];
 	
 	      // Keep track of all log messages.
 	      this.setState({
@@ -21598,7 +21602,7 @@
 	      var width = this.state.world.width;
 	      var height = this.state.world.height;
 	
-	      this.context = new _gameCanvas2.default({
+	      this.contextWorld = new _gameCanvas2.default({
 	        ref: C.CANVAS_REFS.WORLD,
 	        refs: this.refs,
 	        width: width,
@@ -21618,6 +21622,11 @@
 	        width: width,
 	        height: height
 	      }).context;
+	
+	      (0, _updateCanvasWorld.updateCanvasWorld)({
+	        context: this.contextWorld,
+	        world: this.state.world
+	      });
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
@@ -21647,6 +21656,11 @@
 	        world: world,
 	        log: this.state.log.concat(log).splice(-C.MAX_LOG_MESSAGES)
 	      });
+	
+	      (0, _updateCanvasCorpses.updateCanvasCorpses)({
+	        context: this.contextCorpses,
+	        corpses: corpses
+	      });
 	    }
 	
 	    // Update the visual virtual world on the 2D canvas.
@@ -21655,10 +21669,9 @@
 	  }, {
 	    key: 'updateAnimation',
 	    value: function updateAnimation() {
-	      (0, _updateCanvas.updateCanvas)({
-	        context: this.context,
+	      (0, _updateCanvasMobs.updateCanvasMobs)({
+	        context: this.contextMobs,
 	        world: this.state.world,
-	        corpses: this.state.corpses,
 	        mobs: this.state.mobs
 	      });
 	    }
@@ -21921,6 +21934,9 @@
 	
 	// Welcome message.
 	var WELCOME = exports.WELCOME = ['Welcome to Population Game.', 'Influence this worlds population and observe its evolution.'].join(' ');
+	
+	// Flag if the world starts with a default population of mobs.
+	var POP_DEFAULT_MOBS = exports.POP_DEFAULT_MOBS = false;
 	
 	// Maximum number of messages that are logged.
 	var LOG_MASTER_KEY = exports.LOG_MASTER_KEY = 'log';
@@ -22275,8 +22291,12 @@
 	    value: function getRandomTile(world) {
 	      var freeTiles = [];
 	
-	      for (var y = 0; y < world.tiles.length; y++) {
-	        for (var x = 0; x < world.tiles[y].length; x++) {
+	      // Tiles that are on the top and left edges are off-limit
+	      // to pop a new mob.
+	      var edgesOffLimit = 1;
+	
+	      for (var y = edgesOffLimit; y < world.tiles.length; y++) {
+	        for (var x = edgesOffLimit; x < world.tiles[y].length; x++) {
 	          if (!world.tiles[y][x].isBlocked) {
 	            freeTiles.push(world.tiles[y][x]);
 	          }
@@ -22561,9 +22581,14 @@
 	  var orientedMobs = mobs.map(function (mob) {
 	    var adjacentTiles = mob.getAdjacentTiles(world);
 	
+	    var freeTiles = adjacentTiles
 	    // Only pick a tile that doesn't currently have a mob on it.
-	    var freeTiles = adjacentTiles.filter(function (tile) {
+	    .filter(function (tile) {
 	      return !tile.isBlocked;
+	    })
+	    // Don't pick a tile that is close to the top or left edge of the world.
+	    .filter(function (tile) {
+	      return tile.coordinateX > 0 && tile.coordinateY > 0;
 	    });
 	
 	    if (freeTiles.length === 0) {
@@ -23156,259 +23181,13 @@
 	};
 
 /***/ },
-/* 194 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.updateCanvas = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _paintMob = __webpack_require__(195);
-	
-	var _paintTile = __webpack_require__(197);
-	
-	var _animateMobMovement = __webpack_require__(200);
-	
-	var _pickMobsNextTile = __webpack_require__(186);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var updateCanvas = exports.updateCanvas = function updateCanvas(input) {
-	  var context = input.context,
-	      world = input.world,
-	      corpses = input.corpses,
-	      mobs = input.mobs;
-	
-	  // Paint world tiles.
-	
-	  for (var y = 0; y < world.tiles.length; y++) {
-	    for (var x = 0; x < world.tiles[y].length; x++) {
-	      (0, _paintTile.paintTile)(context, world.tiles[y][x]);
-	    }
-	  }
-	
-	  // Paint corpses.
-	  corpses.map(function (corpse) {
-	    return (0, _paintMob.paintMob)(context, corpse);
-	  });
-	
-	  // Update the position towards the destination, if any.
-	  mobs.filter(function (mob) {
-	    return mob.destination;
-	  }).map(function (mob) {
-	    // Paint over the spot the mob is about to leave.
-	    (0, _paintMob.paintMob)(context, mob, C.COLOR.WHITE);
-	
-	    // Update the position of the mob so that he can be painted there.
-	    // This also makes it possible for the mob to move to
-	    // a new set of adjacent tiles.
-	    if (!mob.arrivedAtDestination) {
-	      return (0, _animateMobMovement.animateMobMovement)(mob);
-	    }
-	
-	    return mob;
-	  });
-	
-	  (0, _pickMobsNextTile.pickMobsNextTile)(mobs.filter(function (mob) {
-	    return mob.arrivedAtDestination;
-	  }), world);
-	
-	  // Paint live mobs in their current position where they moved to.
-	  return mobs.map(function (mob) {
-	    return (0, _paintMob.paintMob)(context, mob);
-	  });
-	};
-
-/***/ },
-/* 195 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.paintMob = undefined;
-	
-	var _drawDisc = __webpack_require__(196);
-	
-	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
-	  return (0, _drawDisc.drawDisc)({
-	    context: context,
-	    x: mob.position.x,
-	    y: mob.position.y,
-	    radius: mob.size + (fillStyle ? 1 : 0),
-	    fillStyle: fillStyle || mob.color
-	  });
-	};
-
-/***/ },
-/* 196 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var drawDisc = exports.drawDisc = function drawDisc(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  context.beginPath();
-	  context.arc(x, y, radius, 0, 2 * Math.PI);
-	  context.fillStyle = fillStyle;
-	  context.fill();
-	  context.closePath();
-	
-	  return context;
-	};
-
-/***/ },
-/* 197 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.paintTile = undefined;
-	
-	var _drawHexagon = __webpack_require__(198);
-	
-	var paintTile = exports.paintTile = function paintTile(context, tile) {
-	  return (0, _drawHexagon.drawHexagon)({
-	    context: context,
-	    x: tile.x,
-	    y: tile.y,
-	    radius: tile.radius,
-	    fillStyle: tile.color
-	  });
-	};
-
-/***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.drawHexagon = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _hexCorner = __webpack_require__(199);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// See http://www.redblobgames.com/grids/hexagons/
-	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
-	  var context = input.context,
-	      x = input.x,
-	      y = input.y,
-	      radius = input.radius,
-	      fillStyle = input.fillStyle;
-	
-	
-	  var numberOfSides = 6;
-	
-	  context.beginPath();
-	  var corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, 0);
-	  context.moveTo(corner.x, corner.y);
-	
-	  for (var i = 1; i <= numberOfSides; i += 1) {
-	    corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, i);
-	    context.lineTo(corner.x, corner.y);
-	  }
-	
-	  context.strokeStyle = fillStyle;
-	  context.lineWidth = C.HEXAGON_LINE_WIDTH;
-	  context.stroke();
-	  context.closePath();
-	
-	  return context;
-	};
-
-/***/ },
-/* 199 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var hexCorner = exports.hexCorner = function hexCorner(center, radius, i) {
-	  var angleDeg = 60 * i + 30;
-	  var angleRad = angleDeg * Math.PI / 180;
-	
-	  return {
-	    x: center.x + radius * Math.cos(angleRad),
-	    y: center.y + radius * Math.sin(angleRad)
-	  };
-	};
-
-/***/ },
-/* 200 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
-	  // Make position and destination comparable.
-	  var posY = Math.floor(mob.position.y);
-	  var posX = Math.floor(mob.position.x);
-	  var desY = Math.floor(mob.destination.y);
-	  var desX = Math.floor(mob.destination.x);
-	
-	  // Has mob arrived at destination?
-	  if (posY === desY && posX === desX) {
-	    mob.position.y = mob.destination.y;
-	    mob.position.x = mob.destination.x;
-	    mob.position.coordinateY = mob.destination.coordinateY;
-	    mob.position.coordinateX = mob.destination.coordinateX;
-	    mob.arrivedAtDestination = true;
-	
-	    return mob;
-	  }
-	
-	  // Animate movement.
-	  if (posY > desY) {
-	    mob.position.y = mob.position.y - mob.speed;
-	  }
-	  if (posY < desY) {
-	    mob.position.y = mob.position.y + mob.speed;
-	  }
-	  if (posX > desX) {
-	    mob.position.x = mob.position.x - mob.speed;
-	  }
-	  if (posX < desX) {
-	    mob.position.x = mob.position.x + mob.speed;
-	  }
-	
-	  return mob;
-	};
-
-/***/ },
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
 /* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -23998,6 +23777,360 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateCanvasMobs = undefined;
+	
+	var _clearMob = __webpack_require__(218);
+	
+	var _paintMob = __webpack_require__(210);
+	
+	var _animateMobMovement = __webpack_require__(212);
+	
+	var _pickMobsNextTile = __webpack_require__(186);
+	
+	var updateCanvasMobs = exports.updateCanvasMobs = function updateCanvasMobs(input) {
+	  var context = input.context,
+	      world = input.world,
+	      mobs = input.mobs;
+	
+	  // Update the position towards the destination, if any.
+	
+	  mobs.filter(function (mob) {
+	    return mob.destination;
+	  }).map(function (mob) {
+	    // Clear the painted mob from the location he/she is about to leave.
+	    (0, _clearMob.clearMob)(context, mob);
+	
+	    // Update the position of the mob so that he can be painted there.
+	    // This also makes it possible for the mob to move to
+	    // a new set of adjacent tiles.
+	    if (!mob.arrivedAtDestination) {
+	      return (0, _animateMobMovement.animateMobMovement)(mob);
+	    }
+	
+	    return mob;
+	  });
+	
+	  (0, _pickMobsNextTile.pickMobsNextTile)(mobs.filter(function (mob) {
+	    return mob.arrivedAtDestination;
+	  }), world);
+	
+	  // Paint live mobs in their current position where they moved to.
+	  mobs.map(function (mob) {
+	    return (0, _paintMob.paintMob)(context, mob);
+	  });
+	
+	  return context;
+	};
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintMob = undefined;
+	
+	var _drawDisc = __webpack_require__(211);
+	
+	// @fillStyle: optional, when specified it means the mob died
+	// and it's the corpse that gets painted.
+	var paintMob = exports.paintMob = function paintMob(context, mob, fillStyle) {
+	  return (0, _drawDisc.drawDisc)({
+	    context: context,
+	    x: mob.position.x,
+	    y: mob.position.y,
+	    radius: mob.size + (fillStyle ? 1 : 0),
+	    fillStyle: fillStyle || mob.color
+	  });
+	};
+
+/***/ },
+/* 211 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var drawDisc = exports.drawDisc = function drawDisc(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  context.moveTo(x, y);
+	  context.beginPath();
+	  context.arc(x, y, radius, 0, 2 * Math.PI);
+	  context.fillStyle = fillStyle;
+	  context.fill();
+	  context.closePath();
+	
+	  return context;
+	};
+
+/***/ },
+/* 212 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var animateMobMovement = exports.animateMobMovement = function animateMobMovement(mob) {
+	  // Make position and destination comparable.
+	  var posY = Math.floor(mob.position.y);
+	  var posX = Math.floor(mob.position.x);
+	  var desY = Math.floor(mob.destination.y);
+	  var desX = Math.floor(mob.destination.x);
+	
+	  // Has mob arrived at destination?
+	  if (posY === desY && posX === desX) {
+	    mob.position.y = mob.destination.y;
+	    mob.position.x = mob.destination.x;
+	    mob.position.coordinateY = mob.destination.coordinateY;
+	    mob.position.coordinateX = mob.destination.coordinateX;
+	    mob.arrivedAtDestination = true;
+	
+	    return mob;
+	  }
+	
+	  // Animate movement.
+	  if (posY > desY) {
+	    mob.position.y = mob.position.y - mob.speed;
+	  }
+	  if (posY < desY) {
+	    mob.position.y = mob.position.y + mob.speed;
+	  }
+	  if (posX > desX) {
+	    mob.position.x = mob.position.x - mob.speed;
+	  }
+	  if (posX < desX) {
+	    mob.position.x = mob.position.x + mob.speed;
+	  }
+	
+	  return mob;
+	};
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateCanvasWorld = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _paintTile = __webpack_require__(214);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var updateCanvasWorld = exports.updateCanvasWorld = function updateCanvasWorld(input) {
+	  var context = input.context,
+	      world = input.world;
+	
+	  // Paint world tiles.
+	
+	  for (var y = 0; y < world.tiles.length; y++) {
+	    for (var x = 0; x < world.tiles[y].length; x++) {
+	      (0, _paintTile.paintTile)(context, world.tiles[y][x]);
+	    }
+	  }
+	
+	  return context;
+	};
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.paintTile = undefined;
+	
+	var _drawHexagon = __webpack_require__(215);
+	
+	var paintTile = exports.paintTile = function paintTile(context, tile) {
+	  return (0, _drawHexagon.drawHexagon)({
+	    context: context,
+	    x: tile.x,
+	    y: tile.y,
+	    radius: tile.radius,
+	    fillStyle: tile.color
+	  });
+	};
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.drawHexagon = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _hexCorner = __webpack_require__(216);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// See http://www.redblobgames.com/grids/hexagons/
+	var drawHexagon = exports.drawHexagon = function drawHexagon(input) {
+	  var context = input.context,
+	      x = input.x,
+	      y = input.y,
+	      radius = input.radius,
+	      fillStyle = input.fillStyle;
+	
+	
+	  var numberOfSides = 6;
+	
+	  context.beginPath();
+	  var corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, 0);
+	  context.moveTo(corner.x, corner.y);
+	
+	  for (var i = 1; i <= numberOfSides; i += 1) {
+	    corner = (0, _hexCorner.hexCorner)({ x: x, y: y }, radius, i);
+	    context.lineTo(corner.x, corner.y);
+	  }
+	
+	  context.strokeStyle = fillStyle;
+	  context.lineWidth = C.HEXAGON_LINE_WIDTH;
+	  context.stroke();
+	  context.closePath();
+	
+	  return context;
+	};
+
+/***/ },
+/* 216 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var hexCorner = exports.hexCorner = function hexCorner(center, radius, i) {
+	  var angleDeg = 60 * i + 30;
+	  var angleRad = angleDeg * Math.PI / 180;
+	
+	  return {
+	    x: center.x + radius * Math.cos(angleRad),
+	    y: center.y + radius * Math.sin(angleRad)
+	  };
+	};
+
+/***/ },
+/* 217 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Clear a rectangle of canvas.
+	var clearCanvas = exports.clearCanvas = function clearCanvas(input) {
+	  var context = input.context,
+	      topLeft = input.topLeft,
+	      bottomRight = input.bottomRight;
+	
+	
+	  context.clearRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+	
+	  return context;
+	};
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.clearMob = undefined;
+	
+	var _clearCanvas = __webpack_require__(217);
+	
+	var clearMob = exports.clearMob = function clearMob(context, mob) {
+	  // Clear a square greater than mob by 1 pixel.
+	  var extraPixel = 1;
+	
+	  var topLeft = {
+	    x: Math.floor(mob.position.x - mob.size) - extraPixel,
+	    y: Math.floor(mob.position.y - mob.size) - extraPixel
+	  };
+	
+	  var bottomRight = {
+	    x: Math.floor(mob.position.x + mob.size) - extraPixel,
+	    y: Math.floor(mob.position.y + mob.size) - extraPixel
+	  };
+	
+	  return (0, _clearCanvas.clearCanvas)({
+	    context: context,
+	    topLeft: topLeft,
+	    bottomRight: bottomRight
+	  });
+	};
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateCanvasCorpses = undefined;
+	
+	var _paintMob = __webpack_require__(210);
+	
+	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
+	  var context = input.context,
+	      corpses = input.corpses;
+	
+	  // Paint corpses.
+	
+	  corpses.map(function (corpse) {
+	    return (0, _paintMob.paintMob)(context, corpse, corpse.color);
+	  });
+	
+	  return context;
+	};
 
 /***/ }
 /******/ ]);

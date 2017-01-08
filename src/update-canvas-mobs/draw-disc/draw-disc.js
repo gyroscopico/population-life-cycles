@@ -1,4 +1,4 @@
-export const drawCircle = input => {
+export const drawDisc = input => {
   const {
     context,
     x,
@@ -7,11 +7,11 @@ export const drawCircle = input => {
     fillStyle,
   } = input;
 
+  context.moveTo(x, y);
   context.beginPath();
   context.arc(x, y, radius, 0, 2 * Math.PI);
-  context.strokeStyle = fillStyle;
-  context.lineWidth = 1;
-  context.stroke();
+  context.fillStyle = fillStyle;
+  context.fill();
   context.closePath();
 
   return context;

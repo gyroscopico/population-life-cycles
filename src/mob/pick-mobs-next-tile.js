@@ -9,8 +9,11 @@ export const pickMobsNextTile = (mobs, world) => {
   const orientedMobs = mobs.map(mob => {
     const adjacentTiles = mob.getAdjacentTiles(world);
 
-    // Only pick a tile that doesn't currently have a mob on it.
-    const freeTiles = adjacentTiles.filter(tile => !tile.isBlocked);
+    const freeTiles = adjacentTiles
+      // Only pick a tile that doesn't currently have a mob on it.
+      .filter(tile => !tile.isBlocked)
+      // Don't pick a tile that is close to the top or left edge of the world.
+      .filter(tile => tile.coordinateX > 0 && tile.coordinateY > 0);
 
     if (freeTiles.length === 0) {
       return mob;
