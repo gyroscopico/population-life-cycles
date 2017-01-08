@@ -21643,7 +21643,7 @@
 	    key: 'updateGameLogic',
 	    value: function updateGameLogic() {
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
-	      var ageingResult = (0, _ageMobs.ageMobs)(this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
+	      var ageingResult = (0, _ageMobs.ageMobs)(this.contextMobs, this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
 	      var mobs = ageingResult.mobs;
 	      var corpses = ageingResult.corpses;
 	      var world = ageingResult.world;
@@ -22020,7 +22020,7 @@
 	};
 	
 	// Animation time measurement (ex: mob movements, pop mobs on screen).
-	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 30; // 30 frames per second.
+	var FRAME_RATE = exports.FRAME_RATE = 1e3 / 60; // 60 frames per second.
 	
 	// Game logic time measurement (ex: ageing of mobs).
 	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
@@ -23106,13 +23106,15 @@
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
+	var _clearMob = __webpack_require__(202);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	// Return an aged population of mobs and corpses.
-	var ageMobs = exports.ageMobs = function ageMobs(mobs, corpses, world) {
-	  var years = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+	var ageMobs = exports.ageMobs = function ageMobs(context, mobs, corpses, world) {
+	  var years = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
 	
 	  var log = [];
 	
@@ -23125,6 +23127,9 @@
 	    mob.timeOfDeath = (0, _now.now)();
 	    mob.causeOfDeath = C.OLD_AGE;
 	    corpses.push(mob);
+	
+	    // Clear the mob from the current tile.
+	    (0, _clearMob.clearMob)(context, mob);
 	
 	    // Is the mob tracked on the current tile?
 	    var currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];

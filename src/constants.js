@@ -119,7 +119,7 @@ export const DEFAULT_MOBS = {
 };
 
 // Animation time measurement (ex: mob movements, pop mobs on screen).
-export const FRAME_RATE = 1e3 / 30; // 30 frames per second.
+export const FRAME_RATE = 1e3 / 60; // 60 frames per second.
 
 // Game logic time measurement (ex: ageing of mobs).
 export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.

@@ -108,7 +108,12 @@ export default class App extends Component {
   updateGameLogic() {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     const ageingResult = ageMobs(
-      this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
+      this.contextMobs,
+      this.state.mobs,
+      this.state.corpses,
+      this.state.world,
+      C.AGE_INCREMENT,
+    );
     const mobs = ageingResult.mobs;
     const corpses = ageingResult.corpses;
     const world = ageingResult.world;
