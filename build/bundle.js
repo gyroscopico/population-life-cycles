@@ -21883,6 +21883,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	var DEBUG = exports.DEBUG = true;
+	
 	// Colour scheme. See scss too.
 	var COLOR = exports.COLOR = {
 	  GOLD_L: '#FFFFC5',
@@ -23241,7 +23243,15 @@
 	});
 	exports.updateCanvasWorld = undefined;
 	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
 	var _paintTile = __webpack_require__(197);
+	
+	var _writeCoordinates = __webpack_require__(213);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var updateCanvasWorld = exports.updateCanvasWorld = function updateCanvasWorld(input) {
 	  var context = input.context,
@@ -23252,6 +23262,10 @@
 	  for (var y = 0; y < world.tiles.length; y++) {
 	    for (var x = 0; x < world.tiles[y].length; x++) {
 	      (0, _paintTile.paintTile)(context, world.tiles[y][x]);
+	
+	      if (C.DEBUG) {
+	        (0, _writeCoordinates.writeCoordinates)(context, world.tiles[y][x]);
+	      }
 	    }
 	  }
 	
@@ -24117,6 +24131,63 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _writeText = __webpack_require__(214);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  return (0, _writeText.writeText)({
+	    context: context,
+	    color: C.COLOR.BLACK,
+	    fontSize: '9px',
+	    fontFamily: 'Handlee, cursive',
+	    text: tile.coordinateX + ':' + tile.coordinateY,
+	    x: tile.x - 10,
+	    y: tile.y + 2.5
+	  });
+	};
+
+/***/ },
+/* 214 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var writeText = exports.writeText = function writeText(input) {
+	  var context = input.context,
+	      color = input.color,
+	      fontSize = input.fontSize,
+	      fontFamily = input.fontFamily,
+	      text = input.text,
+	      x = input.x,
+	      y = input.y;
+	
+	
+	  context.fillStyle = color;
+	  context.font = fontSize + " " + fontFamily;
+	  context.fillText(text, x, y);
+	
+	  return context;
+	};
 
 /***/ }
 /******/ ]);
