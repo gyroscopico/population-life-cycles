@@ -21504,13 +21504,13 @@
 	
 	var _updateCanvasWorld = __webpack_require__(196);
 	
-	var _updateCanvasCorpses = __webpack_require__(200);
+	var _updateCanvasCorpses = __webpack_require__(202);
 	
-	var _updateCanvasMobs = __webpack_require__(203);
+	var _updateCanvasMobs = __webpack_require__(205);
 	
-	var _popDefaultMobs = __webpack_require__(205);
+	var _popDefaultMobs = __webpack_require__(207);
 	
-	var _world = __webpack_require__(206);
+	var _world = __webpack_require__(208);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
@@ -21520,11 +21520,11 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _gameCanvas = __webpack_require__(208);
+	var _gameCanvas = __webpack_require__(210);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	__webpack_require__(209);
+	__webpack_require__(211);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23249,7 +23249,7 @@
 	
 	var _paintTile = __webpack_require__(197);
 	
-	var _writeCoordinates = __webpack_require__(213);
+	var _writeCoordinates = __webpack_require__(200);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23370,9 +23370,66 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.writeCoordinates = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _writeText = __webpack_require__(201);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
+	  return (0, _writeText.writeText)({
+	    context: context,
+	    color: C.COLOR.BLACK,
+	    fontSize: '9px',
+	    fontFamily: 'Handlee, cursive',
+	    text: tile.coordinateX + ':' + tile.coordinateY,
+	    x: tile.x - 10,
+	    y: tile.y + 2.5
+	  });
+	};
+
+/***/ },
+/* 201 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var writeText = exports.writeText = function writeText(input) {
+	  var context = input.context,
+	      color = input.color,
+	      fontSize = input.fontSize,
+	      fontFamily = input.fontFamily,
+	      text = input.text,
+	      x = input.x,
+	      y = input.y;
+	
+	
+	  context.fillStyle = color;
+	  context.font = fontSize + " " + fontFamily;
+	  context.fillText(text, x, y);
+	
+	  return context;
+	};
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(201);
+	var _paintMob = __webpack_require__(203);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23388,7 +23445,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23398,7 +23455,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(202);
+	var _drawDisc = __webpack_require__(204);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23413,7 +23470,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 204 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23440,7 +23497,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23452,9 +23509,9 @@
 	
 	var _clearMob = __webpack_require__(193);
 	
-	var _paintMob = __webpack_require__(201);
+	var _paintMob = __webpack_require__(203);
 	
-	var _animateMobMovement = __webpack_require__(204);
+	var _animateMobMovement = __webpack_require__(206);
 	
 	var _pickMobsNextTile = __webpack_require__(186);
 	
@@ -23495,7 +23552,7 @@
 	};
 
 /***/ },
-/* 204 */
+/* 206 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23542,7 +23599,7 @@
 	};
 
 /***/ },
-/* 205 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23613,7 +23670,7 @@
 	};
 
 /***/ },
-/* 206 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23632,7 +23689,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(207);
+	var _tile = __webpack_require__(209);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23698,7 +23755,7 @@
 	exports.default = World;
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23755,7 +23812,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 208 */
+/* 210 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23783,16 +23840,16 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 209 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(210);
+	var content = __webpack_require__(212);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(212)(content, {});
+	var update = __webpack_require__(214)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23809,10 +23866,10 @@
 	}
 
 /***/ },
-/* 210 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(211)();
+	exports = module.exports = __webpack_require__(213)();
 	// imports
 	
 	
@@ -23823,7 +23880,7 @@
 
 
 /***/ },
-/* 211 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/*
@@ -23879,7 +23936,7 @@
 
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24131,63 +24188,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.writeCoordinates = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _writeText = __webpack_require__(214);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var writeCoordinates = exports.writeCoordinates = function writeCoordinates(context, tile) {
-	  return (0, _writeText.writeText)({
-	    context: context,
-	    color: C.COLOR.BLACK,
-	    fontSize: '9px',
-	    fontFamily: 'Handlee, cursive',
-	    text: tile.coordinateX + ':' + tile.coordinateY,
-	    x: tile.x - 10,
-	    y: tile.y + 2.5
-	  });
-	};
-
-/***/ },
-/* 214 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var writeText = exports.writeText = function writeText(input) {
-	  var context = input.context,
-	      color = input.color,
-	      fontSize = input.fontSize,
-	      fontFamily = input.fontFamily,
-	      text = input.text,
-	      x = input.x,
-	      y = input.y;
-	
-	
-	  context.fillStyle = color;
-	  context.font = fontSize + " " + fontFamily;
-	  context.fillText(text, x, y);
-	
-	  return context;
-	};
 
 /***/ }
 /******/ ]);
