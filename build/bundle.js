@@ -22038,6 +22038,25 @@
 	  CORPSES: 'canvasCorpses',
 	  MOBS: 'canvasMobs'
 	};
+	
+	// Vectors relative from current tile to a range
+	// of concentric tiles around central one.
+	// Each mob position.coordinateX and .coordinateY
+	// are that central position.
+	var VECTORS = exports.VECTORS = {
+	  // Central tile Y coordinate is even (0, 2, 4...).
+	  EVEN_RANGES: [
+	  // Range is 0, no movement.
+	  [[0, 0]],
+	  // Range is 1, circle of 6 possible tiles.
+	  [[1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1], [0, 1]]],
+	  // Central tile Y coordinate is even (1, 3, 5...).
+	  ODD_RANGES: [
+	  // Range is 0, no movement.
+	  [[0, 0]],
+	  // Range is 1, circle of 6 possible tiles.
+	  [[1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [0, 1]]]
+	};
 
 /***/ },
 /* 180 */
@@ -22206,6 +22225,8 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
+	var _getTilesWithinRange = __webpack_require__(215);
+	
 	var _pickMobsNextTile = __webpack_require__(186);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22299,36 +22320,19 @@
 	      return tile;
 	    }
 	
-	    // List all tiles around the mob current hexagon.
+	    // List the 6 tiles around the mob current hexagon (range 1)
 	
 	  }, {
 	    key: 'getAdjacentTiles',
 	    value: function getAdjacentTiles(world) {
-	      // The starting position of y is odd.
-	      var directionsFromOddY = [[1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [0, 1]];
-	
-	      // The starting position of y is even.
-	      var directionsFromEvenY = [[1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1], [0, 1]];
-	
-	      var adjacentTiles = [];
-	      var maxY = world.tiles.length - 1;
-	      var maxX = world.tiles[0].length - 1;
-	      var y = void 0;
-	      var x = void 0;
-	      var startYIsEven = this.position.coordinateY % 2 === 0;
-	
-	      for (var i = 0; i <= 5; i++) {
-	        y = this.position.coordinateY + (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
-	        x = this.position.coordinateX + (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
-	
-	        if (y < 0 || y > maxY || x < 0 || x > maxX) {
-	          continue;
-	        } else {
-	          adjacentTiles.push(world.tiles[y][x]);
-	        }
-	      }
-	
-	      return adjacentTiles;
+	      return (0, _getTilesWithinRange.getTilesWithinRange)({
+	        world: world,
+	        center: {
+	          coordinateY: this.position.coordinateY,
+	          coordinateX: this.position.coordinateX
+	        },
+	        range: 1
+	      });
 	    }
 	  }, {
 	    key: 'positionMobInWorld',
@@ -24188,6 +24192,55 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getTilesWithinRange = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Return all the tiles around a given tile.
+	// @input.range: maximum range is 4.
+	var getTilesWithinRange = exports.getTilesWithinRange = function getTilesWithinRange(input) {
+	  var world = input.world,
+	      center = input.center,
+	      range = input.range;
+	
+	
+	  var tilesInRange = [];
+	  var maxY = world.tiles.length - 1;
+	  var maxX = world.tiles[0].length - 1;
+	  var y = void 0;
+	  var x = void 0;
+	  var startYIsEven = center.coordinateY % 2 === 0;
+	
+	  // max: the maximum number of tiles in a circle.
+	  // example of max: with a range of 1, there are 6 tiles,
+	  // with a range of 2 there are 12 possible tiles.
+	  for (var i = 0, max = range * 6; i < max; i++) {
+	    y = center.coordinateY + (startYIsEven ? C.VECTORS.EVEN_RANGES[1][i][0] : C.VECTORS.ODD_RANGES[1][i][0]);
+	    x = center.coordinateX + (startYIsEven ? C.VECTORS.EVEN_RANGES[1][i][1] : C.VECTORS.ODD_RANGES[1][i][1]);
+	
+	    if (y < 0 || y > maxY || x < 0 || x > maxX) {
+	      continue;
+	    } else {
+	      tilesInRange.push(world.tiles[y][x]);
+	    }
+	  }
+	
+	  return tilesInRange;
+	};
 
 /***/ }
 /******/ ]);

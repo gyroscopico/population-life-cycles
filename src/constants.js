@@ -156,3 +156,42 @@ export const CANVAS_REFS = {
   CORPSES: 'canvasCorpses',
   MOBS: 'canvasMobs',
 };
+
+// Vectors relative from current tile to a range
+// of concentric tiles around central one.
+// Each mob position.coordinateX and .coordinateY
+// are that central position.
+export const VECTORS = {
+  // Central tile Y coordinate is even (0, 2, 4...).
+  EVEN_RANGES: [
+    // Range is 0, no movement.
+    [
+      [0, 0],
+    ],
+    // Range is 1, circle of 6 possible tiles.
+    [
+      [1, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, 1]
+    ],
+  ],
+  // Central tile Y coordinate is even (1, 3, 5...).
+  ODD_RANGES: [
+    // Range is 0, no movement.
+    [
+      [0, 0],
+    ],
+    // Range is 1, circle of 6 possible tiles.
+    [
+      [1, 0],
+      [1, -1],
+      [0, -1],
+      [-1, -1],
+      [-1, 0],
+      [0, 1]
+    ],
+  ],
+};

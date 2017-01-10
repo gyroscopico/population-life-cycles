@@ -1,6 +1,8 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
-import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
+import { getTilesWithinRange }
+  from '../world/get-tiles-within-range/get-tiles-within-range';
+import { pickMobsNextTile } from './pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
 // i.e. not called outside this class.
@@ -81,49 +83,16 @@ export default class Mob extends BaseClass {
     return tile;
   }
 
-  // List all tiles around the mob current hexagon.
+  // List the 6 tiles around the mob current hexagon (range 1)
   getAdjacentTiles(world) {
-    // The starting position of y is odd.
-    const directionsFromOddY = [
-      [1, 0],
-      [1, -1],
-      [0, -1],
-      [-1, -1],
-      [-1, 0],
-      [0, 1]
-    ];
-
-    // The starting position of y is even.
-    const directionsFromEvenY = [
-      [1, 1],
-      [1, 0],
-      [0, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, 1]
-    ];
-
-    const adjacentTiles = [];
-    const maxY = world.tiles.length - 1;
-    const maxX = world.tiles[0].length - 1;
-    let y;
-    let x;
-    const startYIsEven = this.position.coordinateY % 2 === 0;
-
-    for (let i = 0; i <= 5; i++) {
-      y = this.position.coordinateY +
-          (startYIsEven ? directionsFromEvenY[i][0] : directionsFromOddY[i][0]);
-      x = this.position.coordinateX +
-          (startYIsEven ? directionsFromEvenY[i][1] : directionsFromOddY[i][1]);
-
-      if (y < 0 || y > maxY || x < 0 || x > maxX) {
-        continue;
-      } else {
-        adjacentTiles.push(world.tiles[y][x]);
-      }
-    }
-
-    return adjacentTiles;
+    return getTilesWithinRange({
+      world,
+      center: {
+        coordinateY: this.position.coordinateY,
+        coordinateX: this.position.coordinateX,
+      },
+      range: 1,
+    });
   }
 
   positionMobInWorld(world) {
