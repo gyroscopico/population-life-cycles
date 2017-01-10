@@ -22,12 +22,12 @@ export const getTilesWithinRange = input => {
   for (let i = 0, max = range * 6; i < max; i++) {
     y = center.coordinateY +
         (startYIsEven ?
-          C.VECTORS.EVEN_RANGES[1][i][0] :
-          C.VECTORS.ODD_RANGES[1][i][0]);
+          C.VECTORS.EVEN_RANGES[range][i][0] :
+          C.VECTORS.ODD_RANGES[range][i][0]);
     x = center.coordinateX +
         (startYIsEven ?
-          C.VECTORS.EVEN_RANGES[1][i][1] :
-          C.VECTORS.ODD_RANGES[1][i][1]);
+          C.VECTORS.EVEN_RANGES[range][i][1] :
+          C.VECTORS.ODD_RANGES[range][i][1]);
 
     if (y < 0 || y > maxY || x < 0 || x > maxX) {
       continue;

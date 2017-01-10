@@ -1,33 +1,33 @@
-export const DEBUG = true;
+export const DEBUG = false;
 
 // Colour scheme. See scss too.
 export const COLOR = {
-  GOLD_L: '#FFFFC5',
-  GOLD_M: '#E3B446',
-  GOLD_D: '#C99A2C',
+  GOLD_L: '#ffffc5',
+  GOLD_M: '#e3b446',
+  GOLD_D: '#c99a2c',
 
-  GREEN_L: '#C4FFCC',
-  GREEN_M: '#5FFD67',
+  GREEN_L: '#c4ffcc',
+  GREEN_M: '#49b64e',
   GREEN_D: '#009701',
 
-  BLUE_L: '#C5FFFF',
-  BLUE_M: '#46AFE3',
-  BLUE_D: '#2C95C9',
+  BLUE_L: '#c5ffff',
+  BLUE_M: '#46afe3',
+  BLUE_D: '#2c95c9',
 
-  RED_L: '#FFDEDE',
-  RED_M: '#E34646',
-  RED_D: '#C92C2C',
+  RED_L: '#ffdede',
+  RED_M: '#e34646',
+  RED_D: '#c92c2c',
 
-  PURPLE_L: '#FFC5FF',
-  PURPLE_M: '#9C46E3',
-  PURPLE_D: '#822CC9',
+  PURPLE_L: '#ffc5ff',
+  PURPLE_M: '#9c46e3',
+  PURPLE_D: '#822cc9',
 
-  PINK_L: '#FFE4FF',
-  PINK_M: '#F265B0',
-  PINK_D: '#D84B96',
+  PINK_L: '#ffe4ff',
+  PINK_M: '#f265b0',
+  PINK_D: '#d84b96',
 
-  WHITE: '#F9F7ED',
-  BLACK: '#33170D',
+  WHITE: '#f9f7ed',
+  BLACK: '#33170d',
 };
 
 // Welcome message.
@@ -49,37 +49,65 @@ export const FEMALE = 'female';
 export const YOUNG = 'pawn';
 export const ADULT = 'mob';
 
-// Small size mobs.
-export const SMALL_SIZE_YOUNG = 2;
-export const SMALL_SIZE_ADULT = 3;
+// Mob ranges.
+export const RANGES = {
+  NONE: 0,
+  SHORT: 1,
+  MEDIUM: 2,
+  LONG: 3,
+  MAXIMUM: 4,
+};
+
+// Young mob sizes.
+export const YOUNG_SIZES = {
+  SMALL: 2,
+  MEDIUM: 4,
+  LARGE: 6,
+};
+
+// Young to adult size: 1.5
+const YOUNG_TO_ADULT = 1.5;
+
+// Adult mob sizes.
+export const ADULT_SIZES = {
+  SMALL: YOUNG_SIZES.SMALL * YOUNG_TO_ADULT,
+  MEDIUM: YOUNG_SIZES.MEDIUM * YOUNG_TO_ADULT,
+  LARGE: YOUNG_SIZES.LARGE * YOUNG_TO_ADULT,
+};
+
+// Mob speeds.
+export const SPEEDS = {
+  SLOW: 6,
+  AVERAGE: 8,
+  FAST: 12,
+};
 
 // Mob pop default values.
 export const MIN_MOB_LONGEVITY = 15;
 export const MAX_MOB_LONGEVITY = 45;
 export const MATURITY = 12;
 export const MAX_CREATION_AGE = 9;
-export const YOUNG_SIZE = 6;
-export const ADULT_SIZE = 9; // young size * 1.5
+export const YOUNG_SIZE = YOUNG_SIZES.MEDIUM;
+export const ADULT_SIZE = ADULT_SIZES.MEDIUM;
+export const MOB_RANGE = RANGES.MEDIUM;
 export const DEAD_COLOR = COLOR.GOLD_L;
 export const YOUNG_COLOR = COLOR.GOLD_M;
 export const ADULT_COLOR = COLOR.GOLD_D;
-export const MOB_SPEED = 6;
+export const MOB_SPEED = SPEEDS.SLOW;
 
 // Cats pop default values.
 export const MIN_CAT_LONGEVITY = 4;
 export const MAX_CAT_LONGEVITY = 17;
 export const CAT_MATURITY = 2;
 export const MAX_CAT_CREATION_AGE = 3;
-export const YOUNG_CAT_SIZE = SMALL_SIZE_YOUNG;
-export const ADULT_CAT_SIZE = SMALL_SIZE_ADULT;
+export const YOUNG_CAT_SIZE = YOUNG_SIZES.SMALL;
+export const ADULT_CAT_SIZE = ADULT_SIZES.SMALL;
 export const DEAD_CAT_COLOR = COLOR.BLUE_L;
 export const YOUNG_CAT_COLOR = COLOR.BLUE_M;
 export const ADULT_CAT_COLOR = COLOR.BLUE_D;
-export const CAT_SPEED = 8;
+export const CAT_SPEED = SPEEDS.AVERAGE;
 
 // Goblin pop default values.
-export const YOUNG_GOBLIN_SIZE = 4;
-export const ADULT_GOBLIN_SIZE = 6;  // young size * 1.5
 export const DEAD_GOBLIN_COLOR = COLOR.GREEN_L;
 export const YOUNG_GOBLIN_COLOR = COLOR.GREEN_M;
 export const ADULT_GOBLIN_COLOR = COLOR.GREEN_D;
@@ -96,12 +124,12 @@ export const MIN_FAERY_LONGEVITY = 630;
 export const MAX_FAERY_LONGEVITY = 810;
 export const FAERY_MATURITY = 540;
 export const MAX_FAERY_CREATION_AGE = 27;
-export const YOUNG_FAERY_SIZE = SMALL_SIZE_YOUNG;
-export const ADULT_FAERY_SIZE = SMALL_SIZE_ADULT;
+export const YOUNG_FAERY_SIZE = YOUNG_SIZES.SMALL;
+export const ADULT_FAERY_SIZE = ADULT_SIZES.SMALL;
 export const YOUNG_FAERY_COLOR = COLOR.PURPLE_M;
 export const ADULT_FAERY_COLOR = COLOR.PURPLE_D;
 export const DEAD_FAERY_COLOR = COLOR.PURPLE_L;
-export const FAERY_SPEED = 12;
+export const FAERY_SPEED = SPEEDS.FAST;
 
 // Mob categories used for poping the right mob class.
 export const CATEGORY = {

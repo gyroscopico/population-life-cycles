@@ -10,14 +10,6 @@ export default class Goblin extends Mob {
     return 'goblin';
   }
 
-  getYoungSize() {
-    return C.YOUNG_GOBLIN_SIZE;
-  }
-
-  getAdultSize() {
-    return C.ADULT_GOBLIN_SIZE;
-  }
-
   getYoungColor() {
     return C.YOUNG_GOBLIN_COLOR;
   }

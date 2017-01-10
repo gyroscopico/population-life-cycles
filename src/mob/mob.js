@@ -42,6 +42,7 @@ export default class Mob extends BaseClass {
     this.category = this._getCategory();
 
     this.speed = input && input.speed || this.getSpeed();
+    this.range = input && input.range || this.getRange();
 
     // Position, size and color are properties used on canvas.
     if (this.position === undefined) {
@@ -77,21 +78,24 @@ export default class Mob extends BaseClass {
 
     const tile = freeTiles[randomIndex];
 
-    tile.isBlocked = true;
-    tile.mobId = this.id;
+    tile.trackMob({
+      id: this.id,
+      category: this.category,
+    })
 
     return tile;
   }
 
-  // List the 6 tiles around the mob current hexagon (range 1)
-  getAdjacentTiles(world) {
+  // Returns the tiles around the mob current hexagon,
+  // short range by default (i.e. 6 immediate tiles).
+  getAdjacentTiles(world, range = C.RANGES.SHORT) {
     return getTilesWithinRange({
       world,
       center: {
         coordinateY: this.position.coordinateY,
         coordinateX: this.position.coordinateX,
       },
-      range: 1,
+      range,
     });
   }
 
@@ -166,6 +170,10 @@ export default class Mob extends BaseClass {
 
   getSpeed() {
     return C.MOB_SPEED;
+  }
+
+  getRange() {
+    return C.MOB_RANGE;
   }
 
   maxCreationAge() {

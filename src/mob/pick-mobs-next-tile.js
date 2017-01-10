@@ -25,14 +25,15 @@ export const pickMobsNextTile = (mobs, world) => {
     // Leave the current tile.
     world
       .tiles[mob.position.coordinateY][mob.position.coordinateX]
-      .isBlocked = false;
-    world
-      .tiles[mob.position.coordinateY][mob.position.coordinateX]
-      .mobId = undefined;
+      .resetMobTracking();
 
     // Occupy the next tile.
-    world.tiles[tile.coordinateY][tile.coordinateX].isBlocked = true;
-    world.tiles[tile.coordinateY][tile.coordinateX].mobId = mob.id;
+    world
+      .tiles[tile.coordinateY][tile.coordinateX]
+      .trackMob({
+        id: mob.id,
+        category: mob.category,
+      });
 
     // Update the destination of the mob.
     mob.destination = {

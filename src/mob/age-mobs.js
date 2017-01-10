@@ -25,9 +25,7 @@ export const ageMobs = (context, mobs, corpses, world, years = 1) => {
         .tiles[mob.position.coordinateY][mob.position.coordinateX];
 
     if (currentTile.mobId === mob.id) {
-      // Remove the mob from the current tile tracking.
-      currentTile.isBlocked = false;
-      currentTile.mobId = undefined;
+      currentTile.resetMobTracking();
     }
 
     // Is the mob tracked on the destination tile?
@@ -35,9 +33,7 @@ export const ageMobs = (context, mobs, corpses, world, years = 1) => {
       const destinationTile = world
           .tiles[mob.destination.coordinateY][mob.destination.coordinateX];
       if (destinationTile.mobId === mob.id) {
-        // Remove the mob from the destination tile tracking.
-        destinationTile.isBlocked = false;
-        destinationTile.mobId = undefined;
+        destinationTile.resetMobTracking();
       }
     }
 
