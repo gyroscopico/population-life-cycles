@@ -4,7 +4,8 @@
     "dat": true,
     "module": true,
     "test": true,
-    "expect": true
+    "expect": true,
+    "ga": true
   },
   "env": {
     "browser": true

@@ -22164,7 +22164,17 @@
 	
 	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
 	    mobs.push(newMob);
-	    log.push(['[pop] ' + newMob.gender + ' ' + newMob.category, '(' + age + ', \u2625' + newMob.longevity + ').'].join(' '));
+	
+	    // Message to log.
+	    var message = ['[pop] ' + newMob.gender + ' ' + newMob.category, '(' + age + ', \u2625' + newMob.longevity + ').'].join(' ');
+	
+	    // Local log.
+	    log.push(message);
+	
+	    // Store log message in Google Analytics.
+	    // ga('send', 'event', Category, Action, Label, Value).
+	    // "Value" must be an integer but it's optional.
+	    ga('send', 'event', 'log', 'pop', message);
 	  }
 	
 	  // Persist the new log messages to localStorage.
