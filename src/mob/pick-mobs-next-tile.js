@@ -33,6 +33,7 @@ export const pickMobsNextTile = (mobs, world) => {
       .trackMob({
         id: mob.id,
         category: mob.category,
+        gender: mob.gender,
       });
 
     // Update the destination of the mob.

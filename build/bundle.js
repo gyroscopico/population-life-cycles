@@ -21508,7 +21508,7 @@
 	
 	var _updateCanvasMobs = __webpack_require__(206);
 	
-	var _world = __webpack_require__(209);
+	var _world = __webpack_require__(208);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
@@ -21518,11 +21518,11 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _gameCanvas = __webpack_require__(211);
+	var _gameCanvas = __webpack_require__(210);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	__webpack_require__(212);
+	__webpack_require__(211);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -22342,7 +22342,8 @@
 	
 	      tile.trackMob({
 	        id: this.id,
-	        category: this.category
+	        category: this.category,
+	        gender: this.gender
 	      });
 	
 	      return tile;
@@ -22675,7 +22676,8 @@
 	    // Occupy the next tile.
 	    world.tiles[tile.coordinateY][tile.coordinateX].trackMob({
 	      id: mob.id,
-	      category: mob.category
+	      category: mob.category,
+	      gender: mob.gender
 	    });
 	
 	    // Update the destination of the mob.
@@ -23675,8 +23677,7 @@
 	};
 
 /***/ },
-/* 208 */,
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23695,7 +23696,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(210);
+	var _tile = __webpack_require__(209);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23761,7 +23762,7 @@
 	exports.default = World;
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23822,6 +23823,7 @@
 	      this.isBlocked = false;
 	      this.mobId = undefined;
 	      this.mobCategory = undefined;
+	      this.mobGender = undefined;
 	    }
 	
 	    // Set this tile to track a mob.
@@ -23830,12 +23832,14 @@
 	    key: 'trackMob',
 	    value: function trackMob(input) {
 	      var id = input.id,
-	          category = input.category;
+	          category = input.category,
+	          gender = input.gender;
 	
 	
 	      this.isBlocked = true;
 	      this.mobId = id;
 	      this.mobCategory = category;
+	      this.mobGender = gender;
 	    }
 	  }]);
 	
@@ -23845,7 +23849,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23873,16 +23877,16 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(213);
+	var content = __webpack_require__(212);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(215)(content, {});
+	var update = __webpack_require__(214)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23899,10 +23903,10 @@
 	}
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(214)();
+	exports = module.exports = __webpack_require__(213)();
 	// imports
 	
 	
@@ -23913,7 +23917,7 @@
 
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/*
@@ -23969,7 +23973,7 @@
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

@@ -81,7 +81,8 @@ export default class Mob extends BaseClass {
     tile.trackMob({
       id: this.id,
       category: this.category,
-    })
+      gender: this.gender,
+    });
 
     return tile;
   }
