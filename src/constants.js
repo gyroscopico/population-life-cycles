@@ -164,7 +164,7 @@ export const CANVAS_REFS = {
 export const VECTORS = {
   // Central tile Y coordinate is even (0, 2, 4...).
   EVEN_RANGES: [
-    // Range is 0, no movement.
+    // Range is 0, i.e. no movement.
     [
       [0, 0],
     ],
@@ -177,10 +177,13 @@ export const VECTORS = {
       [-1, 1],
       [0, 1]
     ],
+    // todo: range is 2.
+    // todo: range is 3.
+    // todo: range is 4.
   ],
   // Central tile Y coordinate is even (1, 3, 5...).
   ODD_RANGES: [
-    // Range is 0, no movement.
+    // Range is 0, i.e. no movement.
     [
       [0, 0],
     ],
@@ -193,5 +196,8 @@ export const VECTORS = {
       [-1, 0],
       [0, 1]
     ],
+    // todo: range is 2.
+    // todo: range is 3.
+    // todo: range is 4.
   ],
 };
