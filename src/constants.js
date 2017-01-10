@@ -36,9 +36,6 @@ export const WELCOME = [
   'Influence this worlds population and observe its evolution.',
 ].join(' ');
 
-// Flag if the world starts with a default population of mobs.
-export const POP_DEFAULT_MOBS = false;
-
 // Maximum number of messages that are logged.
 export const LOG_MASTER_KEY = 'log';
 export const MAX_LOG_MESSAGES = 9;
@@ -139,15 +136,6 @@ export const CATEGORY = {
   ORC: 'Orc',
   GOBLIN: 'Goblin',
   CAT: 'Cat',
-};
-
-// Default mobs poped in the world.
-export const DEFAULT_MOBS = {
-  FAERY: 1,
-  HUMAN: 2,
-  ORC: 5,
-  GOBLIN: 7,
-  CAT: 11,
 };
 
 // Game logic time measurement (ex: ageing of mobs).

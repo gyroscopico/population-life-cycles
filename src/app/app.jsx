@@ -8,7 +8,6 @@ import { updateCanvasWorld } from '../update-canvas-world/update-canvas-world';
 import { updateCanvasCorpses }
   from '../update-canvas-corpses/update-canvas-corpses';
 import { updateCanvasMobs } from '../update-canvas-mobs/update-canvas-mobs';
-import { popDefaultMobs } from '../mob/pop-default-mobs';
 import World from '../world/world';
 import Storage from '../storage/storage';
 import { now } from '../utils/now';
@@ -19,14 +18,12 @@ import './app.scss';
 export default class App extends Component {
   componentWillMount() {
     const welcome = `[motd] ${C.WELCOME} ${now()}`;
-
     const world = new World({ window });
-    const mobs = C.POP_DEFAULT_MOBS ? popDefaultMobs(world) : [];
 
     // Keep track of all log messages.
     this.setState({
       // Mobs that are currently alive.
-      mobs,
+      mobs: [],
 
       // Mobs that used to be alive but are now dead.
       corpses: [],

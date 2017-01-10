@@ -21508,8 +21508,6 @@
 	
 	var _updateCanvasMobs = __webpack_require__(206);
 	
-	var _popDefaultMobs = __webpack_require__(208);
-	
 	var _world = __webpack_require__(209);
 	
 	var _world2 = _interopRequireDefault(_world);
@@ -21550,14 +21548,12 @@
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var welcome = '[motd] ' + C.WELCOME + ' ' + (0, _now.now)();
-	
 	      var world = new _world2.default({ window: window });
-	      var mobs = C.POP_DEFAULT_MOBS ? (0, _popDefaultMobs.popDefaultMobs)(world) : [];
 	
 	      // Keep track of all log messages.
 	      this.setState({
 	        // Mobs that are currently alive.
-	        mobs: mobs,
+	        mobs: [],
 	
 	        // Mobs that used to be alive but are now dead.
 	        corpses: [],
@@ -21918,9 +21914,6 @@
 	// Welcome message.
 	var WELCOME = exports.WELCOME = ['Welcome to Population Game.', 'Influence this worlds population and observe its evolution.'].join(' ');
 	
-	// Flag if the world starts with a default population of mobs.
-	var POP_DEFAULT_MOBS = exports.POP_DEFAULT_MOBS = false;
-	
 	// Maximum number of messages that are logged.
 	var LOG_MASTER_KEY = exports.LOG_MASTER_KEY = 'log';
 	var MAX_LOG_MESSAGES = exports.MAX_LOG_MESSAGES = 9;
@@ -22021,15 +22014,6 @@
 	  ORC: 'Orc',
 	  GOBLIN: 'Goblin',
 	  CAT: 'Cat'
-	};
-	
-	// Default mobs poped in the world.
-	var DEFAULT_MOBS = exports.DEFAULT_MOBS = {
-	  FAERY: 1,
-	  HUMAN: 2,
-	  ORC: 5,
-	  GOBLIN: 7,
-	  CAT: 11
 	};
 	
 	// Game logic time measurement (ex: ageing of mobs).
@@ -23691,77 +23675,7 @@
 	};
 
 /***/ },
-/* 208 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.popDefaultMobs = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _faery = __webpack_require__(191);
-	
-	var _faery2 = _interopRequireDefault(_faery);
-	
-	var _human = __webpack_require__(190);
-	
-	var _human2 = _interopRequireDefault(_human);
-	
-	var _orc = __webpack_require__(181);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _goblin = __webpack_require__(188);
-	
-	var _goblin2 = _interopRequireDefault(_goblin);
-	
-	var _cat = __webpack_require__(189);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var popDefaultMobs = exports.popDefaultMobs = function popDefaultMobs(world) {
-	  var mobs = [];
-	  var i = void 0;
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.FAERY; i++) {
-	    var faery = new _faery2.default({ world: world });
-	    mobs.push(faery);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.HUMAN; i++) {
-	    var human = new _human2.default({ world: world });
-	    mobs.push(human);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.ORC; i++) {
-	    var orc = new _orc2.default({ world: world });
-	    mobs.push(orc);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.GOBLIN; i++) {
-	    var goblin = new _goblin2.default({ world: world });
-	    mobs.push(goblin);
-	  }
-	
-	  for (i = 0; i < C.DEFAULT_MOBS.CAT; i++) {
-	    var cat = new _cat2.default({ world: world });
-	    mobs.push(cat);
-	  }
-	
-	  return mobs;
-	};
-
-/***/ },
+/* 208 */,
 /* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
