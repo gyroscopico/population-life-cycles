@@ -1,7 +1,6 @@
 import { animateMobMovement } from './animate-mob-movement';
 
-test(`animateMobMovement moves a mob down towards his
-    destination on the y axis by 1 pixel.`, () => {
+test(`animateMobMovement moves a mob down.`, () => {
   // Mock mob.
   const mob = {
     position: {
@@ -16,17 +15,18 @@ test(`animateMobMovement moves a mob down towards his
       coordinateY: 4,
       coordinateX: 1,
     },
-    speed: 1,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 32;
 
-  expect(result.position.y).toBe(31);
+  const result = animateMobMovement(mob, delta);
+
+  expect(result.position.y).toBe(30.25);
   expect(result.position.x).toBe(10);
 });
 
-test(`animateMobMovement moves a mob up towards his
-    destination on the y axis by 2 pixel.`, () => {
+test(`animateMobMovement moves a mob up.`, () => {
   // Mock mob.
   const mob = {
     position: {
@@ -41,17 +41,18 @@ test(`animateMobMovement moves a mob up towards his
       coordinateY: 2,
       coordinateX: 1,
     },
-    speed: 2,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 16;
 
-  expect(result.position.y).toBe(68);
+  const result = animateMobMovement(mob, delta);
+
+  expect(result.position.y).toBe(69.5);
   expect(result.position.x).toBe(10);
 });
 
-test(`animateMobMovement moves a mob left towards his
-    destination on the x axis by 1 pixel.`, () => {
+test(`animateMobMovement moves a mob left.`, () => {
   // Mock mob.
   const mob = {
     position: {
@@ -66,17 +67,18 @@ test(`animateMobMovement moves a mob left towards his
       coordinateY: 2,
       coordinateX: 0,
     },
-    speed: 1,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 32;
+
+  const result = animateMobMovement(mob, delta);
 
   expect(result.position.y).toBe(30);
-  expect(result.position.x).toBe(9);
+  expect(result.position.x).toBe(9.75);
 });
 
-test(`animateMobMovement moves a mob right towards his
-    destination on the x axis by 1 pixel.`, () => {
+test(`animateMobMovement moves a mob right.`, () => {
   // Mock mob.
   const mob = {
     position: {
@@ -91,13 +93,15 @@ test(`animateMobMovement moves a mob right towards his
       coordinateY: 2,
       coordinateX: 1,
     },
-    speed: 1,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 32;
+
+  const result = animateMobMovement(mob, delta);
 
   expect(result.position.y).toBe(30);
-  expect(result.position.x).toBe(1);
+  expect(result.position.x).toBe(0.25);
 });
 
 test(`animateMobMovement sets arrivedAtDestination to true
@@ -116,10 +120,12 @@ test(`animateMobMovement sets arrivedAtDestination to true
       coordinateY: 2,
       coordinateX: 1,
     },
-    speed: 1,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 32;
+
+  const result = animateMobMovement(mob, delta);
 
   expect(result.arrivedAtDestination).toBe(true);
 });
@@ -141,10 +147,12 @@ test(`animateMobMovement sets position coordinates to
       coordinateY: 2,
       coordinateX: 1,
     },
-    speed: 1,
+    speed: 8,
   };
 
-  const result = animateMobMovement(mob);
+  const delta = 32;
+
+  const result = animateMobMovement(mob, delta);
 
   expect(result.position.coordinateX).toBe(1);
 });

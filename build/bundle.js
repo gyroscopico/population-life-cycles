@@ -21561,9 +21561,9 @@
 	        // World models all environment parameters (not mobs).
 	        world: world,
 	
-	        // In heartbeat, tick measures if enough time
-	        // has elapsed since the last tick.
-	        tick: 0,
+	        // In heartbeat, longTick measures if enough time
+	        // has elapsed since the last longTick.
+	        longTick: 0,
 	
 	        // Keep track of all messages that should be logged and displayed.
 	        log: [welcome]
@@ -21624,7 +21624,7 @@
 	      }
 	    }
 	
-	    // Called every "tick", see C.ONE_TICK for this length of time.
+	    // Called every "longTick", see C.LONG_TICK for this length of time.
 	
 	  }, {
 	    key: 'updateGameLogic',
@@ -21663,7 +21663,7 @@
 	      });
 	    }
 	
-	    // Heartbeat runs faster than the ticks and guarantees
+	    // Heartbeat runs faster than the long ticks and guarantees
 	    // an animation consistent regardless of the device physical framerate.
 	
 	  }, {
@@ -21678,23 +21678,23 @@
 	      var delta = this.lastTime === undefined ? 0 : currentTime - this.lastTime;
 	      this.lastTime = currentTime;
 	
-	      // Update the game every tick (regular intervals),
+	      // Update the game every longTick (regular intervals),
 	      // not every heartbeat (too fast and varies based on client).
-	      if (this.state.tick >= C.ONE_TICK) {
+	      if (this.state.longTick >= C.LONG_TICK) {
 	        // The heartbeat is not allowed to make any game update
 	        // or any DOM operation, only other functions called by
 	        // updateGameLogic or updateAnimation can.
 	        this.updateGameLogic();
 	        this.setState({
-	          tick: 0 });
+	          longTick: 0 });
 	      }
 	
 	      // Movements are related to the requestAnimationFrame delta.
 	      this.updateAnimation(delta);
 	
-	      // Increment the game tick (every 6 seconds).
+	      // Increment the game longTick (every 6 seconds).
 	      this.setState({
-	        tick: this.state.tick + delta
+	        longTick: this.state.longTick + delta
 	      });
 	    }
 	  }, {
@@ -22023,7 +22023,7 @@
 	};
 	
 	// Game logic time measurement (ex: ageing of mobs).
-	var ONE_TICK = exports.ONE_TICK = 6 * 1e3; // 6 seconds of real time.
+	var LONG_TICK = exports.LONG_TICK = 1e3 * 6; // 6 seconds of real time.
 	
 	// Causes of death.
 	var OLD_AGE = exports.OLD_AGE = 'of old age';

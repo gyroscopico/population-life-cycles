@@ -38,5 +38,5 @@ test('Human mob colour is set to the dead one when he is very old', () => {
 
   const result = human.color;
 
-  expect(result).toBe('#FFE4FF');
+  expect(result).toBe('#ffe4ff');
 });

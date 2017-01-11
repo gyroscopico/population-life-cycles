@@ -139,7 +139,7 @@ export const CATEGORY = {
 };
 
 // Game logic time measurement (ex: ageing of mobs).
-export const ONE_TICK = 6 * 1e3; // 6 seconds of real time.
+export const LONG_TICK = 1e3 * 6; // 6 seconds of real time.
 
 // Causes of death.
 export const OLD_AGE = 'of old age';

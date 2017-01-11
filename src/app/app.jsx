@@ -31,9 +31,9 @@ export default class App extends Component {
       // World models all environment parameters (not mobs).
       world,
 
-      // In heartbeat, tick measures if enough time
-      // has elapsed since the last tick.
-      tick: 0,
+      // In heartbeat, longTick measures if enough time
+      // has elapsed since the last longTick.
+      longTick: 0,
 
       // Keep track of all messages that should be logged and displayed.
       log: [welcome],
@@ -92,7 +92,7 @@ export default class App extends Component {
     }
   }
 
-  // Called every "tick", see C.ONE_TICK for this length of time.
+  // Called every "longTick", see C.LONG_TICK for this length of time.
   updateGameLogic() {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     const ageingResult = ageMobs(
@@ -133,7 +133,7 @@ export default class App extends Component {
     });
   }
 
-  // Heartbeat runs faster than the ticks and guarantees
+  // Heartbeat runs faster than the long ticks and guarantees
   // an animation consistent regardless of the device physical framerate.
   heartbeat(currentTime) {
     if (window && window.requestAnimationFrame) {
@@ -147,24 +147,24 @@ export default class App extends Component {
       currentTime - this.lastTime;
     this.lastTime = currentTime;
 
-    // Update the game every tick (regular intervals),
+    // Update the game every longTick (regular intervals),
     // not every heartbeat (too fast and varies based on client).
-    if (this.state.tick >= C.ONE_TICK) {
+    if (this.state.longTick >= C.LONG_TICK) {
       // The heartbeat is not allowed to make any game update
       // or any DOM operation, only other functions called by
       // updateGameLogic or updateAnimation can.
       this.updateGameLogic();
       this.setState({
-        tick: 0,  // Reset the tick.
+        longTick: 0,  // Reset the longTick.
       });
     }
 
     // Movements are related to the requestAnimationFrame delta.
     this.updateAnimation(delta);
 
-    // Increment the game tick (every 6 seconds).
+    // Increment the game longTick (every 6 seconds).
     this.setState({
-      tick: this.state.tick + delta,
+      longTick: this.state.longTick + delta,
     });
   }
 

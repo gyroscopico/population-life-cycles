@@ -16,5 +16,5 @@ test('Cat mob colour is set to the dead one when he is very old', () => {
 
   const result = cat.color;
 
-  expect(result).toBe('#C5FFFF');
+  expect(result).toBe('#c5ffff');
 });
