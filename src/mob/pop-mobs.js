@@ -6,19 +6,21 @@ import Human from './human/human';
 import Faery from './faery/faery';
 import Storage from '../storage/storage';
 
+// Pop a number of new mobs from a given category.
 export const popMobs = (event, input) => {
   if (event !== undefined) {
     event.preventDefault();
   }
 
   const mobs = [];
-  const log = [];
 
   const {
     toAdd,
     category,
     world,
   } = input;
+
+  let errorMessage;
 
   for (let i = 0; i < toAdd; i++) {
     let newMob;
@@ -40,29 +42,26 @@ export const popMobs = (event, input) => {
         newMob = new Faery({ world });
         break;
       default:
-        throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
+        errorMessage = `${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`;
+        ga('send', 'event', 'Error', 'pop-mob.js', errorMessage);
+        throw new Error(errorMessage);
     }
 
-    const age = newMob.age >= newMob.maturity() ?
-        `${newMob.age} ${newMob.age > 1 ? 'years' : 'year'} old` : 'newborn';
     mobs.push(newMob);
-
-    // Message to log.
-    const message = [
-      `[pop] ${newMob.gender} ${newMob.category}`,
-      `(${age}, \u2625${newMob.longevity}).`
-    ].join(' ');
-
-    // Local log.
-    log.push(message);
-
-    // Store log message in Google Analytics.
-    // ga('send', 'event', Category, Action, Label, Value).
-    // "Value" must be an integer but it's optional.
-    ga('send', 'event', 'log', 'pop', message);
   }
 
-  // Persist the new log messages to localStorage.
+  // Local log.
+  const log = [`[pop] ${toAdd} new ${toAdd > 1 ?
+    'mobs' :
+    'mob'
+  }, category: ${category}.`];
+
+  // Log in Analytics how many mobs have popped.
+  // ga('send', 'event', Category, Action, Label, Value).
+  // @Value: the number of mobs.
+  ga('send', 'event', 'Mob', 'Pop', category, toAdd);
+
+  // Add the pop message to the log.
   const logStorage = new Storage({ masterKey: C.LOG_MASTER_KEY });
   log.map(message => logStorage.setItem(message));
 

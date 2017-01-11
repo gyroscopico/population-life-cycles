@@ -171,13 +171,19 @@ export default class App extends Component {
   submitForm(category, event) {
     // Validate the number of mobs to add.
     const toAdd = Number(this.refs['number-mobs-to-add'].value);
+    let errorMessage;
+
     if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
-      throw new Error(`${C.ERROR.INVALID_NUMBER_OF_MOBS}: ${toAdd}.`);
+      errorMessage = `${C.ERROR.INVALID_NUMBER_OF_MOBS}: ${toAdd}.`;
+      ga('send', 'event', 'Error', 'app.jsx', errorMessage);
+      throw new Error(errorMessage);
     }
 
     // Validate the category of the mobs to add.
     if (!category) {
-      throw new Error(`${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`);
+      errorMessage = `${C.ERROR.UNEXPECTED_MOB_CATEGORY}: ${category}.`;
+      ga('send', 'event', 'Error', 'app.jsx', errorMessage);
+      throw new Error(errorMessage);
     }
 
     const input = {

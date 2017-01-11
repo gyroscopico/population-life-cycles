@@ -13,6 +13,7 @@ export default class Mob extends BaseClass {
     const world = input && input.world;
 
     if (!world) {
+      ga('send', 'event', 'Error', 'mob.js', C.ERROR.INVALID_INPUT);
       throw new Error(C.ERROR.INVALID_INPUT);
     }
 
@@ -71,6 +72,7 @@ export default class Mob extends BaseClass {
     }
 
     if (freeTiles.length === 0) {
+      ga('send', 'event', 'Error', 'mob.js', C.ERROR.WORLD_IS_FULL);
       throw new Error(C.ERROR.WORLD_IS_FULL);
     }
 

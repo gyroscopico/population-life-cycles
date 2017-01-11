@@ -5,10 +5,13 @@ import * as C from '../constants';
 export default class Storage {
   constructor(input) {
     if (!input) {
+      ga('send', 'event', 'Error', 'storage.js', C.ERROR.INVALID_INPUT);
       throw new Error(C.ERROR.INVALID_INPUT);
     }
 
     if (!window || !window.localStorage) {
+      ga('send', 'event', 'Error', 'storage.js',
+        C.ERROR.LOCAL_STORAGE_NOT_SUPPORTED);
       throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
     }
 

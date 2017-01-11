@@ -3,6 +3,8 @@ import * as C from '../constants';
 // Try to pick free tiles where the mobs will move to.
 export const pickMobsNextTile = (mobs, world) => {
   if (!world || !world.tiles || world.tiles.length === 0) {
+    ga('send', 'event', 'Error',
+      'pick-mobs-next-tile.js', C.ERROR.INVALID_INPUT);
     throw new Error(C.ERROR.INVALID_INPUT);
   }
 

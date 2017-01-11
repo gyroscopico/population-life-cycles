@@ -21702,13 +21702,19 @@
 	    value: function submitForm(category, event) {
 	      // Validate the number of mobs to add.
 	      var toAdd = Number(this.refs['number-mobs-to-add'].value);
+	      var errorMessage = void 0;
+	
 	      if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
-	        throw new Error(C.ERROR.INVALID_NUMBER_OF_MOBS + ': ' + toAdd + '.');
+	        errorMessage = C.ERROR.INVALID_NUMBER_OF_MOBS + ': ' + toAdd + '.';
+	        ga('send', 'event', 'Error', 'app.jsx', errorMessage);
+	        throw new Error(errorMessage);
 	      }
 	
 	      // Validate the category of the mobs to add.
 	      if (!category) {
-	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
+	        errorMessage = C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.';
+	        ga('send', 'event', 'Error', 'app.jsx', errorMessage);
+	        throw new Error(errorMessage);
 	      }
 	
 	      var input = {
@@ -22126,18 +22132,20 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	// Pop a number of new mobs from a given category.
 	var popMobs = exports.popMobs = function popMobs(event, input) {
 	  if (event !== undefined) {
 	    event.preventDefault();
 	  }
 	
 	  var mobs = [];
-	  var log = [];
 	
 	  var toAdd = input.toAdd,
 	      category = input.category,
 	      world = input.world;
 	
+	
+	  var errorMessage = void 0;
 	
 	  for (var i = 0; i < toAdd; i++) {
 	    var newMob = void 0;
@@ -22159,25 +22167,23 @@
 	        newMob = new _faery2.default({ world: world });
 	        break;
 	      default:
-	        throw new Error(C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.');
+	        errorMessage = C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.';
+	        ga('send', 'event', 'Error', 'pop-mob.js', errorMessage);
+	        throw new Error(errorMessage);
 	    }
 	
-	    var age = newMob.age >= newMob.maturity() ? newMob.age + ' ' + (newMob.age > 1 ? 'years' : 'year') + ' old' : 'newborn';
 	    mobs.push(newMob);
-	
-	    // Message to log.
-	    var message = ['[pop] ' + newMob.gender + ' ' + newMob.category, '(' + age + ', \u2625' + newMob.longevity + ').'].join(' ');
-	
-	    // Local log.
-	    log.push(message);
-	
-	    // Store log message in Google Analytics.
-	    // ga('send', 'event', Category, Action, Label, Value).
-	    // "Value" must be an integer but it's optional.
-	    ga('send', 'event', 'log', 'pop', message);
 	  }
 	
-	  // Persist the new log messages to localStorage.
+	  // Local log.
+	  var log = ['[pop] ' + toAdd + ' new ' + (toAdd > 1 ? 'mobs' : 'mob') + ', category: ' + category + '.'];
+	
+	  // Log in Analytics how many mobs have popped.
+	  // ga('send', 'event', Category, Action, Label, Value).
+	  // @Value: the number of mobs.
+	  ga('send', 'event', 'Mob', 'Pop', category, toAdd);
+	
+	  // Add the pop message to the log.
 	  var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
 	  log.map(function (message) {
 	    return logStorage.setItem(message);
@@ -22287,6 +22293,7 @@
 	    var world = input && input.world;
 	
 	    if (!world) {
+	      ga('send', 'event', 'Error', 'mob.js', C.ERROR.INVALID_INPUT);
 	      throw new Error(C.ERROR.INVALID_INPUT);
 	    }
 	
@@ -22343,6 +22350,7 @@
 	      }
 	
 	      if (freeTiles.length === 0) {
+	        ga('send', 'event', 'Error', 'mob.js', C.ERROR.WORLD_IS_FULL);
 	        throw new Error(C.ERROR.WORLD_IS_FULL);
 	      }
 	
@@ -22657,6 +22665,7 @@
 	// Try to pick free tiles where the mobs will move to.
 	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
 	  if (!world || !world.tiles || world.tiles.length === 0) {
+	    ga('send', 'event', 'Error', 'pick-mobs-next-tile.js', C.ERROR.INVALID_INPUT);
 	    throw new Error(C.ERROR.INVALID_INPUT);
 	  }
 	
@@ -23099,10 +23108,12 @@
 	    _classCallCheck(this, Storage);
 	
 	    if (!input) {
+	      ga('send', 'event', 'Error', 'storage.js', C.ERROR.INVALID_INPUT);
 	      throw new Error(C.ERROR.INVALID_INPUT);
 	    }
 	
 	    if (!window || !window.localStorage) {
+	      ga('send', 'event', 'Error', 'storage.js', C.ERROR.LOCAL_STORAGE_NOT_SUPPORTED);
 	      throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
 	    }
 	
