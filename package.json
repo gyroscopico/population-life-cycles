@@ -64,7 +64,6 @@
     "left-pad": "azer/left-pad",
     "node-sass": "3.8.0",
     "npm-check": "5.4.0",
-    "promise-polyfill": "4.0.3",
     "react-test-renderer": "15.4.1",
     "sass-lint": "1.10.2",
     "sass-loader": "3.2.0",
