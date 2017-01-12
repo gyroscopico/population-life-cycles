@@ -21631,7 +21631,36 @@
 	  }, {
 	    key: 'updateShortTickGameLogic',
 	    value: function updateShortTickGameLogic() {
-	      console.warn('implement mob being aware of area around him/herself.');
+	      var _this2 = this;
+	
+	      // Each mobs becomes aware of potential mates.
+	      this.state.mobs
+	      // Only check mature mobs.
+	      .filter(function (mob) {
+	        return mob.mature;
+	      }).map(function (mob) {
+	        var oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
+	        var matesInRange = mob.getTilesInRange(_this2.state.world).filter(function (tile) {
+	          return (
+	            // Include tiles where there is a mob.
+	            tile.isBlocked &&
+	            // Include tiles where mobs are of the same category.
+	            tile.mobCategory === mob.category &&
+	            // Include tiles where the mob is of opposite gender.
+	            tile.mobGender === oppositeGender &&
+	            // Include tiles where the mob is mature.
+	            tile.mobIsMature &&
+	            // Exclude the tile where the current mob is moving to.
+	            tile.mobId !== mob.id
+	          );
+	        });
+	
+	        if (matesInRange.length > 0) {
+	          console.log('Mates for ' + JSON.stringify(mob) + ' are on tiles ' + JSON.stringify(matesInRange) + '.');
+	        }
+	
+	        return mob;
+	      });
 	    }
 	
 	    // Called every "longTick", see C.LONG_TICK for this length of time.
@@ -21754,7 +21783,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var key = 0;
 	      var logMessages = this.state.log.map(function (message) {
@@ -21818,7 +21847,7 @@
 	            className: 'main-controls',
 	            action: '#',
 	            onSubmit: function onSubmit(event) {
-	              return _this2.submitForm(C.CATEGORY.DEFAULT, event);
+	              return _this3.submitForm(C.CATEGORY.DEFAULT, event);
 	            }
 	          },
 	          _react2.default.createElement('input', {
@@ -21835,7 +21864,7 @@
 	            {
 	              className: 'pop-mob pop-orc',
 	              onClick: function onClick(event) {
-	                return _this2.submitForm(C.CATEGORY.ORC, event);
+	                return _this3.submitForm(C.CATEGORY.ORC, event);
 	              }
 	            },
 	            'Orc'
@@ -21845,7 +21874,7 @@
 	            {
 	              className: 'pop-mob pop-goblin',
 	              onClick: function onClick(event) {
-	                return _this2.submitForm(C.CATEGORY.GOBLIN, event);
+	                return _this3.submitForm(C.CATEGORY.GOBLIN, event);
 	              }
 	            },
 	            'Gob'
@@ -21855,7 +21884,7 @@
 	            {
 	              className: 'pop-mob pop-cat',
 	              onClick: function onClick(event) {
-	                return _this2.submitForm(C.CATEGORY.CAT, event);
+	                return _this3.submitForm(C.CATEGORY.CAT, event);
 	              }
 	            },
 	            'Cat'
@@ -21865,7 +21894,7 @@
 	            {
 	              className: 'pop-mob pop-human',
 	              onClick: function onClick(event) {
-	                return _this2.submitForm(C.CATEGORY.HUMAN, event);
+	                return _this3.submitForm(C.CATEGORY.HUMAN, event);
 	              }
 	            },
 	            'Man'
@@ -21875,7 +21904,7 @@
 	            {
 	              className: 'pop-mob pop-faery pop-mob-last',
 	              onClick: function onClick(event) {
-	                return _this2.submitForm(C.CATEGORY.FAERY, event);
+	                return _this3.submitForm(C.CATEGORY.FAERY, event);
 	              }
 	            },
 	            'Fae'
@@ -22289,6 +22318,8 @@
 	
 	var _getTilesCircle = __webpack_require__(216);
 	
+	var _getTilesArea = __webpack_require__(215);
+	
 	var _pickMobsNextTile = __webpack_require__(187);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22348,6 +22379,8 @@
 	    _this.size = _this._getSize();
 	    _this.color = _this._getColor();
 	
+	    _this.mature = _this.isMature();
+	
 	    // All mobs pick a next tile adjacent to the current one.
 	    (0, _pickMobsNextTile.pickMobsNextTile)([_this], world);
 	    return _this;
@@ -22382,10 +22415,26 @@
 	      tile.trackMob({
 	        id: this.id,
 	        category: this.category,
-	        gender: this.gender
+	        gender: this.gender,
+	        mature: this.mature
 	      });
 	
 	      return tile;
+	    }
+	
+	    // Returns an area of tiles all with the range of the mob current hexagon.
+	
+	  }, {
+	    key: 'getTilesInRange',
+	    value: function getTilesInRange(world) {
+	      return (0, _getTilesArea.getTilesArea)({
+	        world: world,
+	        center: {
+	          coordinateY: this.position.coordinateY,
+	          coordinateX: this.position.coordinateX
+	        },
+	        range: this.range
+	      });
 	    }
 	
 	    // Returns the tiles around the mob current hexagon.
@@ -22428,6 +22477,9 @@
 	      this.category = this._getCategory();
 	      this.size = this._getSize();
 	      this.color = this._getColor();
+	
+	      // Procreation related properties.
+	      this.mature = this.isMature();
 	
 	      // Return true if the mob could become older.
 	      // Return false and sets the age to the longevity (i.e. dead).
@@ -22666,7 +22718,8 @@
 	    world.tiles[tile.coordinateY][tile.coordinateX].trackMob({
 	      id: mob.id,
 	      category: mob.category,
-	      gender: mob.gender
+	      gender: mob.gender,
+	      mature: mob.mature
 	    });
 	
 	    // Update the destination of the mob.
@@ -23823,6 +23876,7 @@
 	      this.mobId = undefined;
 	      this.mobCategory = undefined;
 	      this.mobGender = undefined;
+	      this.mobIsMature = undefined;
 	    }
 	
 	    // Set this tile to track a mob.
@@ -23832,13 +23886,15 @@
 	    value: function trackMob(input) {
 	      var id = input.id,
 	          category = input.category,
-	          gender = input.gender;
+	          gender = input.gender,
+	          mature = input.mature;
 	
 	
 	      this.isBlocked = true;
 	      this.mobId = id;
 	      this.mobCategory = category;
 	      this.mobGender = gender;
+	      this.mobIsMature = mature;
 	    }
 	  }]);
 	
@@ -24226,7 +24282,40 @@
 
 
 /***/ },
-/* 215 */,
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getTilesArea = undefined;
+	
+	var _getTilesCircle = __webpack_require__(216);
+	
+	var getTilesArea = exports.getTilesArea = function getTilesArea(input) {
+	  var world = input.world,
+	      center = input.center,
+	      range = input.range;
+	
+	
+	  var tilesInRange = [];
+	
+	  for (var r = 1; r <= range; r++) {
+	    var tilesCircle = (0, _getTilesCircle.getTilesCircle)({
+	      world: world,
+	      center: center,
+	      range: r
+	    });
+	
+	    tilesInRange = tilesInRange.concat(tilesCircle);
+	  }
+	
+	  return tilesInRange;
+	};
+
+/***/ },
 /* 216 */
 /***/ function(module, exports, __webpack_require__) {
 

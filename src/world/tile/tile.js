@@ -25,6 +25,7 @@ export default class Tile extends BaseClass {
     this.mobId = undefined;
     this.mobCategory = undefined;
     this.mobGender = undefined;
+    this.mobIsMature = undefined;
   }
 
   // Set this tile to track a mob.
@@ -33,11 +34,13 @@ export default class Tile extends BaseClass {
       id,
       category,
       gender,
+      mature,
     } = input;
 
     this.isBlocked = true;
     this.mobId = id;
     this.mobCategory = category;
     this.mobGender = gender;
+    this.mobIsMature = mature;
   }
 }

@@ -36,6 +36,7 @@ export const pickMobsNextTile = (mobs, world) => {
         id: mob.id,
         category: mob.category,
         gender: mob.gender,
+        mature: mob.mature,
       });
 
     // Update the destination of the mob.

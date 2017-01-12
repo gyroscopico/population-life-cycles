@@ -1,6 +1,7 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
 import { getTilesCircle } from '../world/get-tiles-circle/get-tiles-circle';
+import { getTilesArea } from '../world/get-tiles-area/get-tiles-area';
 import { pickMobsNextTile } from './pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
@@ -51,6 +52,8 @@ export default class Mob extends BaseClass {
     this.size = this._getSize();
     this.color = this._getColor();
 
+    this.mature = this.isMature();
+
     // All mobs pick a next tile adjacent to the current one.
     pickMobsNextTile([this], world);
   }
@@ -83,9 +86,22 @@ export default class Mob extends BaseClass {
       id: this.id,
       category: this.category,
       gender: this.gender,
+      mature: this.mature,
     });
 
     return tile;
+  }
+
+  // Returns an area of tiles all with the range of the mob current hexagon.
+  getTilesInRange(world) {
+    return getTilesArea({
+      world,
+      center: {
+        coordinateY: this.position.coordinateY,
+        coordinateX: this.position.coordinateX,
+      },
+      range: this.range,
+    });
   }
 
   // Returns the tiles around the mob current hexagon.
@@ -123,6 +139,9 @@ export default class Mob extends BaseClass {
     this.category = this._getCategory();
     this.size = this._getSize();
     this.color = this._getColor();
+
+    // Procreation related properties.
+    this.mature = this.isMature();
 
     // Return true if the mob could become older.
     // Return false and sets the age to the longevity (i.e. dead).

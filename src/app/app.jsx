@@ -98,7 +98,34 @@ export default class App extends Component {
   }
 
   updateShortTickGameLogic() {
-    console.warn('implement mob being aware of area around him/herself.');
+    // Each mobs becomes aware of potential mates.
+    this.state.mobs
+      // Only check mature mobs.
+      .filter(mob => mob.mature)
+      .map((mob) => {
+        const oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
+        const matesInRange = mob.getTilesInRange(this.state.world)
+          .filter(tile =>
+            // Include tiles where there is a mob.
+            tile.isBlocked &&
+            // Include tiles where mobs are of the same category.
+            tile.mobCategory === mob.category &&
+            // Include tiles where the mob is of opposite gender.
+            tile.mobGender === oppositeGender &&
+            // Include tiles where the mob is mature.
+            tile.mobIsMature &&
+            // Exclude the tile where the current mob is moving to.
+            tile.mobId !== mob.id
+          );
+
+        if (matesInRange.length > 0) {
+          console.log(`Mates for ${
+            JSON.stringify(mob)} are on tiles ${
+            JSON.stringify(matesInRange)}.`);
+        }
+
+        return mob;
+      });
   }
 
   // Called every "longTick", see C.LONG_TICK for this length of time.
