@@ -61,6 +61,12 @@ npm run lint_js
 
 Browse to ./linters/js-report.html to view the Javascript linting report.
 
+## Check dependencies are up to date
+
+```
+npm run check
+```
+
 ## Deploy to production
 
 Publish any changes to the gh-pages branch and browse to https://ebabel-eu.github.io/population-life-cycles/
