@@ -138,8 +138,10 @@ export const CATEGORY = {
   CAT: 'Cat',
 };
 
-// Game logic time measurement (ex: ageing of mobs).
+// Game logic time measurement (ex: ageing of mobs or
+// checking agro range).
 export const LONG_TICK = 1e3 * 6; // 6 seconds of real time.
+export const SHORT_TICK = 1e3; // 1 second of real time.
 
 // Causes of death.
 export const OLD_AGE = 'of old age';

@@ -21565,6 +21565,8 @@
 	        // has elapsed since the last longTick.
 	        longTick: 0,
 	
+	        shortTick: 0,
+	
 	        // Keep track of all messages that should be logged and displayed.
 	        log: [welcome]
 	      });
@@ -21626,12 +21628,17 @@
 	        (0, _scrollToBottom.scrollToBottom)(this.refs.logWindow);
 	      }
 	    }
+	  }, {
+	    key: 'updateShortTickGameLogic',
+	    value: function updateShortTickGameLogic() {
+	      console.warn('implement mob being aware of area around him/herself.');
+	    }
 	
 	    // Called every "longTick", see C.LONG_TICK for this length of time.
 	
 	  }, {
-	    key: 'updateGameLogic',
-	    value: function updateGameLogic() {
+	    key: 'updateLongTickGameLogic',
+	    value: function updateLongTickGameLogic() {
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
 	      var ageingResult = (0, _ageMobs.ageMobs)(this.contextMobs, this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
 	      var mobs = ageingResult.mobs;
@@ -21686,17 +21693,26 @@
 	      if (this.state.longTick >= C.LONG_TICK) {
 	        // The heartbeat is not allowed to make any game update
 	        // or any DOM operation, only other functions called by
-	        // updateGameLogic or updateAnimation can.
-	        this.updateGameLogic();
+	        // updateLongTickGameLogic, updateShortTickGameLogic or
+	        // updateAnimation can.
+	        this.updateLongTickGameLogic();
 	        this.setState({
 	          longTick: 0 });
+	      }
+	
+	      if (this.state.shortTick >= C.SHORT_TICK) {
+	        this.updateShortTickGameLogic();
+	        this.setState({
+	          shortTick: 0
+	        });
 	      }
 	
 	      // Movements are related to the requestAnimationFrame delta.
 	      this.updateAnimation(delta);
 	
-	      // Increment the game longTick (every 6 seconds).
+	      // Increment the game shortTick and longTick.
 	      this.setState({
+	        shortTick: this.state.shortTick + delta,
 	        longTick: this.state.longTick + delta
 	      });
 	    }
@@ -22025,8 +22041,10 @@
 	  CAT: 'Cat'
 	};
 	
-	// Game logic time measurement (ex: ageing of mobs).
+	// Game logic time measurement (ex: ageing of mobs or
+	// checking agro range).
 	var LONG_TICK = exports.LONG_TICK = 1e3 * 6; // 6 seconds of real time.
+	var SHORT_TICK = exports.SHORT_TICK = 1e3; // 1 second of real time.
 	
 	// Causes of death.
 	var OLD_AGE = exports.OLD_AGE = 'of old age';

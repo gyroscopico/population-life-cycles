@@ -35,6 +35,8 @@ export default class App extends Component {
       // has elapsed since the last longTick.
       longTick: 0,
 
+      shortTick: 0,
+
       // Keep track of all messages that should be logged and displayed.
       log: [welcome],
     });
@@ -95,8 +97,12 @@ export default class App extends Component {
     }
   }
 
+  updateShortTickGameLogic() {
+    console.warn('implement mob being aware of area around him/herself.');
+  }
+
   // Called every "longTick", see C.LONG_TICK for this length of time.
-  updateGameLogic() {
+  updateLongTickGameLogic() {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     const ageingResult = ageMobs(
       this.contextMobs,
@@ -155,18 +161,27 @@ export default class App extends Component {
     if (this.state.longTick >= C.LONG_TICK) {
       // The heartbeat is not allowed to make any game update
       // or any DOM operation, only other functions called by
-      // updateGameLogic or updateAnimation can.
-      this.updateGameLogic();
+      // updateLongTickGameLogic, updateShortTickGameLogic or
+      // updateAnimation can.
+      this.updateLongTickGameLogic();
       this.setState({
         longTick: 0,  // Reset the longTick.
+      });
+    }
+
+    if (this.state.shortTick >= C.SHORT_TICK) {
+      this.updateShortTickGameLogic();
+      this.setState({
+        shortTick: 0,
       });
     }
 
     // Movements are related to the requestAnimationFrame delta.
     this.updateAnimation(delta);
 
-    // Increment the game longTick (every 6 seconds).
+    // Increment the game shortTick and longTick.
     this.setState({
+      shortTick: this.state.shortTick + delta,
       longTick: this.state.longTick + delta,
     });
   }
