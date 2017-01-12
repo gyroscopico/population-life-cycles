@@ -38,10 +38,14 @@ export const ageMobs = (context, mobs, corpses, world, years = 1) => {
     }
 
     // Log the death.
-    log.push([
-      `[death] ${mob.gender} ${mob.category},`,
+    const message = [
+      `${mob.gender} ${mob.category},`,
       `died ${mob.causeOfDeath} \u2625${mob.age}.`
-    ].join(' '));
+    ].join(' ');
+    log.push(message);
+
+    // Log the death in Google Analytics.
+    ga('send', 'event', 'Mob', 'Death', message, mob.age);
 
     return null;
   });

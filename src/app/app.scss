@@ -171,6 +171,10 @@ li {
   font-family: verdana, sans-serif;
   font-size: 11px;
   line-height: 15px;
+
+  li:first-letter {
+    text-transform: uppercase;
+  }
 }
 
 // Breakpoint: anything greater than the smallest

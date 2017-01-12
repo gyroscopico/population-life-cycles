@@ -1,8 +1,9 @@
 import * as C from '../../constants';
 
-// Return all the tiles around a given tile.
+// Return all the tiles forming a circle
+// all on the same range distance from center.
 // @input.range: maximum range is 4.
-export const getTilesWithinRange = input => {
+export const getTilesCircle = input => {
   const {
     world,
     center,
@@ -19,6 +20,8 @@ export const getTilesWithinRange = input => {
   // max: the maximum number of tiles in a circle.
   // example of max: with a range of 1, there are 6 tiles,
   // with a range of 2 there are 12 possible tiles.
+  // note: this is not an area of hexagons and does not
+  // include smaller concentric circles of tiles.
   for (let i = 0, max = range * 6; i < max; i++) {
     y = center.coordinateY +
         (startYIsEven ?

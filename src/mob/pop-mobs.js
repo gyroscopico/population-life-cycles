@@ -51,7 +51,7 @@ export const popMobs = (event, input) => {
   }
 
   // Local log.
-  const log = [`[pop] ${toAdd} new ${toAdd > 1 ?
+  const log = [`${toAdd} new ${toAdd > 1 ?
     'mobs' :
     'mob'
   }, category: ${category}.`];

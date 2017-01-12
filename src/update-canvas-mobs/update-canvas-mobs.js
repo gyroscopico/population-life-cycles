@@ -12,6 +12,10 @@ export const updateCanvasMobs = input => {
     delta
   } = input;
 
+  if (mobs.length === 0) {
+    return context;
+  }
+
   // Update the position towards the destination, if any.
   mobs
     .filter(mob => mob.destination)

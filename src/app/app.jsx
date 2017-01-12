@@ -17,7 +17,7 @@ import './app.scss';
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
-    const welcome = `[motd] ${C.WELCOME} ${now()}`;
+    const welcome = `${C.WELCOME} ${now()}`;
     const world = new World({ window });
 
     // Keep track of all log messages.
@@ -42,6 +42,9 @@ export default class App extends Component {
     // Persist the welcome message in log.
     const logStorage = new Storage({ masterKey: C.LOG_MASTER_KEY });
     logStorage.setItem(welcome);
+
+    // Log the welcome message of the day in Google Analytics.
+    ga('send', 'event', 'Log', 'MOTD', welcome);
 
     // Functions of the game.
     this.heartbeat = this.heartbeat.bind(this);

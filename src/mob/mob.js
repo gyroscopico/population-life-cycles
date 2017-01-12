@@ -1,7 +1,7 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
-import { getTilesWithinRange }
-  from '../world/get-tiles-within-range/get-tiles-within-range';
+import { getTilesArea }
+  from '../world/get-tiles-area/get-tiles-area';
 import { pickMobsNextTile } from './pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
@@ -92,7 +92,7 @@ export default class Mob extends BaseClass {
   // Returns the tiles around the mob current hexagon,
   // short range by default (i.e. 6 immediate tiles).
   getAdjacentTiles(world, range = C.RANGES.SHORT) {
-    return getTilesWithinRange({
+    return getTilesArea({
       world,
       center: {
         coordinateY: this.position.coordinateY,
