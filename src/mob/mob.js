@@ -1,7 +1,6 @@
 import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
-import { getTilesArea }
-  from '../world/get-tiles-area/get-tiles-area';
+import { getTilesCircle } from '../world/get-tiles-circle/get-tiles-circle';
 import { pickMobsNextTile } from './pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
@@ -89,16 +88,15 @@ export default class Mob extends BaseClass {
     return tile;
   }
 
-  // Returns the tiles around the mob current hexagon,
-  // short range by default (i.e. 6 immediate tiles).
-  getAdjacentTiles(world, range = C.RANGES.SHORT) {
-    return getTilesArea({
+  // Returns the tiles around the mob current hexagon.
+  getAdjacentTiles(world) {
+    return getTilesCircle({
       world,
       center: {
         coordinateY: this.position.coordinateY,
         coordinateX: this.position.coordinateX,
       },
-      range,
+      range: C.RANGES.SHORT,
     });
   }
 
