@@ -54,6 +54,8 @@ export default class Mob extends BaseClass {
 
     this.mature = this.isMature();
 
+    this.matesList = [];
+
     // All mobs pick a next tile adjacent to the current one.
     pickMobsNextTile([this], world);
   }

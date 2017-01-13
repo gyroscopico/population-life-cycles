@@ -708,17 +708,6 @@
 	  }
 	};
 	
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-	
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -758,8 +747,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 	
 	module.exports = PooledClass;
@@ -3099,7 +3087,14 @@
 	    // We warn in this case but don't throw. We expect the element creation to
 	    // succeed and there will likely be errors in render.
 	    if (!validType) {
-	      process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type should not be null, undefined, boolean, or ' + 'number. It should be a string (for DOM elements) or a ReactClass ' + '(for composite components).%s', getDeclarationErrorAddendum()) : void 0;
+	      if (typeof type !== 'function' && typeof type !== 'string') {
+	        var info = '';
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	        info += getDeclarationErrorAddendum();
+	        process.env.NODE_ENV !== 'production' ? warning(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info) : void 0;
+	      }
 	    }
 	
 	    var element = ReactElement.createElement.apply(this, arguments);
@@ -4070,7 +4065,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 31 */
@@ -4269,6 +4264,13 @@
 	var internalInstanceKey = '__reactInternalInstance$' + Math.random().toString(36).slice(2);
 	
 	/**
+	 * Check if a given node should be cached.
+	 */
+	function shouldPrecacheNode(node, nodeID) {
+	  return node.nodeType === 1 && node.getAttribute(ATTR_NAME) === String(nodeID) || node.nodeType === 8 && node.nodeValue === ' react-text: ' + nodeID + ' ' || node.nodeType === 8 && node.nodeValue === ' react-empty: ' + nodeID + ' ';
+	}
+	
+	/**
 	 * Drill down (through composites and empty components) until we get a host or
 	 * host text component.
 	 *
@@ -4333,7 +4335,7 @@
 	    }
 	    // We assume the child nodes are in the same order as the child instances.
 	    for (; childNode !== null; childNode = childNode.nextSibling) {
-	      if (childNode.nodeType === 1 && childNode.getAttribute(ATTR_NAME) === String(childID) || childNode.nodeType === 8 && childNode.nodeValue === ' react-text: ' + childID + ' ' || childNode.nodeType === 8 && childNode.nodeValue === ' react-empty: ' + childID + ' ') {
+	      if (shouldPrecacheNode(childNode, childID)) {
 	        precacheNode(childInst, childNode);
 	        continue outer;
 	      }
@@ -6574,17 +6576,6 @@
 	  }
 	};
 	
-	var fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-	  var Klass = this;
-	  if (Klass.instancePool.length) {
-	    var instance = Klass.instancePool.pop();
-	    Klass.call(instance, a1, a2, a3, a4, a5);
-	    return instance;
-	  } else {
-	    return new Klass(a1, a2, a3, a4, a5);
-	  }
-	};
-	
 	var standardReleaser = function (instance) {
 	  var Klass = this;
 	  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Trying to release an instance into a pool of a different type.') : _prodInvariant('25') : void 0;
@@ -6624,8 +6615,7 @@
 	  oneArgumentPooler: oneArgumentPooler,
 	  twoArgumentPooler: twoArgumentPooler,
 	  threeArgumentPooler: threeArgumentPooler,
-	  fourArgumentPooler: fourArgumentPooler,
-	  fiveArgumentPooler: fiveArgumentPooler
+	  fourArgumentPooler: fourArgumentPooler
 	};
 	
 	module.exports = PooledClass;
@@ -11443,12 +11433,18 @@
 	    } else {
 	      var contentToUse = CONTENT_TYPES[typeof props.children] ? props.children : null;
 	      var childrenToUse = contentToUse != null ? null : props.children;
+	      // TODO: Validate that text is allowed as a child of this node
 	      if (contentToUse != null) {
-	        // TODO: Validate that text is allowed as a child of this node
-	        if (process.env.NODE_ENV !== 'production') {
-	          setAndValidateContentChildDev.call(this, contentToUse);
+	        // Avoid setting textContent when the text is empty. In IE11 setting
+	        // textContent on a text area will cause the placeholder to not
+	        // show within the textarea until it has been focused and blurred again.
+	        // https://github.com/facebook/react/issues/6731#issuecomment-254874553
+	        if (contentToUse !== '') {
+	          if (process.env.NODE_ENV !== 'production') {
+	            setAndValidateContentChildDev.call(this, contentToUse);
+	          }
+	          DOMLazyTree.queueText(lazyTree, contentToUse);
 	        }
-	        DOMLazyTree.queueText(lazyTree, contentToUse);
 	      } else if (childrenToUse != null) {
 	        var mountImages = this.mountChildren(childrenToUse, transaction, context);
 	        for (var i = 0; i < mountImages.length; i++) {
@@ -13368,7 +13364,17 @@
 	      }
 	    } else {
 	      if (props.value == null && props.defaultValue != null) {
-	        node.defaultValue = '' + props.defaultValue;
+	        // In Chrome, assigning defaultValue to certain input types triggers input validation.
+	        // For number inputs, the display value loses trailing decimal points. For email inputs,
+	        // Chrome raises "The specified value <x> is not a valid email address".
+	        //
+	        // Here we check to see if the defaultValue has actually changed, avoiding these problems
+	        // when the user is inputting text
+	        //
+	        // https://github.com/facebook/react/issues/7253
+	        if (node.defaultValue !== '' + props.defaultValue) {
+	          node.defaultValue = '' + props.defaultValue;
+	        }
 	      }
 	      if (props.checked == null && props.defaultChecked != null) {
 	        node.defaultChecked = !!props.defaultChecked;
@@ -14115,9 +14121,15 @@
 	    // This is in postMount because we need access to the DOM node, which is not
 	    // available until after the component has mounted.
 	    var node = ReactDOMComponentTree.getNodeFromInstance(inst);
+	    var textContent = node.textContent;
 	
-	    // Warning: node.value may be the empty string at this point (IE11) if placeholder is set.
-	    node.value = node.textContent; // Detach value from defaultValue
+	    // Only set node.value if textContent is equal to the expected
+	    // initial value. In IE10/IE11 there is a bug where the placeholder attribute
+	    // will populate textContent as well.
+	    // https://developer.microsoft.com/microsoft-edge/platform/issues/101525/
+	    if (textContent === inst._wrapperState.initialValue) {
+	      node.value = textContent;
+	    }
 	  }
 	};
 	
@@ -14919,7 +14931,17 @@
 	    instance = ReactEmptyComponent.create(instantiateReactComponent);
 	  } else if (typeof node === 'object') {
 	    var element = node;
-	    !(element && (typeof element.type === 'function' || typeof element.type === 'string')) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : _prodInvariant('130', element.type == null ? element.type : typeof element.type, getDeclarationErrorAddendum(element._owner)) : void 0;
+	    var type = element.type;
+	    if (typeof type !== 'function' && typeof type !== 'string') {
+	      var info = '';
+	      if (process.env.NODE_ENV !== 'production') {
+	        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+	          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+	        }
+	      }
+	      info += getDeclarationErrorAddendum(element._owner);
+	       true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', type == null ? type : typeof type, info) : _prodInvariant('130', type == null ? type : typeof type, info) : void 0;
+	    }
 	
 	    // Special case string values
 	    if (typeof element.type === 'string') {
@@ -15209,7 +15231,7 @@
 	      // Since plain JS classes are defined without any special initialization
 	      // logic, we can not catch common errors early. Therefore, we have to
 	      // catch them here, at initialization time, instead.
-	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
+	      process.env.NODE_ENV !== 'production' ? warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved || inst.state, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
 	      process.env.NODE_ENV !== 'production' ? warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
@@ -16213,14 +16235,11 @@
 	
 	'use strict';
 	
-	var _prodInvariant = __webpack_require__(35),
-	    _assign = __webpack_require__(4);
+	var _prodInvariant = __webpack_require__(35);
 	
 	var invariant = __webpack_require__(8);
 	
 	var genericComponentClass = null;
-	// This registry keeps track of wrapper classes around host tags.
-	var tagToComponentClass = {};
 	var textComponentClass = null;
 	
 	var ReactHostComponentInjection = {
@@ -16233,11 +16252,6 @@
 	  // rendered as props.
 	  injectTextComponentClass: function (componentClass) {
 	    textComponentClass = componentClass;
-	  },
-	  // This accepts a keyed object with classes as values. Each key represents a
-	  // tag. That particular tag will use this class instead of the generic one.
-	  injectComponentClasses: function (componentClasses) {
-	    _assign(tagToComponentClass, componentClasses);
 	  }
 	};
 	
@@ -21092,7 +21106,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.4.1';
+	module.exports = '15.4.2';
 
 /***/ },
 /* 172 */
@@ -21498,31 +21512,33 @@
 	
 	var _popMobs = __webpack_require__(180);
 	
-	var _ageMobs = __webpack_require__(193);
+	var _ageMobs = __webpack_require__(194);
 	
-	var _scrollToBottom = __webpack_require__(196);
+	var _scrollToBottom = __webpack_require__(197);
 	
-	var _updateCanvasWorld = __webpack_require__(197);
+	var _updateCanvasWorld = __webpack_require__(198);
 	
-	var _updateCanvasCorpses = __webpack_require__(203);
+	var _updateCanvasCorpses = __webpack_require__(204);
 	
-	var _updateCanvasMobs = __webpack_require__(206);
+	var _updateCanvasMobs = __webpack_require__(207);
 	
-	var _world = __webpack_require__(208);
+	var _world = __webpack_require__(209);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	var _storage = __webpack_require__(192);
+	var _storage = __webpack_require__(193);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
 	var _now = __webpack_require__(185);
 	
-	var _gameCanvas = __webpack_require__(210);
+	var _gameCanvas = __webpack_require__(211);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	__webpack_require__(211);
+	var _updateMatesList = __webpack_require__(212);
+	
+	__webpack_require__(213);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21628,64 +21644,38 @@
 	        (0, _scrollToBottom.scrollToBottom)(this.refs.logWindow);
 	      }
 	    }
+	
+	    // Called every "shortTick" see C.SHORT_TICK.
+	
 	  }, {
 	    key: 'updateShortTickGameLogic',
 	    value: function updateShortTickGameLogic() {
-	      var _this2 = this;
-	
-	      // Each mobs becomes aware of potential mates.
-	      this.state.mobs
-	      // Only check mature mobs.
-	      .filter(function (mob) {
-	        return mob.mature;
-	      }).map(function (mob) {
-	        var oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
-	        var matesInRange = mob.getTilesInRange(_this2.state.world).filter(function (tile) {
-	          return (
-	            // Include tiles where there is a mob.
-	            tile.isBlocked &&
-	            // Include tiles where mobs are of the same category.
-	            tile.mobCategory === mob.category &&
-	            // Include tiles where the mob is of opposite gender.
-	            tile.mobGender === oppositeGender &&
-	            // Include tiles where the mob is mature.
-	            tile.mobIsMature &&
-	            // Exclude the tile where the current mob is moving to.
-	            tile.mobId !== mob.id
-	          );
-	        });
-	
-	        if (matesInRange.length > 0) {
-	          console.log('Mates for ' + JSON.stringify(mob) + ' are on tiles ' + JSON.stringify(matesInRange) + '.');
-	        }
-	
-	        return mob;
+	      // Update each mob list of mobs he/she wants to mate with.
+	      (0, _updateMatesList.updateMatesList)({
+	        world: this.state.world,
+	        mobs: this.state.mobs
 	      });
 	    }
 	
-	    // Called every "longTick", see C.LONG_TICK for this length of time.
+	    // Called every "longTick", see C.LONG_TICK for how frequent this is.
 	
 	  }, {
 	    key: 'updateLongTickGameLogic',
 	    value: function updateLongTickGameLogic() {
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
 	      var ageingResult = (0, _ageMobs.ageMobs)(this.contextMobs, this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
-	      var mobs = ageingResult.mobs;
-	      var corpses = ageingResult.corpses;
-	      var world = ageingResult.world;
-	      var log = ageingResult.log;
 	
 	      // Update state for all mobs, world, corpses and log.
 	      this.setState({
-	        mobs: mobs,
-	        corpses: corpses,
-	        world: world,
-	        log: this.state.log.concat(log).splice(-C.MAX_LOG_MESSAGES)
+	        mobs: ageingResult.mobs,
+	        corpses: ageingResult.corpses,
+	        world: ageingResult.world,
+	        log: this.state.log.concat(ageingResult.log).splice(-C.MAX_LOG_MESSAGES)
 	      });
 	
 	      (0, _updateCanvasCorpses.updateCanvasCorpses)({
 	        context: this.contextCorpses,
-	        corpses: corpses
+	        corpses: ageingResult.corpses
 	      });
 	    }
 	
@@ -21783,7 +21773,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this2 = this;
 	
 	      var key = 0;
 	      var logMessages = this.state.log.map(function (message) {
@@ -21847,7 +21837,7 @@
 	            className: 'main-controls',
 	            action: '#',
 	            onSubmit: function onSubmit(event) {
-	              return _this3.submitForm(C.CATEGORY.DEFAULT, event);
+	              return _this2.submitForm(C.CATEGORY.DEFAULT, event);
 	            }
 	          },
 	          _react2.default.createElement('input', {
@@ -21864,7 +21854,7 @@
 	            {
 	              className: 'pop-mob pop-orc',
 	              onClick: function onClick(event) {
-	                return _this3.submitForm(C.CATEGORY.ORC, event);
+	                return _this2.submitForm(C.CATEGORY.ORC, event);
 	              }
 	            },
 	            'Orc'
@@ -21874,7 +21864,7 @@
 	            {
 	              className: 'pop-mob pop-goblin',
 	              onClick: function onClick(event) {
-	                return _this3.submitForm(C.CATEGORY.GOBLIN, event);
+	                return _this2.submitForm(C.CATEGORY.GOBLIN, event);
 	              }
 	            },
 	            'Gob'
@@ -21884,7 +21874,7 @@
 	            {
 	              className: 'pop-mob pop-cat',
 	              onClick: function onClick(event) {
-	                return _this3.submitForm(C.CATEGORY.CAT, event);
+	                return _this2.submitForm(C.CATEGORY.CAT, event);
 	              }
 	            },
 	            'Cat'
@@ -21894,7 +21884,7 @@
 	            {
 	              className: 'pop-mob pop-human',
 	              onClick: function onClick(event) {
-	                return _this3.submitForm(C.CATEGORY.HUMAN, event);
+	                return _this2.submitForm(C.CATEGORY.HUMAN, event);
 	              }
 	            },
 	            'Man'
@@ -21904,7 +21894,7 @@
 	            {
 	              className: 'pop-mob pop-faery pop-mob-last',
 	              onClick: function onClick(event) {
-	                return _this3.submitForm(C.CATEGORY.FAERY, event);
+	                return _this2.submitForm(C.CATEGORY.FAERY, event);
 	              }
 	            },
 	            'Fae'
@@ -22158,23 +22148,23 @@
 	
 	var _orc2 = _interopRequireDefault(_orc);
 	
-	var _goblin = __webpack_require__(188);
+	var _goblin = __webpack_require__(189);
 	
 	var _goblin2 = _interopRequireDefault(_goblin);
 	
-	var _cat = __webpack_require__(189);
+	var _cat = __webpack_require__(190);
 	
 	var _cat2 = _interopRequireDefault(_cat);
 	
-	var _human = __webpack_require__(190);
+	var _human = __webpack_require__(191);
 	
 	var _human2 = _interopRequireDefault(_human);
 	
-	var _faery = __webpack_require__(191);
+	var _faery = __webpack_require__(192);
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
-	var _storage = __webpack_require__(192);
+	var _storage = __webpack_require__(193);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
@@ -22316,11 +22306,11 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _getTilesCircle = __webpack_require__(216);
+	var _getTilesCircle = __webpack_require__(186);
 	
-	var _getTilesArea = __webpack_require__(215);
+	var _getTilesArea = __webpack_require__(187);
 	
-	var _pickMobsNextTile = __webpack_require__(187);
+	var _pickMobsNextTile = __webpack_require__(188);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -22380,6 +22370,8 @@
 	    _this.color = _this._getColor();
 	
 	    _this.mature = _this.isMature();
+	
+	    _this.matesList = [];
 	
 	    // All mobs pick a next tile adjacent to the current one.
 	    (0, _pickMobsNextTile.pickMobsNextTile)([_this], world);
@@ -22667,8 +22659,93 @@
 	};
 
 /***/ },
-/* 186 */,
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getTilesCircle = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Return all the tiles forming a circle
+	// all on the same range distance from center.
+	// @input.range: maximum range is 4.
+	var getTilesCircle = exports.getTilesCircle = function getTilesCircle(input) {
+	  var world = input.world,
+	      center = input.center,
+	      range = input.range;
+	
+	
+	  var tilesInRange = [];
+	  var maxY = world.tiles.length - 1;
+	  var maxX = world.tiles[0].length - 1;
+	  var y = void 0;
+	  var x = void 0;
+	  var startYIsEven = center.coordinateY % 2 === 0;
+	
+	  // max: the maximum number of tiles in a circle.
+	  // example of max: with a range of 1, there are 6 tiles,
+	  // with a range of 2 there are 12 possible tiles.
+	  // note: this is not an area of hexagons and does not
+	  // include smaller concentric circles of tiles.
+	  for (var i = 0, max = range * 6; i < max; i++) {
+	    y = center.coordinateY + (startYIsEven ? C.VECTORS.EVEN_RANGES[range][i][0] : C.VECTORS.ODD_RANGES[range][i][0]);
+	    x = center.coordinateX + (startYIsEven ? C.VECTORS.EVEN_RANGES[range][i][1] : C.VECTORS.ODD_RANGES[range][i][1]);
+	
+	    if (y < 0 || y > maxY || x < 0 || x > maxX) {
+	      continue;
+	    } else {
+	      tilesInRange.push(world.tiles[y][x]);
+	    }
+	  }
+	
+	  return tilesInRange;
+	};
+
+/***/ },
 /* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getTilesArea = undefined;
+	
+	var _getTilesCircle = __webpack_require__(186);
+	
+	var getTilesArea = exports.getTilesArea = function getTilesArea(input) {
+	  var world = input.world,
+	      center = input.center,
+	      range = input.range;
+	
+	
+	  var tilesInRange = [];
+	
+	  for (var r = 1; r <= range; r++) {
+	    var tilesCircle = (0, _getTilesCircle.getTilesCircle)({
+	      world: world,
+	      center: center,
+	      range: r
+	    });
+	
+	    tilesInRange = tilesInRange.concat(tilesCircle);
+	  }
+	
+	  return tilesInRange;
+	};
+
+/***/ },
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22741,7 +22818,7 @@
 	};
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22812,7 +22889,7 @@
 	exports.default = Goblin;
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22918,7 +22995,7 @@
 	exports.default = Cat;
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22999,7 +23076,7 @@
 	exports.default = Human;
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23105,7 +23182,7 @@
 	exports.default = Faery;
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23204,7 +23281,7 @@
 	exports.default = Storage;
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23220,11 +23297,11 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _storage = __webpack_require__(192);
+	var _storage = __webpack_require__(193);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
-	var _clearMob = __webpack_require__(194);
+	var _clearMob = __webpack_require__(195);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -23289,7 +23366,7 @@
 	};
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23299,7 +23376,7 @@
 	});
 	exports.clearMob = undefined;
 	
-	var _clearCanvas = __webpack_require__(195);
+	var _clearCanvas = __webpack_require__(196);
 	
 	var clearMob = exports.clearMob = function clearMob(context, mob) {
 	  // Clear a square greater than mob by 1 pixel.
@@ -23323,7 +23400,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23344,7 +23421,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23359,7 +23436,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23373,9 +23450,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintTile = __webpack_require__(198);
+	var _paintTile = __webpack_require__(199);
 	
-	var _writeCoordinates = __webpack_require__(201);
+	var _writeCoordinates = __webpack_require__(202);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23399,7 +23476,7 @@
 	};
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23409,7 +23486,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(199);
+	var _drawHexagon = __webpack_require__(200);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23422,7 +23499,7 @@
 	};
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23436,7 +23513,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(200);
+	var _hexCorner = __webpack_require__(201);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23469,7 +23546,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23488,7 +23565,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23502,7 +23579,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _writeText = __webpack_require__(202);
+	var _writeText = __webpack_require__(203);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23519,7 +23596,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23545,7 +23622,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23555,7 +23632,7 @@
 	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(204);
+	var _paintMob = __webpack_require__(205);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23571,7 +23648,7 @@
 	};
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23581,7 +23658,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(205);
+	var _drawDisc = __webpack_require__(206);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23596,7 +23673,7 @@
 	};
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23623,7 +23700,7 @@
 	};
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23633,13 +23710,13 @@
 	});
 	exports.updateCanvasMobs = undefined;
 	
-	var _clearMob = __webpack_require__(194);
+	var _clearMob = __webpack_require__(195);
 	
-	var _paintMob = __webpack_require__(204);
+	var _paintMob = __webpack_require__(205);
 	
-	var _animateMobMovement = __webpack_require__(207);
+	var _animateMobMovement = __webpack_require__(208);
 	
-	var _pickMobsNextTile = __webpack_require__(187);
+	var _pickMobsNextTile = __webpack_require__(188);
 	
 	var updateCanvasMobs = exports.updateCanvasMobs = function updateCanvasMobs(input) {
 	  var context = input.context,
@@ -23682,7 +23759,7 @@
 	};
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23729,7 +23806,7 @@
 	};
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23748,7 +23825,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(209);
+	var _tile = __webpack_require__(210);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23814,7 +23891,7 @@
 	exports.default = World;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23904,7 +23981,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23932,16 +24009,75 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 211 */
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.updateMatesList = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var updateMatesList = exports.updateMatesList = function updateMatesList(input) {
+	  var world = input.world,
+	      mobs = input.mobs;
+	
+	
+	  if (mobs.length === 0) {
+	    return mobs;
+	  }
+	
+	  return mobs
+	  // Only check mature mobs.
+	  .filter(function (mob) {
+	    return mob.mature;
+	  }).map(function (mob) {
+	    var oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
+	    var matesInRange = mob.getTilesInRange(world).filter(function (tile) {
+	      return (
+	        // Include tiles where there is a mob.
+	        tile.isBlocked &&
+	        // Include tiles where mobs are of the same category.
+	        tile.mobCategory === mob.category &&
+	        // Include tiles where the mob is of opposite gender.
+	        tile.mobGender === oppositeGender &&
+	        // Include tiles where the mob is mature.
+	        tile.mobIsMature &&
+	        // Exclude the tile where the current mob is moving to.
+	        tile.mobId !== mob.id
+	      );
+	    });
+	
+	    if (matesInRange.length > 0) {
+	      // todo: improve listing the mates.
+	      // - if the mate is already listed by mobId, only update the location.
+	      // - if the mate is not listed, add him/her with the
+	      // mobId, y, x, coordinateY and coordinateX.
+	      mob.matesList = matesInRange.length;
+	    }
+	
+	    return mob;
+	  });
+	};
+
+/***/ },
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(212);
+	var content = __webpack_require__(214);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(214)(content, {});
+	var update = __webpack_require__(216)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23958,10 +24094,10 @@
 	}
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(213)();
+	exports = module.exports = __webpack_require__(215)();
 	// imports
 	
 	
@@ -23972,7 +24108,7 @@
 
 
 /***/ },
-/* 213 */
+/* 215 */
 /***/ function(module, exports) {
 
 	/*
@@ -24028,7 +24164,7 @@
 
 
 /***/ },
-/* 214 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24244,7 +24380,6 @@
 	function applyToTag(styleElement, obj) {
 		var css = obj.css;
 		var media = obj.media;
-		var sourceMap = obj.sourceMap;
 	
 		if(media) {
 			styleElement.setAttribute("media", media)
@@ -24262,7 +24397,6 @@
 	
 	function updateLink(linkElement, obj) {
 		var css = obj.css;
-		var media = obj.media;
 		var sourceMap = obj.sourceMap;
 	
 		if(sourceMap) {
@@ -24280,92 +24414,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 215 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getTilesArea = undefined;
-	
-	var _getTilesCircle = __webpack_require__(216);
-	
-	var getTilesArea = exports.getTilesArea = function getTilesArea(input) {
-	  var world = input.world,
-	      center = input.center,
-	      range = input.range;
-	
-	
-	  var tilesInRange = [];
-	
-	  for (var r = 1; r <= range; r++) {
-	    var tilesCircle = (0, _getTilesCircle.getTilesCircle)({
-	      world: world,
-	      center: center,
-	      range: r
-	    });
-	
-	    tilesInRange = tilesInRange.concat(tilesCircle);
-	  }
-	
-	  return tilesInRange;
-	};
-
-/***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getTilesCircle = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Return all the tiles forming a circle
-	// all on the same range distance from center.
-	// @input.range: maximum range is 4.
-	var getTilesCircle = exports.getTilesCircle = function getTilesCircle(input) {
-	  var world = input.world,
-	      center = input.center,
-	      range = input.range;
-	
-	
-	  var tilesInRange = [];
-	  var maxY = world.tiles.length - 1;
-	  var maxX = world.tiles[0].length - 1;
-	  var y = void 0;
-	  var x = void 0;
-	  var startYIsEven = center.coordinateY % 2 === 0;
-	
-	  // max: the maximum number of tiles in a circle.
-	  // example of max: with a range of 1, there are 6 tiles,
-	  // with a range of 2 there are 12 possible tiles.
-	  // note: this is not an area of hexagons and does not
-	  // include smaller concentric circles of tiles.
-	  for (var i = 0, max = range * 6; i < max; i++) {
-	    y = center.coordinateY + (startYIsEven ? C.VECTORS.EVEN_RANGES[range][i][0] : C.VECTORS.ODD_RANGES[range][i][0]);
-	    x = center.coordinateX + (startYIsEven ? C.VECTORS.EVEN_RANGES[range][i][1] : C.VECTORS.ODD_RANGES[range][i][1]);
-	
-	    if (y < 0 || y > maxY || x < 0 || x > maxX) {
-	      continue;
-	    } else {
-	      tilesInRange.push(world.tiles[y][x]);
-	    }
-	  }
-	
-	  return tilesInRange;
-	};
 
 /***/ }
 /******/ ]);

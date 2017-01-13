@@ -12,6 +12,7 @@ import World from '../world/world';
 import Storage from '../storage/storage';
 import { now } from '../utils/now';
 import GameCanvas from '../game-canvas/game-canvas';
+import { updateMatesList } from '../mob/update-mates-list/update-mates-list';
 import './app.scss';
 
 // Main starting point of the game.
@@ -97,38 +98,16 @@ export default class App extends Component {
     }
   }
 
+  // Called every "shortTick" see C.SHORT_TICK.
   updateShortTickGameLogic() {
-    // Each mobs becomes aware of potential mates.
-    this.state.mobs
-      // Only check mature mobs.
-      .filter(mob => mob.mature)
-      .map((mob) => {
-        const oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
-        const matesInRange = mob.getTilesInRange(this.state.world)
-          .filter(tile =>
-            // Include tiles where there is a mob.
-            tile.isBlocked &&
-            // Include tiles where mobs are of the same category.
-            tile.mobCategory === mob.category &&
-            // Include tiles where the mob is of opposite gender.
-            tile.mobGender === oppositeGender &&
-            // Include tiles where the mob is mature.
-            tile.mobIsMature &&
-            // Exclude the tile where the current mob is moving to.
-            tile.mobId !== mob.id
-          );
-
-        if (matesInRange.length > 0) {
-          console.log(`Mates for ${
-            JSON.stringify(mob)} are on tiles ${
-            JSON.stringify(matesInRange)}.`);
-        }
-
-        return mob;
-      });
+    // Update each mob list of mobs he/she wants to mate with.
+    updateMatesList({
+      world: this.state.world,
+      mobs: this.state.mobs,
+    });
   }
 
-  // Called every "longTick", see C.LONG_TICK for this length of time.
+  // Called every "longTick", see C.LONG_TICK for how frequent this is.
   updateLongTickGameLogic() {
     // Age all mobs by 1 year, returns both the mobs and the corpses.
     const ageingResult = ageMobs(
@@ -138,24 +117,20 @@ export default class App extends Component {
       this.state.world,
       C.AGE_INCREMENT,
     );
-    const mobs = ageingResult.mobs;
-    const corpses = ageingResult.corpses;
-    const world = ageingResult.world;
-    const log = ageingResult.log;
 
     // Update state for all mobs, world, corpses and log.
     this.setState({
-      mobs,
-      corpses,
-      world,
+      mobs: ageingResult.mobs,
+      corpses: ageingResult.corpses,
+      world: ageingResult.world,
       log: this.state.log
-          .concat(log)
-          .splice(- C.MAX_LOG_MESSAGES),
+          .concat(ageingResult.log)
+          .splice(-C.MAX_LOG_MESSAGES),
     });
 
     updateCanvasCorpses({
       context: this.contextCorpses,
-      corpses,
+      corpses: ageingResult.corpses,
     });
   }
 
