@@ -24025,6 +24025,16 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	var isAlreadyListed = function isAlreadyListed(input) {
+	  var id = input.id,
+	      list = input.list;
+	
+	
+	  return list.filter(function (member) {
+	    return member.id === id;
+	  }).length > 0;
+	};
+	
 	var updateMatesList = exports.updateMatesList = function updateMatesList(input) {
 	  var world = input.world,
 	      mobs = input.mobs;
@@ -24056,11 +24066,34 @@
 	    });
 	
 	    if (matesInRange.length > 0) {
-	      // todo: improve listing the mates.
-	      // - if the mate is already listed by mobId, only update the location.
-	      // - if the mate is not listed, add him/her with the
-	      // mobId, y, x, coordinateY and coordinateX.
-	      mob.matesList = matesInRange.length;
+	      var _loop = function _loop(i, max) {
+	        var mate = matesInRange[i];
+	        var listed = isAlreadyListed({
+	          id: mate.id,
+	          list: mob.matesList
+	        });
+	
+	        if (listed) {
+	          var mateToUpdate = mob.matesList.filter(function (listedMate) {
+	            return listedMate.id === mate.id;
+	          });
+	          // todo: only update the location of an already listed mate.
+	        }
+	
+	        if (!listed) {
+	          mob.matesList.push({
+	            id: mate.mobId,
+	            x: mate.x,
+	            y: mate.y,
+	            coordinateX: mate.coordinateX,
+	            coordinateY: mate.coordinateY
+	          });
+	        }
+	      };
+	
+	      for (var i = 0, max = matesInRange.length; i < max; i = i + 1) {
+	        _loop(i, max);
+	      }
 	    }
 	
 	    return mob;
