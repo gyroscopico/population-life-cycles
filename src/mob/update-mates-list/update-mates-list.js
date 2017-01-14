@@ -33,19 +33,19 @@ export const updateMatesList = (input) => {
       if (mateTilesInRange.length > 0) {
         for (let i = 0, max = mateTilesInRange.length; i < max; i += 1) {
           const mateTile = mateTilesInRange[i];
-          const listed = isAlreadyListed({
+          const result = isAlreadyListed({
             id: mateTile.mobId,
             list: mob.matesList,
           });
 
-          if (listed) {
-            mob.matesList[listed].x = mateTile.x;
-            mob.matesList[listed].y = mateTile.y;
-            mob.matesList[listed].coordinateX = mateTile.coordinateX;
-            mob.matesList[listed].coordinateY = mateTile.coordinateY;
+          if (result.listed) {
+            mob.matesList[result.index].x = mateTile.x;
+            mob.matesList[result.index].y = mateTile.y;
+            mob.matesList[result.index].coordinateX = mateTile.coordinateX;
+            mob.matesList[result.index].coordinateY = mateTile.coordinateY;
           }
 
-          if (!listed) {
+          if (!result.listed) {
             mob.matesList.push({
               id: mateTile.mobId,
               x: mateTile.x,

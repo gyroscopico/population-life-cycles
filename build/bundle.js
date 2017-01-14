@@ -22352,13 +22352,15 @@
 	  }, {
 	    key: 'getTilesInRange',
 	    value: function getTilesInRange(world) {
+	      var range = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.range;
+	
 	      return (0, _getTilesArea.getTilesArea)({
 	        world: world,
 	        center: {
 	          coordinateY: this.position.coordinateY,
 	          coordinateX: this.position.coordinateX
 	        },
-	        range: this.range
+	        range: range
 	      });
 	    }
 	
@@ -23908,19 +23910,19 @@
 	    if (mateTilesInRange.length > 0) {
 	      for (var i = 0, max = mateTilesInRange.length; i < max; i += 1) {
 	        var mateTile = mateTilesInRange[i];
-	        var listed = (0, _isAlreadyListed.isAlreadyListed)({
+	        var result = (0, _isAlreadyListed.isAlreadyListed)({
 	          id: mateTile.mobId,
 	          list: mob.matesList
 	        });
 	
-	        if (listed) {
-	          mob.matesList[listed].x = mateTile.x;
-	          mob.matesList[listed].y = mateTile.y;
-	          mob.matesList[listed].coordinateX = mateTile.coordinateX;
-	          mob.matesList[listed].coordinateY = mateTile.coordinateY;
+	        if (result.listed) {
+	          mob.matesList[result.index].x = mateTile.x;
+	          mob.matesList[result.index].y = mateTile.y;
+	          mob.matesList[result.index].coordinateX = mateTile.coordinateX;
+	          mob.matesList[result.index].coordinateY = mateTile.coordinateY;
 	        }
 	
-	        if (!listed) {
+	        if (!result.listed) {
 	          mob.matesList.push({
 	            id: mateTile.mobId,
 	            x: mateTile.x,
@@ -23947,18 +23949,28 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Returns the index of the mob id in the list if found,
-	// or returns false if not found.
+	// Returns both the index of the mob id in the list if found,
+	// and a listed boolean that is either true or false.
 	var isAlreadyListed = exports.isAlreadyListed = function isAlreadyListed(input) {
 	  var id = input.id,
 	      list = input.list;
 	
 	
+	  if (list.length === 0) {
+	    return {
+	      listed: false,
+	      index: -1
+	    };
+	  }
+	
 	  var index = list.findIndex(function (member) {
 	    return member.id === id;
 	  });
 	
-	  return index !== -1 ? index : false;
+	  return {
+	    listed: index !== -1,
+	    index: index
+	  };
 	};
 
 /***/ },

@@ -97,14 +97,14 @@ export default class Mob extends BaseClass {
   }
 
   // Returns an area of tiles all with the range of the mob current hexagon.
-  getTilesInRange(world) {
+  getTilesInRange(world, range = this.range) {
     return getTilesArea({
       world,
       center: {
         coordinateY: this.position.coordinateY,
         coordinateX: this.position.coordinateX,
       },
-      range: this.range,
+      range,
     });
   }
 

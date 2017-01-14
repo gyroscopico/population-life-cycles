@@ -1,12 +1,22 @@
-// Returns the index of the mob id in the list if found,
-// or returns false if not found.
+// Returns both the index of the mob id in the list if found,
+// and a listed boolean that is either true or false.
 export const isAlreadyListed = (input) => {
   const {
     id,
     list,
   } = input;
 
+  if (list.length === 0) {
+    return {
+      listed: false,
+      index: -1,
+    };
+  }
+
   const index = list.findIndex(member => member.id === id);
 
-  return index !== -1 ? index : false;
+  return {
+    listed: index !== -1,
+    index,
+  };
 };
