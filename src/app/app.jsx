@@ -232,7 +232,7 @@ export default class App extends Component {
             type="number"
             ref="number-mobs-to-add"
             className="number-mobs-to-add"
-            defaultValue="9"
+            defaultValue="1"
             min="1"
             max="100"
             pattern="\d*"
