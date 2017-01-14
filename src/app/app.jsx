@@ -165,15 +165,7 @@ export default class App extends Component {
   }
 
   submitForm(category, event) {
-    // Validate the number of mobs to add.
-    const toAdd = Number(this.refs['number-mobs-to-add'].value);
     let errorMessage;
-
-    if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
-      errorMessage = `${C.ERROR.INVALID_NUMBER_OF_MOBS}: ${toAdd}.`;
-      ga('send', 'event', 'Error', 'app.jsx', errorMessage);
-      throw new Error(errorMessage);
-    }
 
     // Validate the category of the mobs to add.
     if (!category) {
@@ -183,7 +175,7 @@ export default class App extends Component {
     }
 
     const input = {
-      toAdd,
+      toAdd: C.MOBS_PER_POP,
       category,
       world: this.state.world,
     };
@@ -228,15 +220,6 @@ export default class App extends Component {
           action="#"
           onSubmit={event => this.submitForm(C.CATEGORY.DEFAULT, event)}
         >
-          <input
-            type="number"
-            ref="number-mobs-to-add"
-            className="number-mobs-to-add"
-            defaultValue="1"
-            min="1"
-            max="100"
-            pattern="\d*"
-          />
           <button
             className="pop-mob pop-orc"
             onClick={event => this.submitForm(C.CATEGORY.ORC, event)}

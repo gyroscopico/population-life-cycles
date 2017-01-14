@@ -21710,15 +21710,7 @@
 	  }, {
 	    key: 'submitForm',
 	    value: function submitForm(category, event) {
-	      // Validate the number of mobs to add.
-	      var toAdd = Number(this.refs['number-mobs-to-add'].value);
 	      var errorMessage = void 0;
-	
-	      if (!toAdd || isNaN(toAdd) || toAdd > 100 || toAdd < 0) {
-	        errorMessage = C.ERROR.INVALID_NUMBER_OF_MOBS + ': ' + toAdd + '.';
-	        ga('send', 'event', 'Error', 'app.jsx', errorMessage);
-	        throw new Error(errorMessage);
-	      }
 	
 	      // Validate the category of the mobs to add.
 	      if (!category) {
@@ -21728,7 +21720,7 @@
 	      }
 	
 	      var input = {
-	        toAdd: toAdd,
+	        toAdd: C.MOBS_PER_POP,
 	        category: category,
 	        world: this.state.world
 	      };
@@ -21801,15 +21793,6 @@
 	              return _this2.submitForm(C.CATEGORY.DEFAULT, event);
 	            }
 	          },
-	          _react2.default.createElement('input', {
-	            type: 'number',
-	            ref: 'number-mobs-to-add',
-	            className: 'number-mobs-to-add',
-	            defaultValue: '1',
-	            min: '1',
-	            max: '100',
-	            pattern: '\\d*'
-	          }),
 	          _react2.default.createElement(
 	            'button',
 	            {
@@ -22021,7 +22004,6 @@
 	
 	// List all error messages.
 	var ERROR = exports.ERROR = {
-	  INVALID_NUMBER_OF_MOBS: 'Invalid number of mobs',
 	  UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
 	  WORLD_IS_FULL: 'World is full',
 	  INVALID_INPUT: 'Invalid input'
@@ -22048,6 +22030,9 @@
 	var LIST = exports.LIST = {
 	  MAX: 6
 	};
+	
+	// Number of mobs to pop with pop buttons.
+	var MOBS_PER_POP = exports.MOBS_PER_POP = 1;
 	
 	// Vectors relative from current tile to a range
 	// of concentric tiles around central one.
@@ -22316,17 +22301,19 @@
 	    return _this;
 	  }
 	
+	  // Pickk a random tile that isn't blocked.
+	
+	
 	  _createClass(Mob, [{
 	    key: 'getRandomTile',
 	    value: function getRandomTile(world) {
 	      var freeTiles = [];
 	
-	      // Tiles that are on the top and left edges are off-limit
-	      // to pop a new mob.
-	      var edgesOffLimit = 1;
+	      // Tiles that are on the edges are off-limit.
+	      var edges = 1;
 	
-	      for (var y = edgesOffLimit; y < world.tiles.length; y++) {
-	        for (var x = edgesOffLimit; x < world.tiles[y].length; x++) {
+	      for (var y = edges, maxY = world.tiles.length - edges; y < maxY; y += 1) {
+	        for (var x = edges, maxX = world.tiles[y].length - edges; x < maxX; x += 1) {
 	          if (!world.tiles[y][x].isBlocked) {
 	            freeTiles.push(world.tiles[y][x]);
 	          }
@@ -22709,14 +22696,17 @@
 	  var orientedMobs = mobs.map(function (mob) {
 	    var adjacentTiles = mob.getAdjacentTiles(world);
 	
+	    var maxCoordinateX = world.tiles[0].length - 1;
+	    var maxCoordinateY = world.tiles.length - 1;
+	
 	    var freeTiles = adjacentTiles
 	    // Only pick a tile that doesn't currently have a mob on it.
 	    .filter(function (tile) {
 	      return !tile.isBlocked;
 	    })
-	    // Don't pick a tile that is close to the top or left edge of the world.
+	    // Don't pick a tile that is close to edges of the world.
 	    .filter(function (tile) {
-	      return tile.coordinateX > 0 && tile.coordinateY > 0;
+	      return tile.coordinateX > 0 && tile.coordinateY > 0 && tile.coordinateX < maxCoordinateX && tile.coordinateY < maxCoordinateY;
 	    });
 	
 	    if (freeTiles.length === 0) {
@@ -23944,7 +23934,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right;\n  padding: .625em; }\n\n.number-mobs-to-add {\n  line-height: 29px;\n  background-color: #f9f7ed;\n  color: #33170d;\n  height: 30px; }\n\n.number-mobs-to-add,\n.pop-mob {\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; } }\n", ""]);
+	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right;\n  padding: .625em; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; } }\n", ""]);
 	
 	// exports
 

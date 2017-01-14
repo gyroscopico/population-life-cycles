@@ -110,24 +110,13 @@ li {
   padding: .625em;
 }
 
-.number-mobs-to-add {
-  line-height: 29px;
-  background-color: $white;
-  color: $black;
-  height: 30px;
-}
-
-.number-mobs-to-add,
 .pop-mob {
+  -webkit-appearance: none; // Needs to stay first line of this style.
   margin: 0 .5em 0 0;
   cursor: pointer;
   min-width: $min-size;
   border-radius: .5em;
   border: solid 1px;
-}
-
-.pop-mob {
-  -webkit-appearance: none; // Needs to stay first line of this style.
   font-weight: 600;
   text-transform: uppercase;
   height: 32px;

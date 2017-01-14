@@ -60,15 +60,16 @@ export default class Mob extends BaseClass {
     pickMobsNextTile([this], world);
   }
 
+  // Pickk a random tile that isn't blocked.
   getRandomTile(world) {
     const freeTiles = [];
 
-    // Tiles that are on the top and left edges are off-limit
-    // to pop a new mob.
-    const edgesOffLimit = 1;
+    // Tiles that are on the edges are off-limit.
+    const edges = 1;
 
-    for (let y = edgesOffLimit; y < world.tiles.length; y++) {
-      for (let x = edgesOffLimit; x < world.tiles[y].length; x++) {
+    for (let y = edges, maxY = world.tiles.length - edges; y < maxY; y += 1) {
+      for (let x = edges, maxX = world.tiles[y].length - edges;
+          x < maxX; x += 1) {
         if (!world.tiles[y][x].isBlocked) {
           freeTiles.push(world.tiles[y][x]);
         }

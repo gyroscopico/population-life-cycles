@@ -8,14 +8,21 @@ export const pickMobsNextTile = (mobs, world) => {
     throw new Error(C.ERROR.INVALID_INPUT);
   }
 
-  const orientedMobs = mobs.map(mob => {
+  const orientedMobs = mobs.map((mob) => {
     const adjacentTiles = mob.getAdjacentTiles(world);
+
+    const maxCoordinateX = world.tiles[0].length - 1;
+    const maxCoordinateY = world.tiles.length - 1;
 
     const freeTiles = adjacentTiles
       // Only pick a tile that doesn't currently have a mob on it.
       .filter(tile => !tile.isBlocked)
-      // Don't pick a tile that is close to the top or left edge of the world.
-      .filter(tile => tile.coordinateX > 0 && tile.coordinateY > 0);
+      // Don't pick a tile that is close to edges of the world.
+      .filter(tile =>
+        tile.coordinateX > 0 &&
+        tile.coordinateY > 0 &&
+        tile.coordinateX < maxCoordinateX &&
+        tile.coordinateY < maxCoordinateY);
 
     if (freeTiles.length === 0) {
       return mob;
