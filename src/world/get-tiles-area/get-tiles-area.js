@@ -10,9 +10,7 @@ export const getTilesArea = (input) => {
     range,
   } = input;
 
-  const startYIsEven = center.coordinateY % 2 === 0;
-
-  input.vectors = startYIsEven ?
+  input.vectors = center.coordinateY % 2 === 0 ?
     C.AREA_VECTORS.EVEN_RANGES[range] :
     C.AREA_VECTORS.ODD_RANGES[range];
 
