@@ -30,16 +30,6 @@ export const COLOR = {
   BLACK: '#33170d',
 };
 
-// Welcome message.
-export const WELCOME = [
-  'Welcome to Population Game.',
-  'Influence this worlds population and observe its evolution.',
-].join(' ');
-
-// Maximum number of messages that are logged.
-export const LOG_MASTER_KEY = 'log';
-export const MAX_LOG_MESSAGES = 9;
-
 // Keys.
 export const MALE = 'male';
 export const FEMALE = 'female';

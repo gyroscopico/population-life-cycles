@@ -21514,31 +21514,23 @@
 	
 	var _ageMobs = __webpack_require__(194);
 	
-	var _scrollToBottom = __webpack_require__(197);
+	var _updateCanvasWorld = __webpack_require__(197);
 	
-	var _updateCanvasWorld = __webpack_require__(198);
+	var _updateCanvasCorpses = __webpack_require__(203);
 	
-	var _updateCanvasCorpses = __webpack_require__(204);
+	var _updateCanvasMobs = __webpack_require__(206);
 	
-	var _updateCanvasMobs = __webpack_require__(207);
-	
-	var _world = __webpack_require__(209);
+	var _world = __webpack_require__(208);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	var _storage = __webpack_require__(193);
-	
-	var _storage2 = _interopRequireDefault(_storage);
-	
-	var _now = __webpack_require__(185);
-	
-	var _gameCanvas = __webpack_require__(211);
+	var _gameCanvas = __webpack_require__(210);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	var _updateMatesList = __webpack_require__(212);
+	var _updateMatesList = __webpack_require__(211);
 	
-	__webpack_require__(213);
+	__webpack_require__(212);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -21563,10 +21555,9 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      var welcome = C.WELCOME + ' ' + (0, _now.now)();
 	      var world = new _world2.default({ window: window });
 	
-	      // Keep track of all log messages.
+	      // Keep track of game state.
 	      this.setState({
 	        // Mobs that are currently alive.
 	        mobs: [],
@@ -21581,18 +21572,8 @@
 	        // has elapsed since the last longTick.
 	        longTick: 0,
 	
-	        shortTick: 0,
-	
-	        // Keep track of all messages that should be logged and displayed.
-	        log: [welcome]
+	        shortTick: 0
 	      });
-	
-	      // Persist the welcome message in log.
-	      var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
-	      logStorage.setItem(welcome);
-	
-	      // Log the welcome message of the day in Google Analytics.
-	      ga('send', 'event', 'Log', 'MOTD', welcome);
 	
 	      // Functions of the game.
 	      this.heartbeat = this.heartbeat.bind(this);
@@ -21636,14 +21617,6 @@
 	        world: this.state.world
 	      });
 	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate(prevProps, prevState) {
-	      // Has log changed?
-	      if (this.state.log.length !== prevState.log.length) {
-	        (0, _scrollToBottom.scrollToBottom)(this.refs.logWindow);
-	      }
-	    }
 	
 	    // Called every "shortTick" see C.SHORT_TICK.
 	
@@ -21665,12 +21638,11 @@
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
 	      var ageingResult = (0, _ageMobs.ageMobs)(this.contextMobs, this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
 	
-	      // Update state for all mobs, world, corpses and log.
+	      // Update state for all mobs, world and corpses.
 	      this.setState({
 	        mobs: ageingResult.mobs,
 	        corpses: ageingResult.corpses,
-	        world: ageingResult.world,
-	        log: this.state.log.concat(ageingResult.log).splice(-C.MAX_LOG_MESSAGES)
+	        world: ageingResult.world
 	      });
 	
 	      (0, _updateCanvasCorpses.updateCanvasCorpses)({
@@ -21766,24 +21738,13 @@
 	
 	      this.setState({
 	        mobs: this.state.mobs.concat(newMobs.mobs),
-	        world: newMobs.world,
-	        log: this.state.log.concat(newMobs.log).splice(-C.MAX_LOG_MESSAGES)
+	        world: newMobs.world
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
-	
-	      var key = 0;
-	      var logMessages = this.state.log.map(function (message) {
-	        key = key + 1;
-	        return _react2.default.createElement(
-	          'li',
-	          { key: key },
-	          message
-	        );
-	      });
 	
 	      var mobsTotal = this.state.mobs && this.state.mobs.length || 0;
 	      var corpsesTotal = this.state.corpses && this.state.corpses.length || 0;
@@ -21899,11 +21860,6 @@
 	            },
 	            'Fae'
 	          )
-	        ),
-	        _react2.default.createElement(
-	          'ol',
-	          { className: 'scrollable-window', ref: 'logWindow' },
-	          logMessages
 	        )
 	      );
 	    }
@@ -21954,13 +21910,6 @@
 	  WHITE: '#f9f7ed',
 	  BLACK: '#33170d'
 	};
-	
-	// Welcome message.
-	var WELCOME = exports.WELCOME = ['Welcome to Population Game.', 'Influence this worlds population and observe its evolution.'].join(' ');
-	
-	// Maximum number of messages that are logged.
-	var LOG_MASTER_KEY = exports.LOG_MASTER_KEY = 'log';
-	var MAX_LOG_MESSAGES = exports.MAX_LOG_MESSAGES = 9;
 	
 	// Keys.
 	var MALE = exports.MALE = 'male';
@@ -22169,10 +22118,6 @@
 	
 	var _faery2 = _interopRequireDefault(_faery);
 	
-	var _storage = __webpack_require__(193);
-	
-	var _storage2 = _interopRequireDefault(_storage);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -22220,24 +22165,14 @@
 	    mobs.push(newMob);
 	  }
 	
-	  // Local log.
-	  var log = [toAdd + ' new ' + (toAdd > 1 ? 'mobs' : 'mob') + ', category: ' + category + '.'];
-	
-	  // Log in Analytics how many mobs have popped.
+	  // Record in Analytics how many mobs have popped.
 	  // ga('send', 'event', Category, Action, Label, Value).
 	  // @Value: the number of mobs.
 	  ga('send', 'event', 'Mob', 'Pop', category, toAdd);
 	
-	  // Add the pop message to the log.
-	  var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
-	  log.map(function (message) {
-	    return logStorage.setItem(message);
-	  });
-	
 	  return {
 	    mobs: mobs,
-	    world: world,
-	    log: log
+	    world: world
 	  };
 	};
 
@@ -23187,105 +23122,7 @@
 	exports.default = Faery;
 
 /***/ },
-/* 193 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	// A Storage uses a masterKey to persist more than one
-	// localStorage key value pairs.
-	var Storage = function () {
-	  function Storage(input) {
-	    _classCallCheck(this, Storage);
-	
-	    if (!input) {
-	      ga('send', 'event', 'Error', 'storage.js', C.ERROR.INVALID_INPUT);
-	      throw new Error(C.ERROR.INVALID_INPUT);
-	    }
-	
-	    if (!window || !window.localStorage) {
-	      ga('send', 'event', 'Error', 'storage.js', C.ERROR.LOCAL_STORAGE_NOT_SUPPORTED);
-	      throw new Error(C.LOCAL_STORAGE_NOT_SUPPORTED);
-	    }
-	
-	    var masterKey = input.masterKey;
-	
-	
-	    this.masterKey = masterKey;
-	
-	    this.existsKey = masterKey + '_exists';
-	    this.lengthKey = masterKey + '_length';
-	
-	    this.exists = this._doesExist();
-	    this.length = this._getLength();
-	  }
-	
-	  // Has the master key ever been used to store data, even
-	  // if now it may no longer have any pairs using its master key.
-	
-	
-	  _createClass(Storage, [{
-	    key: '_doesExist',
-	    value: function _doesExist() {
-	      return window.localStorage.getItem(this.existsKey) !== null;
-	    }
-	  }, {
-	    key: '_getLength',
-	    value: function _getLength() {
-	      if (this.exists) {
-	        return parseInt(window.localStorage.getItem(this.lengthKey), 10);
-	      }
-	
-	      return 0;
-	    }
-	
-	    // Append a new member to the storage array.
-	
-	  }, {
-	    key: 'setItem',
-	    value: function setItem(value) {
-	      // The currently available index is equal to the length (starts with 0).
-	      var key = '' + this.masterKey + this.length;
-	      window.localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
-	
-	      // Increment the length now that a new array member has been added.
-	      this.length = this.length + 1;
-	      window.localStorage.setItem(this.lengthKey, this.length);
-	
-	      // Update the exists property.
-	      this.exists = true;
-	      window.localStorage.setItem(this.existsKey, this.exists);
-	    }
-	
-	    // Return localStorage total size in Kilobytes.
-	
-	  }, {
-	    key: 'totalSize',
-	    value: function totalSize() {
-	      return Math.round(JSON.stringify(window.localStorage).length / 1024);
-	    }
-	  }]);
-	
-	  return Storage;
-	}();
-	
-	exports.default = Storage;
-
-/***/ },
+/* 193 */,
 /* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -23302,21 +23139,13 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _storage = __webpack_require__(193);
-	
-	var _storage2 = _interopRequireDefault(_storage);
-	
 	var _clearMob = __webpack_require__(195);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	// Return an aged population of mobs and corpses.
 	var ageMobs = exports.ageMobs = function ageMobs(context, mobs, corpses, world) {
 	  var years = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-	
-	  var log = [];
 	
 	  var agedMobs = mobs.filter(function (mob) {
 	    if (mob.becomeOlder(years)) {
@@ -23346,27 +23175,17 @@
 	      }
 	    }
 	
-	    // Log the death.
+	    // Record the death in Google Analytics.
 	    var message = [mob.gender + ' ' + mob.category + ',', 'died ' + mob.causeOfDeath + ' \u2625' + mob.age + '.'].join(' ');
-	    log.push(message);
-	
-	    // Log the death in Google Analytics.
 	    ga('send', 'event', 'Mob', 'Death', message, mob.age);
 	
 	    return null;
 	  });
 	
-	  // Persist the new log messages to localStorage.
-	  var logStorage = new _storage2.default({ masterKey: C.LOG_MASTER_KEY });
-	  log.map(function (message) {
-	    return logStorage.setItem(message);
-	  });
-	
 	  return {
 	    mobs: agedMobs,
 	    corpses: corpses,
-	    world: world,
-	    log: log
+	    world: world
 	  };
 	};
 
@@ -23427,21 +23246,6 @@
 
 /***/ },
 /* 197 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var scrollToBottom = exports.scrollToBottom = function scrollToBottom(element) {
-	  element.scrollTop = element.scrollHeight;
-	
-	  return element;
-	};
-
-/***/ },
-/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23455,9 +23259,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintTile = __webpack_require__(199);
+	var _paintTile = __webpack_require__(198);
 	
-	var _writeCoordinates = __webpack_require__(202);
+	var _writeCoordinates = __webpack_require__(201);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23481,7 +23285,7 @@
 	};
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23491,7 +23295,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(200);
+	var _drawHexagon = __webpack_require__(199);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23504,7 +23308,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23518,7 +23322,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(201);
+	var _hexCorner = __webpack_require__(200);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23551,7 +23355,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23570,7 +23374,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23584,7 +23388,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _writeText = __webpack_require__(203);
+	var _writeText = __webpack_require__(202);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23601,7 +23405,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 202 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23627,7 +23431,7 @@
 	};
 
 /***/ },
-/* 204 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23637,7 +23441,7 @@
 	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(205);
+	var _paintMob = __webpack_require__(204);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23653,7 +23457,7 @@
 	};
 
 /***/ },
-/* 205 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23663,7 +23467,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(206);
+	var _drawDisc = __webpack_require__(205);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23678,7 +23482,7 @@
 	};
 
 /***/ },
-/* 206 */
+/* 205 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23705,7 +23509,7 @@
 	};
 
 /***/ },
-/* 207 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23717,9 +23521,9 @@
 	
 	var _clearMob = __webpack_require__(195);
 	
-	var _paintMob = __webpack_require__(205);
+	var _paintMob = __webpack_require__(204);
 	
-	var _animateMobMovement = __webpack_require__(208);
+	var _animateMobMovement = __webpack_require__(207);
 	
 	var _pickMobsNextTile = __webpack_require__(188);
 	
@@ -23764,7 +23568,7 @@
 	};
 
 /***/ },
-/* 208 */
+/* 207 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23811,7 +23615,7 @@
 	};
 
 /***/ },
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23830,7 +23634,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(210);
+	var _tile = __webpack_require__(209);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23896,7 +23700,7 @@
 	exports.default = World;
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23986,7 +23790,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24014,7 +23818,7 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24108,16 +23912,16 @@
 	};
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(214);
+	var content = __webpack_require__(213);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(216)(content, {});
+	var update = __webpack_require__(215)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -24134,21 +23938,21 @@
 	}
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(215)();
+	exports = module.exports = __webpack_require__(214)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls,\n.scrollable-window {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.main-controls,\n.scrollable-window {\n  padding: .625em; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 114px;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right; }\n\n.number-mobs-to-add {\n  line-height: 29px;\n  background-color: #f9f7ed;\n  color: #33170d;\n  height: 30px; }\n\n.number-mobs-to-add,\n.pop-mob {\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  height: 100px;\n  overflow: auto;\n  bottom: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n  .scrollable-window li:first-letter {\n    text-transform: uppercase; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; }\n  .main-controls,\n  .scrollable-window {\n    left: initial; }\n  .main-controls {\n    width: 314px; }\n  .scrollable-window {\n    width: 320px; } }\n", ""]);
+	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 114px;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right;\n  padding: .625em; }\n\n.number-mobs-to-add {\n  line-height: 29px;\n  background-color: #f9f7ed;\n  color: #33170d;\n  height: 30px; }\n\n.number-mobs-to-add,\n.pop-mob {\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; }\n  .main-controls {\n    left: initial; }\n  .main-controls {\n    width: 314px; } }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports) {
 
 	/*
@@ -24204,7 +24008,7 @@
 
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

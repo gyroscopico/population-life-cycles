@@ -3,14 +3,11 @@ import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import * as C from '../constants';
 import { popMobs } from '../mob/pop-mobs';
 import { ageMobs } from '../mob/age-mobs';
-import { scrollToBottom } from '../utils/scroll-to-bottom';
 import { updateCanvasWorld } from '../update-canvas-world/update-canvas-world';
 import { updateCanvasCorpses }
   from '../update-canvas-corpses/update-canvas-corpses';
 import { updateCanvasMobs } from '../update-canvas-mobs/update-canvas-mobs';
 import World from '../world/world';
-import Storage from '../storage/storage';
-import { now } from '../utils/now';
 import GameCanvas from '../game-canvas/game-canvas';
 import { updateMatesList } from '../mob/update-mates-list/update-mates-list';
 import './app.scss';
@@ -18,10 +15,9 @@ import './app.scss';
 // Main starting point of the game.
 export default class App extends Component {
   componentWillMount() {
-    const welcome = `${C.WELCOME} ${now()}`;
     const world = new World({ window });
 
-    // Keep track of all log messages.
+    // Keep track of game state.
     this.setState({
       // Mobs that are currently alive.
       mobs: [],
@@ -37,17 +33,7 @@ export default class App extends Component {
       longTick: 0,
 
       shortTick: 0,
-
-      // Keep track of all messages that should be logged and displayed.
-      log: [welcome],
     });
-
-    // Persist the welcome message in log.
-    const logStorage = new Storage({ masterKey: C.LOG_MASTER_KEY });
-    logStorage.setItem(welcome);
-
-    // Log the welcome message of the day in Google Analytics.
-    ga('send', 'event', 'Log', 'MOTD', welcome);
 
     // Functions of the game.
     this.heartbeat = this.heartbeat.bind(this);
@@ -91,13 +77,6 @@ export default class App extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // Has log changed?
-    if (this.state.log.length !== prevState.log.length) {
-      scrollToBottom(this.refs.logWindow);
-    }
-  }
-
   // Called every "shortTick" see C.SHORT_TICK.
   updateShortTickGameLogic() {
     // Update each mob list of mobs he/she wants to mate with.
@@ -118,14 +97,11 @@ export default class App extends Component {
       C.AGE_INCREMENT,
     );
 
-    // Update state for all mobs, world, corpses and log.
+    // Update state for all mobs, world and corpses.
     this.setState({
       mobs: ageingResult.mobs,
       corpses: ageingResult.corpses,
       world: ageingResult.world,
-      log: this.state.log
-          .concat(ageingResult.log)
-          .splice(-C.MAX_LOG_MESSAGES),
     });
 
     updateCanvasCorpses({
@@ -218,19 +194,10 @@ export default class App extends Component {
     this.setState({
       mobs: this.state.mobs.concat(newMobs.mobs),
       world: newMobs.world,
-      log: this.state.log
-          .concat(newMobs.log)
-          .splice(- C.MAX_LOG_MESSAGES),
     });
   }
 
   render() {
-    let key = 0;
-    const logMessages = this.state.log.map(message => {
-      key = key + 1;
-      return <li key={key}>{message}</li>;
-    });
-
     const mobsTotal = this.state.mobs && this.state.mobs.length || 0;
     const corpsesTotal = this.state.corpses && this.state.corpses.length || 0;
     const mobsLabel = mobsTotal > 1 ? 'mobs' : 'mob';
@@ -301,10 +268,6 @@ export default class App extends Component {
             Fae
           </button>
         </form>
-
-        <ol className="scrollable-window" ref="logWindow">
-          {logMessages}
-        </ol>
       </div>
     );
   }

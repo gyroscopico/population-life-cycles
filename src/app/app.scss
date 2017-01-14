@@ -60,18 +60,12 @@ li {
 // Style shared by several UI components.
 
 .header,
-.main-controls,
-.scrollable-window {
+.main-controls {
   margin: 0;
   position: fixed;
   left: 0;
   right: 0;
   z-index: 4;
-}
-
-.main-controls,
-.scrollable-window {
-  padding: .625em;
 }
 
 // Header: top of the screen, display logo and
@@ -113,6 +107,7 @@ li {
   bottom: 114px;
   background-color: $transparent-75;
   text-align: right;
+  padding: .625em;
 }
 
 .number-mobs-to-add {
@@ -163,21 +158,6 @@ li {
   @include pop-mob($pop-faery-l, $pop-faery-m, $pop-faery-d);
 }
 
-// Scrollable window: log of game events.
-.scrollable-window {
-  background-color: $transparent-20;
-  height: 100px;
-  overflow: auto;
-  bottom: 0;
-  font-family: verdana, sans-serif;
-  font-size: 11px;
-  line-height: 15px;
-
-  li:first-letter {
-    text-transform: uppercase;
-  }
-}
-
 // Breakpoint: anything greater than the smallest
 // supported device; iPhone 5, 320px wide.
 @media (min-width: 321px) {
@@ -185,16 +165,11 @@ li {
     font-size: 24px;
   }
 
-  .main-controls,
-  .scrollable-window {
+  .main-controls {
     left: initial;
   }
 
   .main-controls {
     width: 314px;
-  }
-
-  .scrollable-window {
-    width: 320px;
   }
 }
