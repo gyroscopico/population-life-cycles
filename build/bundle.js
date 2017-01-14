@@ -21512,25 +21512,25 @@
 	
 	var _popMobs = __webpack_require__(180);
 	
-	var _ageMobs = __webpack_require__(194);
+	var _ageMobs = __webpack_require__(193);
 	
-	var _updateCanvasWorld = __webpack_require__(197);
+	var _updateCanvasWorld = __webpack_require__(196);
 	
-	var _updateCanvasCorpses = __webpack_require__(203);
+	var _updateCanvasCorpses = __webpack_require__(202);
 	
-	var _updateCanvasMobs = __webpack_require__(206);
+	var _updateCanvasMobs = __webpack_require__(205);
 	
-	var _world = __webpack_require__(208);
+	var _world = __webpack_require__(207);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	var _gameCanvas = __webpack_require__(210);
+	var _gameCanvas = __webpack_require__(209);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	var _updateMatesList = __webpack_require__(211);
+	var _updateMatesList = __webpack_require__(210);
 	
-	__webpack_require__(212);
+	__webpack_require__(211);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23110,8 +23110,7 @@
 	exports.default = Faery;
 
 /***/ },
-/* 193 */,
-/* 194 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23127,7 +23126,7 @@
 	
 	var _now = __webpack_require__(185);
 	
-	var _clearMob = __webpack_require__(195);
+	var _clearMob = __webpack_require__(194);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23178,7 +23177,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23188,7 +23187,7 @@
 	});
 	exports.clearMob = undefined;
 	
-	var _clearCanvas = __webpack_require__(196);
+	var _clearCanvas = __webpack_require__(195);
 	
 	var clearMob = exports.clearMob = function clearMob(context, mob) {
 	  // Clear a square greater than mob by 1 pixel.
@@ -23212,7 +23211,7 @@
 	};
 
 /***/ },
-/* 196 */
+/* 195 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23233,7 +23232,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23247,9 +23246,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintTile = __webpack_require__(198);
+	var _paintTile = __webpack_require__(197);
 	
-	var _writeCoordinates = __webpack_require__(201);
+	var _writeCoordinates = __webpack_require__(200);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23273,7 +23272,7 @@
 	};
 
 /***/ },
-/* 198 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23283,7 +23282,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(199);
+	var _drawHexagon = __webpack_require__(198);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23296,7 +23295,7 @@
 	};
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23310,7 +23309,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(200);
+	var _hexCorner = __webpack_require__(199);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23343,7 +23342,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23362,7 +23361,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23376,7 +23375,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _writeText = __webpack_require__(202);
+	var _writeText = __webpack_require__(201);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23393,7 +23392,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 201 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23419,7 +23418,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23429,7 +23428,7 @@
 	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(204);
+	var _paintMob = __webpack_require__(203);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23445,7 +23444,7 @@
 	};
 
 /***/ },
-/* 204 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23455,7 +23454,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(205);
+	var _drawDisc = __webpack_require__(204);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23470,7 +23469,7 @@
 	};
 
 /***/ },
-/* 205 */
+/* 204 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23497,7 +23496,7 @@
 	};
 
 /***/ },
-/* 206 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23507,11 +23506,11 @@
 	});
 	exports.updateCanvasMobs = undefined;
 	
-	var _clearMob = __webpack_require__(195);
+	var _clearMob = __webpack_require__(194);
 	
-	var _paintMob = __webpack_require__(204);
+	var _paintMob = __webpack_require__(203);
 	
-	var _animateMobMovement = __webpack_require__(207);
+	var _animateMobMovement = __webpack_require__(206);
 	
 	var _pickMobsNextTile = __webpack_require__(188);
 	
@@ -23556,7 +23555,7 @@
 	};
 
 /***/ },
-/* 207 */
+/* 206 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23603,7 +23602,7 @@
 	};
 
 /***/ },
-/* 208 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23622,7 +23621,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(209);
+	var _tile = __webpack_require__(208);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23688,7 +23687,7 @@
 	exports.default = World;
 
 /***/ },
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23778,7 +23777,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23806,7 +23805,7 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23820,21 +23819,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
+	var _isAlreadyListed = __webpack_require__(215);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Returns the index of the mob id in the list if found,
-	// or returns false if not found.
-	var isAlreadyListed = function isAlreadyListed(input) {
-	  var id = input.id,
-	      list = input.list;
-	
-	
-	  var index = list.findIndex(function (member) {
-	    return member.id === id;
-	  });
-	
-	  return index !== -1 ? index : false;
-	};
 	
 	var updateMatesList = exports.updateMatesList = function updateMatesList(input) {
 	  var world = input.world,
@@ -23869,7 +23856,7 @@
 	    if (mateTilesInRange.length > 0) {
 	      for (var i = 0, max = mateTilesInRange.length; i < max; i += 1) {
 	        var mateTile = mateTilesInRange[i];
-	        var listed = isAlreadyListed({
+	        var listed = (0, _isAlreadyListed.isAlreadyListed)({
 	          id: mateTile.mobId,
 	          list: mob.matesList
 	        });
@@ -23900,16 +23887,16 @@
 	};
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(213);
+	var content = __webpack_require__(212);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(215)(content, {});
+	var update = __webpack_require__(214)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23926,10 +23913,10 @@
 	}
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(214)();
+	exports = module.exports = __webpack_require__(213)();
 	// imports
 	
 	
@@ -23940,7 +23927,7 @@
 
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/*
@@ -23996,7 +23983,7 @@
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24246,6 +24233,29 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 215 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Returns the index of the mob id in the list if found,
+	// or returns false if not found.
+	var isAlreadyListed = exports.isAlreadyListed = function isAlreadyListed(input) {
+	  var id = input.id,
+	      list = input.list;
+	
+	
+	  var index = list.findIndex(function (member) {
+	    return member.id === id;
+	  });
+	
+	  return index !== -1 ? index : false;
+	};
 
 /***/ }
 /******/ ]);
