@@ -146,9 +146,9 @@ export const ERROR = {
 };
 
 // UI.
-export const HEADER_HEIGHT = 49;
+export const HEADER_HEIGHT = 40;
 export const CONTROLS_WIDTH = 264;
-export const CONTROLS_HEIGHT = 53;
+export const CONTROLS_HEIGHT = 40;
 export const HEXAGON_LINE_WIDTH = 1;
 
 // World tiles.

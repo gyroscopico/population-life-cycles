@@ -204,14 +204,14 @@ export default class App extends Component {
         <ul className="header">
           <li><h1>Population Game</h1></li>
           <li>
-            <span className="total-mobs big-number">
-              {mobsTotal.toString()}
-            </span> {mobsLabel}
-          </li>
-          <li>
             <span className="total-corpses big-number">
               {corpsesTotal.toString()}
             </span> {corpsesLabel}
+          </li>
+          <li>
+            <span className="total-mobs big-number">
+              {mobsTotal.toString()}
+            </span> {mobsLabel}
           </li>
         </ul>
 

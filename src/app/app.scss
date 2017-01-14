@@ -27,8 +27,8 @@ button {
 
 // Note: the only h1 is the logo.
 h1 {
-  margin: 0 6px 0 0;
-  line-height: 49px;
+  margin: 0;
+  line-height: 40px;
   font-size: 16px;
   font-weight: 400;
 }
@@ -41,7 +41,7 @@ li {
 
 .canvas {
   position: fixed;
-  top: 49px;
+  top: 40px;
 }
 
 .canvas-world {
@@ -77,10 +77,15 @@ li {
   color: $white;
 
   li {
-    float: left;
-    margin-left: .5em;
+    float: right;
+    margin-right: .5em;
     text-align: center;
-    line-height: 3em;
+    line-height: 38px;
+
+    &:first-child {
+      margin-left: .5em;
+      float: left;
+    }
   }
 }
 
@@ -107,7 +112,7 @@ li {
   bottom: 0;
   background-color: $transparent-75;
   text-align: right;
-  padding: .625em;
+  padding: 4px;
 }
 
 .pop-mob {
