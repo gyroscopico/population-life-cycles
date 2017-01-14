@@ -2,7 +2,7 @@ import * as C from '../constants';
 import BaseClass from '../base-class/base-class';
 import { getTilesCircle } from '../world/get-tiles-circle/get-tiles-circle';
 import { getTilesArea } from '../world/get-tiles-area/get-tiles-area';
-import { pickMobsNextTile } from './pick-mobs-next-tile';
+import { pickMobsNextTile } from './pick-mobs-next-tile/pick-mobs-next-tile';
 
 // Note: methods starting with an underscore are meant to be private,
 // i.e. not called outside this class.
@@ -25,7 +25,8 @@ export default class Mob extends BaseClass {
     // Is this mob born from other mobs?
     this.isBornFromMobs = input && input.isBornFromMobs || false;
 
-    // A newborn mob from existing mobs who procreated is always 0 years of age.
+    // A newborn mob from existing mobs who procreated
+    // is always 0 years of age.
     if (input && input.age !== undefined) {
       this.age = input.age;
     } else {

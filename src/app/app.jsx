@@ -1,8 +1,8 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 
 import * as C from '../constants';
-import { popMobs } from '../mob/pop-mobs';
-import { ageMobs } from '../mob/age-mobs';
+import { popMobs } from '../mob/pop-mobs/pop-mobs';
+import { ageMobs } from '../mob/age-mobs/age-mobs';
 import { updateCanvasWorld } from '../update-canvas-world/update-canvas-world';
 import { updateCanvasCorpses }
   from '../update-canvas-corpses/update-canvas-corpses';

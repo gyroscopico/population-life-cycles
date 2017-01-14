@@ -1,4 +1,4 @@
-import * as C from '../constants';
+import * as C from '../../constants';
 
 // Try to pick free tiles where the mobs will move to.
 export const pickMobsNextTile = (mobs, world) => {

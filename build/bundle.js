@@ -21510,27 +21510,27 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _popMobs = __webpack_require__(180);
+	var _popMobs = __webpack_require__(219);
 	
-	var _ageMobs = __webpack_require__(193);
+	var _ageMobs = __webpack_require__(218);
 	
-	var _updateCanvasWorld = __webpack_require__(196);
+	var _updateCanvasWorld = __webpack_require__(198);
 	
-	var _updateCanvasCorpses = __webpack_require__(202);
+	var _updateCanvasCorpses = __webpack_require__(204);
 	
-	var _updateCanvasMobs = __webpack_require__(205);
+	var _updateCanvasMobs = __webpack_require__(207);
 	
-	var _world = __webpack_require__(207);
+	var _world = __webpack_require__(209);
 	
 	var _world2 = _interopRequireDefault(_world);
 	
-	var _gameCanvas = __webpack_require__(209);
+	var _gameCanvas = __webpack_require__(211);
 	
 	var _gameCanvas2 = _interopRequireDefault(_gameCanvas);
 	
-	var _updateMatesList = __webpack_require__(210);
+	var _updateMatesList = __webpack_require__(212);
 	
-	__webpack_require__(211);
+	__webpack_require__(213);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -22067,99 +22067,7 @@
 	};
 
 /***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.popMobs = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _orc = __webpack_require__(181);
-	
-	var _orc2 = _interopRequireDefault(_orc);
-	
-	var _goblin = __webpack_require__(189);
-	
-	var _goblin2 = _interopRequireDefault(_goblin);
-	
-	var _cat = __webpack_require__(190);
-	
-	var _cat2 = _interopRequireDefault(_cat);
-	
-	var _human = __webpack_require__(191);
-	
-	var _human2 = _interopRequireDefault(_human);
-	
-	var _faery = __webpack_require__(192);
-	
-	var _faery2 = _interopRequireDefault(_faery);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Pop a number of new mobs from a given category.
-	var popMobs = exports.popMobs = function popMobs(event, input) {
-	  if (event !== undefined) {
-	    event.preventDefault();
-	  }
-	
-	  var mobs = [];
-	
-	  var toAdd = input.toAdd,
-	      category = input.category,
-	      world = input.world;
-	
-	
-	  var errorMessage = void 0;
-	
-	  for (var i = 0; i < toAdd; i++) {
-	    var newMob = void 0;
-	
-	    switch (category) {
-	      case C.CATEGORY.ORC:
-	        newMob = new _orc2.default({ world: world });
-	        break;
-	      case C.CATEGORY.GOBLIN:
-	        newMob = new _goblin2.default({ world: world });
-	        break;
-	      case C.CATEGORY.CAT:
-	        newMob = new _cat2.default({ world: world });
-	        break;
-	      case C.CATEGORY.HUMAN:
-	        newMob = new _human2.default({ world: world });
-	        break;
-	      case C.CATEGORY.FAERY:
-	        newMob = new _faery2.default({ world: world });
-	        break;
-	      default:
-	        errorMessage = C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.';
-	        ga('send', 'event', 'Error', 'pop-mob.js', errorMessage);
-	        throw new Error(errorMessage);
-	    }
-	
-	    mobs.push(newMob);
-	  }
-	
-	  // Record in Analytics how many mobs have popped.
-	  // ga('send', 'event', Category, Action, Label, Value).
-	  // @Value: the number of mobs.
-	  ga('send', 'event', 'Mob', 'Pop', category, toAdd);
-	
-	  return {
-	    mobs: mobs,
-	    world: world
-	  };
-	};
-
-/***/ },
+/* 180 */,
 /* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -22233,7 +22141,7 @@
 	
 	var _getTilesArea = __webpack_require__(187);
 	
-	var _pickMobsNextTile = __webpack_require__(188);
+	var _pickMobsNextTile = __webpack_require__(220);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -22270,7 +22178,8 @@
 	    // Is this mob born from other mobs?
 	    _this.isBornFromMobs = input && input.isBornFromMobs || false;
 	
-	    // A newborn mob from existing mobs who procreated is always 0 years of age.
+	    // A newborn mob from existing mobs who procreated
+	    // is always 0 years of age.
 	    if (input && input.age !== undefined) {
 	      _this.age = input.age;
 	    } else {
@@ -22670,82 +22579,7 @@
 	};
 
 /***/ },
-/* 188 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.pickMobsNextTile = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Try to pick free tiles where the mobs will move to.
-	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
-	  if (!world || !world.tiles || world.tiles.length === 0) {
-	    ga('send', 'event', 'Error', 'pick-mobs-next-tile.js', C.ERROR.INVALID_INPUT);
-	    throw new Error(C.ERROR.INVALID_INPUT);
-	  }
-	
-	  var orientedMobs = mobs.map(function (mob) {
-	    var adjacentTiles = mob.getAdjacentTiles(world);
-	
-	    var maxCoordinateX = world.tiles[0].length - 1;
-	    var maxCoordinateY = world.tiles.length - 1;
-	
-	    var freeTiles = adjacentTiles
-	    // Only pick a tile that doesn't currently have a mob on it.
-	    .filter(function (tile) {
-	      return !tile.isBlocked;
-	    })
-	    // Don't pick a tile that is close to edges of the world.
-	    .filter(function (tile) {
-	      return tile.coordinateX > 0 && tile.coordinateY > 0 && tile.coordinateX < maxCoordinateX && tile.coordinateY < maxCoordinateY;
-	    });
-	
-	    if (freeTiles.length === 0) {
-	      return mob;
-	    }
-	
-	    // A valid tile (free, no mob) can be selected.
-	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
-	
-	    // Leave the current tile.
-	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].resetMobTracking();
-	
-	    // Occupy the next tile.
-	    world.tiles[tile.coordinateY][tile.coordinateX].trackMob({
-	      id: mob.id,
-	      category: mob.category,
-	      gender: mob.gender,
-	      mature: mob.mature
-	    });
-	
-	    // Update the destination of the mob.
-	    mob.destination = {
-	      y: tile.y,
-	      x: tile.x,
-	      coordinateY: tile.coordinateY,
-	      coordinateX: tile.coordinateX
-	    };
-	    mob.arrivedAtDestination = false;
-	
-	    return mob;
-	  });
-	
-	  return {
-	    mobs: orientedMobs,
-	    world: world
-	  };
-	};
-
-/***/ },
+/* 188 */,
 /* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -23110,74 +22944,9 @@
 	exports.default = Faery;
 
 /***/ },
-/* 193 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.ageMobs = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _now = __webpack_require__(185);
-	
-	var _clearMob = __webpack_require__(194);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	// Return an aged population of mobs and corpses.
-	var ageMobs = exports.ageMobs = function ageMobs(context, mobs, corpses, world) {
-	  var years = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-	
-	  var agedMobs = mobs.filter(function (mob) {
-	    if (mob.becomeOlder(years)) {
-	      return mob; // This mob is years older but still alive.
-	    }
-	
-	    // This mob just died.
-	    mob.timeOfDeath = (0, _now.now)();
-	    mob.causeOfDeath = C.OLD_AGE;
-	    corpses.push(mob);
-	
-	    // Clear the mob from the current tile.
-	    (0, _clearMob.clearMob)(context, mob);
-	
-	    // Is the mob tracked on the current tile?
-	    var currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
-	
-	    if (currentTile.mobId === mob.id) {
-	      currentTile.resetMobTracking();
-	    }
-	
-	    // Is the mob tracked on the destination tile?
-	    if (mob.destination !== undefined) {
-	      var destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
-	      if (destinationTile.mobId === mob.id) {
-	        destinationTile.resetMobTracking();
-	      }
-	    }
-	
-	    // Record the death in Google Analytics.
-	    var message = [mob.gender + ' ' + mob.category + ',', 'died ' + mob.causeOfDeath + ' \u2625' + mob.age + '.'].join(' ');
-	    ga('send', 'event', 'Mob', 'Death', message, mob.age);
-	
-	    return null;
-	  });
-	
-	  return {
-	    mobs: agedMobs,
-	    corpses: corpses,
-	    world: world
-	  };
-	};
-
-/***/ },
-/* 194 */
+/* 193 */,
+/* 194 */,
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23187,7 +22956,7 @@
 	});
 	exports.clearMob = undefined;
 	
-	var _clearCanvas = __webpack_require__(195);
+	var _clearCanvas = __webpack_require__(196);
 	
 	var clearMob = exports.clearMob = function clearMob(context, mob) {
 	  // Clear a square greater than mob by 1 pixel.
@@ -23211,7 +22980,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23232,7 +23001,8 @@
 	};
 
 /***/ },
-/* 196 */
+/* 197 */,
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23246,9 +23016,9 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _paintTile = __webpack_require__(197);
+	var _paintTile = __webpack_require__(199);
 	
-	var _writeCoordinates = __webpack_require__(200);
+	var _writeCoordinates = __webpack_require__(202);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23272,7 +23042,7 @@
 	};
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23282,7 +23052,7 @@
 	});
 	exports.paintTile = undefined;
 	
-	var _drawHexagon = __webpack_require__(198);
+	var _drawHexagon = __webpack_require__(200);
 	
 	var paintTile = exports.paintTile = function paintTile(context, tile) {
 	  return (0, _drawHexagon.drawHexagon)({
@@ -23295,7 +23065,7 @@
 	};
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23309,7 +23079,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _hexCorner = __webpack_require__(199);
+	var _hexCorner = __webpack_require__(201);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23342,7 +23112,7 @@
 	};
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23361,7 +23131,7 @@
 	};
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23375,7 +23145,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _writeText = __webpack_require__(201);
+	var _writeText = __webpack_require__(203);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23392,7 +23162,7 @@
 	};
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23418,7 +23188,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23428,7 +23198,7 @@
 	});
 	exports.updateCanvasCorpses = undefined;
 	
-	var _paintMob = __webpack_require__(203);
+	var _paintMob = __webpack_require__(205);
 	
 	var updateCanvasCorpses = exports.updateCanvasCorpses = function updateCanvasCorpses(input) {
 	  var context = input.context,
@@ -23444,7 +23214,7 @@
 	};
 
 /***/ },
-/* 203 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23454,7 +23224,7 @@
 	});
 	exports.paintMob = undefined;
 	
-	var _drawDisc = __webpack_require__(204);
+	var _drawDisc = __webpack_require__(206);
 	
 	// @fillStyle: optional, when specified it means the mob died
 	// and it's the corpse that gets painted.
@@ -23469,7 +23239,7 @@
 	};
 
 /***/ },
-/* 204 */
+/* 206 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23496,7 +23266,7 @@
 	};
 
 /***/ },
-/* 205 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23506,13 +23276,13 @@
 	});
 	exports.updateCanvasMobs = undefined;
 	
-	var _clearMob = __webpack_require__(194);
+	var _clearMob = __webpack_require__(195);
 	
-	var _paintMob = __webpack_require__(203);
+	var _paintMob = __webpack_require__(205);
 	
-	var _animateMobMovement = __webpack_require__(206);
+	var _animateMobMovement = __webpack_require__(208);
 	
-	var _pickMobsNextTile = __webpack_require__(188);
+	var _pickMobsNextTile = __webpack_require__(220);
 	
 	var updateCanvasMobs = exports.updateCanvasMobs = function updateCanvasMobs(input) {
 	  var context = input.context,
@@ -23555,7 +23325,7 @@
 	};
 
 /***/ },
-/* 206 */
+/* 208 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23602,7 +23372,7 @@
 	};
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23621,7 +23391,7 @@
 	
 	var _baseClass2 = _interopRequireDefault(_baseClass);
 	
-	var _tile = __webpack_require__(208);
+	var _tile = __webpack_require__(210);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
@@ -23687,7 +23457,7 @@
 	exports.default = World;
 
 /***/ },
-/* 208 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23777,7 +23547,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 209 */
+/* 211 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23805,7 +23575,7 @@
 	exports.default = GameCanvas;
 
 /***/ },
-/* 210 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23819,9 +23589,17 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _isAlreadyListed = __webpack_require__(215);
-	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var isAlreadyListed = function isAlreadyListed(input) {
+	  var id = input.id,
+	      list = input.list;
+	
+	
+	  return list.filter(function (member) {
+	    return member.id === id;
+	  }).length > 0;
+	};
 	
 	var updateMatesList = exports.updateMatesList = function updateMatesList(input) {
 	  var world = input.world,
@@ -23838,7 +23616,7 @@
 	    return mob.mature;
 	  }).map(function (mob) {
 	    var oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
-	    var mateTilesInRange = mob.getTilesInRange(world).filter(function (tile) {
+	    var matesInRange = mob.getTilesInRange(world).filter(function (tile) {
 	      return (
 	        // Include tiles where there is a mob.
 	        tile.isBlocked &&
@@ -23853,32 +23631,34 @@
 	      );
 	    });
 	
-	    if (mateTilesInRange.length > 0) {
-	      for (var i = 0, max = mateTilesInRange.length; i < max; i += 1) {
-	        var mateTile = mateTilesInRange[i];
-	        var listed = (0, _isAlreadyListed.isAlreadyListed)({
-	          id: mateTile.mobId,
+	    if (matesInRange.length > 0) {
+	      var _loop = function _loop(i, max) {
+	        var mate = matesInRange[i];
+	        var listed = isAlreadyListed({
+	          id: mate.id,
 	          list: mob.matesList
 	        });
 	
 	        if (listed) {
-	          mob.matesList[listed].x = mateTile.x;
-	          mob.matesList[listed].y = mateTile.y;
-	          mob.matesList[listed].coordinateX = mateTile.coordinateX;
-	          mob.matesList[listed].coordinateY = mateTile.coordinateY;
+	          var mateToUpdate = mob.matesList.filter(function (listedMate) {
+	            return listedMate.id === mate.id;
+	          });
+	          // todo: only update the location of an already listed mate.
 	        }
 	
 	        if (!listed) {
 	          mob.matesList.push({
-	            id: mateTile.mobId,
-	            x: mateTile.x,
-	            y: mateTile.y,
-	            coordinateX: mateTile.coordinateX,
-	            coordinateY: mateTile.coordinateY
+	            id: mate.mobId,
+	            x: mate.x,
+	            y: mate.y,
+	            coordinateX: mate.coordinateX,
+	            coordinateY: mate.coordinateY
 	          });
-	
-	          mob.matesList = mob.matesList.splice(-C.LIST.MAX);
 	        }
+	      };
+	
+	      for (var i = 0, max = matesInRange.length; i < max; i = i + 1) {
+	        _loop(i, max);
 	      }
 	    }
 	
@@ -23887,16 +23667,16 @@
 	};
 
 /***/ },
-/* 211 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(212);
+	var content = __webpack_require__(214);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(214)(content, {});
+	var update = __webpack_require__(216)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23913,21 +23693,21 @@
 	}
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(213)();
+	exports = module.exports = __webpack_require__(215)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right;\n  padding: .625em; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; } }\n", ""]);
+	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .4; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right;\n  padding: .625em; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; } }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 213 */
+/* 215 */
 /***/ function(module, exports) {
 
 	/*
@@ -23983,7 +23763,7 @@
 
 
 /***/ },
-/* 214 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24235,26 +24015,240 @@
 
 
 /***/ },
-/* 215 */
-/***/ function(module, exports) {
+/* 217 */,
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// Returns the index of the mob id in the list if found,
-	// or returns false if not found.
-	var isAlreadyListed = exports.isAlreadyListed = function isAlreadyListed(input) {
-	  var id = input.id,
-	      list = input.list;
+	exports.ageMobs = undefined;
 	
+	var _constants = __webpack_require__(179);
 	
-	  var index = list.findIndex(function (member) {
-	    return member.id === id;
+	var C = _interopRequireWildcard(_constants);
+	
+	var _now = __webpack_require__(185);
+	
+	var _clearMob = __webpack_require__(195);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Return an aged population of mobs and corpses.
+	var ageMobs = exports.ageMobs = function ageMobs(context, mobs, corpses, world) {
+	  var years = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+	
+	  var agedMobs = mobs.filter(function (mob) {
+	    if (mob.becomeOlder(years)) {
+	      return mob; // This mob is years older but still alive.
+	    }
+	
+	    // This mob just died.
+	    mob.timeOfDeath = (0, _now.now)();
+	    mob.causeOfDeath = C.OLD_AGE;
+	    corpses.push(mob);
+	
+	    // Clear the mob from the current tile.
+	    (0, _clearMob.clearMob)(context, mob);
+	
+	    // Is the mob tracked on the current tile?
+	    var currentTile = world.tiles[mob.position.coordinateY][mob.position.coordinateX];
+	
+	    if (currentTile.mobId === mob.id) {
+	      currentTile.resetMobTracking();
+	    }
+	
+	    // Is the mob tracked on the destination tile?
+	    if (mob.destination !== undefined) {
+	      var destinationTile = world.tiles[mob.destination.coordinateY][mob.destination.coordinateX];
+	      if (destinationTile.mobId === mob.id) {
+	        destinationTile.resetMobTracking();
+	      }
+	    }
+	
+	    // Record the death in Google Analytics.
+	    var message = [mob.gender + ' ' + mob.category + ',', 'died ' + mob.causeOfDeath + ' \u2625' + mob.age + '.'].join(' ');
+	    ga('send', 'event', 'Mob', 'Death', message, mob.age);
+	
+	    return null;
 	  });
 	
-	  return index !== -1 ? index : false;
+	  return {
+	    mobs: agedMobs,
+	    corpses: corpses,
+	    world: world
+	  };
+	};
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.popMobs = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _orc = __webpack_require__(181);
+	
+	var _orc2 = _interopRequireDefault(_orc);
+	
+	var _goblin = __webpack_require__(189);
+	
+	var _goblin2 = _interopRequireDefault(_goblin);
+	
+	var _cat = __webpack_require__(190);
+	
+	var _cat2 = _interopRequireDefault(_cat);
+	
+	var _human = __webpack_require__(191);
+	
+	var _human2 = _interopRequireDefault(_human);
+	
+	var _faery = __webpack_require__(192);
+	
+	var _faery2 = _interopRequireDefault(_faery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Pop a number of new mobs from a given category.
+	var popMobs = exports.popMobs = function popMobs(event, input) {
+	  if (event !== undefined) {
+	    event.preventDefault();
+	  }
+	
+	  var mobs = [];
+	
+	  var toAdd = input.toAdd,
+	      category = input.category,
+	      world = input.world;
+	
+	
+	  var errorMessage = void 0;
+	
+	  for (var i = 0; i < toAdd; i++) {
+	    var newMob = void 0;
+	
+	    switch (category) {
+	      case C.CATEGORY.ORC:
+	        newMob = new _orc2.default({ world: world });
+	        break;
+	      case C.CATEGORY.GOBLIN:
+	        newMob = new _goblin2.default({ world: world });
+	        break;
+	      case C.CATEGORY.CAT:
+	        newMob = new _cat2.default({ world: world });
+	        break;
+	      case C.CATEGORY.HUMAN:
+	        newMob = new _human2.default({ world: world });
+	        break;
+	      case C.CATEGORY.FAERY:
+	        newMob = new _faery2.default({ world: world });
+	        break;
+	      default:
+	        errorMessage = C.ERROR.UNEXPECTED_MOB_CATEGORY + ': ' + category + '.';
+	        ga('send', 'event', 'Error', 'pop-mob.js', errorMessage);
+	        throw new Error(errorMessage);
+	    }
+	
+	    mobs.push(newMob);
+	  }
+	
+	  // Record in Analytics how many mobs have popped.
+	  // ga('send', 'event', Category, Action, Label, Value).
+	  // @Value: the number of mobs.
+	  ga('send', 'event', 'Mob', 'Pop', category, toAdd);
+	
+	  return {
+	    mobs: mobs,
+	    world: world
+	  };
+	};
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.pickMobsNextTile = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	// Try to pick free tiles where the mobs will move to.
+	var pickMobsNextTile = exports.pickMobsNextTile = function pickMobsNextTile(mobs, world) {
+	  if (!world || !world.tiles || world.tiles.length === 0) {
+	    ga('send', 'event', 'Error', 'pick-mobs-next-tile.js', C.ERROR.INVALID_INPUT);
+	    throw new Error(C.ERROR.INVALID_INPUT);
+	  }
+	
+	  var orientedMobs = mobs.map(function (mob) {
+	    var adjacentTiles = mob.getAdjacentTiles(world);
+	
+	    var maxCoordinateX = world.tiles[0].length - 1;
+	    var maxCoordinateY = world.tiles.length - 1;
+	
+	    var freeTiles = adjacentTiles
+	    // Only pick a tile that doesn't currently have a mob on it.
+	    .filter(function (tile) {
+	      return !tile.isBlocked;
+	    })
+	    // Don't pick a tile that is close to edges of the world.
+	    .filter(function (tile) {
+	      return tile.coordinateX > 0 && tile.coordinateY > 0 && tile.coordinateX < maxCoordinateX && tile.coordinateY < maxCoordinateY;
+	    });
+	
+	    if (freeTiles.length === 0) {
+	      return mob;
+	    }
+	
+	    // A valid tile (free, no mob) can be selected.
+	    var tile = freeTiles[mob.randomNumber(0, freeTiles.length - 1)];
+	
+	    // Leave the current tile.
+	    world.tiles[mob.position.coordinateY][mob.position.coordinateX].resetMobTracking();
+	
+	    // Occupy the next tile.
+	    world.tiles[tile.coordinateY][tile.coordinateX].trackMob({
+	      id: mob.id,
+	      category: mob.category,
+	      gender: mob.gender,
+	      mature: mob.mature
+	    });
+	
+	    // Update the destination of the mob.
+	    mob.destination = {
+	      y: tile.y,
+	      x: tile.x,
+	      coordinateY: tile.coordinateY,
+	      coordinateX: tile.coordinateX
+	    };
+	    mob.arrivedAtDestination = false;
+	
+	    return mob;
+	  });
+	
+	  return {
+	    mobs: orientedMobs,
+	    world: world
+	  };
 	};
 
 /***/ }

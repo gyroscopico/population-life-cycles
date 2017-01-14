@@ -1,8 +1,9 @@
 import { clearMob } from './clear-mob/clear-mob';
 import { paintMob } from './paint-mob/paint-mob';
 import { animateMobMovement } from
-    './animate-mob-movement/animate-mob-movement';
-import { pickMobsNextTile } from '../mob/pick-mobs-next-tile';
+  './animate-mob-movement/animate-mob-movement';
+import { pickMobsNextTile } from
+  '../mob/pick-mobs-next-tile/pick-mobs-next-tile';
 
 export const updateCanvasMobs = input => {
   const {

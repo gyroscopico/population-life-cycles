@@ -1,9 +1,9 @@
-import * as C from '../constants';
-import Orc from './orc/orc';
-import Goblin from './goblin/goblin';
-import Cat from './cat/cat';
-import Human from './human/human';
-import Faery from './faery/faery';
+import * as C from '../../constants';
+import Orc from '../orc/orc';
+import Goblin from '../goblin/goblin';
+import Cat from '../cat/cat';
+import Human from '../human/human';
+import Faery from '../faery/faery';
 
 // Pop a number of new mobs from a given category.
 export const popMobs = (event, input) => {

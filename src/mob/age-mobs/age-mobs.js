@@ -1,6 +1,6 @@
-import * as C from '../constants';
-import { now } from '../utils/now';
-import { clearMob } from '../update-canvas-mobs/clear-mob/clear-mob';
+import * as C from '../../constants';
+import { now } from '../../utils/now';
+import { clearMob } from '../../update-canvas-mobs/clear-mob/clear-mob';
 
 // Return an aged population of mobs and corpses.
 export const ageMobs = (context, mobs, corpses, world, years = 1) => {
