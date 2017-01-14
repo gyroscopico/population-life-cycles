@@ -144,7 +144,6 @@ export const ERROR = {
   UNEXPECTED_MOB_CATEGORY: 'Unexpected mob category',
   WORLD_IS_FULL: 'World is full',
   INVALID_INPUT: 'Invalid input',
-  LOCAL_STORAGE_NOT_SUPPORTED: 'localStorage is not supported.',
 };
 
 // World.
