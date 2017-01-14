@@ -104,7 +104,7 @@ li {
 // Main controls: how many mobs to pop and which category.
 
 .main-controls {
-  bottom: 114px;
+  bottom: 0;
   background-color: $transparent-75;
   text-align: right;
   padding: .625em;
@@ -167,9 +167,6 @@ li {
 
   .main-controls {
     left: initial;
-  }
-
-  .main-controls {
     width: 314px;
   }
 }

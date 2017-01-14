@@ -146,11 +146,10 @@ export const ERROR = {
   INVALID_INPUT: 'Invalid input',
 };
 
-// World.
+// UI.
 export const HEADER_HEIGHT = 49;
 export const CONTROLS_WIDTH = 264;
-export const CONTROLS_HEIGHT = 54;
-export const SCROLLABLE_WINDOW_HEIGHT = 114;
+export const CONTROLS_HEIGHT = 53;
 export const HEXAGON_LINE_WIDTH = 1;
 
 // World tiles.
