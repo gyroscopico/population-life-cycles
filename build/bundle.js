@@ -22087,7 +22087,7 @@
 	var HEXAGON_LINE_WIDTH = exports.HEXAGON_LINE_WIDTH = 1;
 	
 	// World tiles.
-	var TILE_SIZE = exports.TILE_SIZE = 30;
+	var TILE_SIZE = exports.TILE_SIZE = 44;
 	var TILE_COLOR = exports.TILE_COLOR = COLOR.RED_L;
 	
 	// Canvas.
@@ -22095,6 +22095,11 @@
 	  WORLD: 'canvasWorld',
 	  CORPSES: 'canvasCorpses',
 	  MOBS: 'canvasMobs'
+	};
+	
+	// Lists of things to track, like mates.
+	var LIST = exports.LIST = {
+	  MAX: 6
 	};
 	
 	// Vectors relative from current tile to a range
@@ -24025,14 +24030,18 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	// Returns the index of the mob id in the list if found,
+	// or returns false if not found.
 	var isAlreadyListed = function isAlreadyListed(input) {
 	  var id = input.id,
 	      list = input.list;
 	
 	
-	  return list.filter(function (member) {
+	  var index = list.findIndex(function (member) {
 	    return member.id === id;
-	  }).length > 0;
+	  });
+	
+	  return index !== -1 ? index : false;
 	};
 	
 	var updateMatesList = exports.updateMatesList = function updateMatesList(input) {
@@ -24050,7 +24059,7 @@
 	    return mob.mature;
 	  }).map(function (mob) {
 	    var oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
-	    var matesInRange = mob.getTilesInRange(world).filter(function (tile) {
+	    var mateTilesInRange = mob.getTilesInRange(world).filter(function (tile) {
 	      return (
 	        // Include tiles where there is a mob.
 	        tile.isBlocked &&
@@ -24065,34 +24074,32 @@
 	      );
 	    });
 	
-	    if (matesInRange.length > 0) {
-	      var _loop = function _loop(i, max) {
-	        var mate = matesInRange[i];
+	    if (mateTilesInRange.length > 0) {
+	      for (var i = 0, max = mateTilesInRange.length; i < max; i += 1) {
+	        var mateTile = mateTilesInRange[i];
 	        var listed = isAlreadyListed({
-	          id: mate.id,
+	          id: mateTile.mobId,
 	          list: mob.matesList
 	        });
 	
 	        if (listed) {
-	          var mateToUpdate = mob.matesList.filter(function (listedMate) {
-	            return listedMate.id === mate.id;
-	          });
-	          // todo: only update the location of an already listed mate.
+	          mob.matesList[listed].x = mateTile.x;
+	          mob.matesList[listed].y = mateTile.y;
+	          mob.matesList[listed].coordinateX = mateTile.coordinateX;
+	          mob.matesList[listed].coordinateY = mateTile.coordinateY;
 	        }
 	
 	        if (!listed) {
 	          mob.matesList.push({
-	            id: mate.mobId,
-	            x: mate.x,
-	            y: mate.y,
-	            coordinateX: mate.coordinateX,
-	            coordinateY: mate.coordinateY
+	            id: mateTile.mobId,
+	            x: mateTile.x,
+	            y: mateTile.y,
+	            coordinateX: mateTile.coordinateX,
+	            coordinateY: mateTile.coordinateY
 	          });
-	        }
-	      };
 	
-	      for (var i = 0, max = matesInRange.length; i < max; i = i + 1) {
-	        _loop(i, max);
+	          mob.matesList = mob.matesList.splice(-C.LIST.MAX);
+	        }
 	      }
 	    }
 	
@@ -24135,7 +24142,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls,\n.scrollable-window {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.main-controls,\n.scrollable-window {\n  padding: .625em; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 114px;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right; }\n\n.number-mobs-to-add {\n  line-height: 29px;\n  background-color: #f9f7ed;\n  color: #33170d;\n  height: 30px; }\n\n.number-mobs-to-add,\n.pop-mob {\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  height: 100px;\n  overflow: auto;\n  bottom: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n  .scrollable-window li:first-letter {\n    text-transform: uppercase; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; }\n  .main-controls,\n  .scrollable-window {\n    left: initial; }\n  .main-controls {\n    width: 314px; }\n  .scrollable-window {\n    width: 320px; } }\n", ""]);
+	exports.push([module.id, "body,\ninput,\nbutton {\n  font-family: 'Handlee', cursive; }\n\nbody {\n  margin: 0;\n  font-size: 16px;\n  font-weight: 400;\n  line-height: 1.5em;\n  background-color: #f9f7ed;\n  color: #33170d; }\n\ninput,\nbutton {\n  padding: 0 6px; }\n\nh1 {\n  margin: 0 6px 0 0;\n  line-height: 49px;\n  font-size: 16px;\n  font-weight: 400; }\n\nli {\n  list-style-type: none; }\n\n.canvas {\n  position: fixed;\n  top: 49px; }\n\n.canvas-world {\n  z-index: 1; }\n\n.canvas-corpses {\n  z-index: 2;\n  opacity: .25; }\n\n.canvas-mobs {\n  z-index: 3; }\n\n.header,\n.main-controls,\n.scrollable-window {\n  margin: 0;\n  position: fixed;\n  left: 0;\n  right: 0;\n  z-index: 4; }\n\n.main-controls,\n.scrollable-window {\n  padding: .625em; }\n\n.header {\n  padding: 0;\n  background-color: rgba(51, 23, 13, 0.75);\n  color: #f9f7ed; }\n  .header li {\n    float: left;\n    margin-left: .5em;\n    text-align: center;\n    line-height: 3em; }\n\n.big-number {\n  padding: 0 .25em;\n  border-radius: .25em;\n  font-size: 1.25em;\n  vertical-align: middle; }\n\n.total-mobs {\n  color: #009701;\n  background-color: #c4ffcc; }\n\n.total-corpses {\n  color: #2c95c9;\n  background-color: #c5ffff; }\n\n.main-controls {\n  bottom: 114px;\n  background-color: rgba(51, 23, 13, 0.75);\n  text-align: right; }\n\n.number-mobs-to-add {\n  line-height: 29px;\n  background-color: #f9f7ed;\n  color: #33170d;\n  height: 30px; }\n\n.number-mobs-to-add,\n.pop-mob {\n  margin: 0 .5em 0 0;\n  cursor: pointer;\n  min-width: 40px;\n  border-radius: .5em;\n  border: solid 1px; }\n\n.pop-mob {\n  -webkit-appearance: none;\n  font-weight: 600;\n  text-transform: uppercase;\n  height: 32px;\n  line-height: 32px; }\n\n.pop-mob-last {\n  margin-right: 0; }\n\n.pop-orc {\n  background-color: #e3b446;\n  color: #ffffc5; }\n  .pop-orc:hover {\n    background-color: #ffffc5;\n    color: #c99a2c; }\n  .pop-orc:active {\n    background-color: #c99a2c;\n    color: #ffffc5; }\n\n.pop-goblin {\n  background-color: #49b64e;\n  color: #c4ffcc; }\n  .pop-goblin:hover {\n    background-color: #c4ffcc;\n    color: #009701; }\n  .pop-goblin:active {\n    background-color: #009701;\n    color: #c4ffcc; }\n\n.pop-cat {\n  background-color: #46afe3;\n  color: #c5ffff; }\n  .pop-cat:hover {\n    background-color: #c5ffff;\n    color: #2c95c9; }\n  .pop-cat:active {\n    background-color: #2c95c9;\n    color: #c5ffff; }\n\n.pop-human {\n  background-color: #f265b0;\n  color: #ffe4ff; }\n  .pop-human:hover {\n    background-color: #ffe4ff;\n    color: #d84b96; }\n  .pop-human:active {\n    background-color: #d84b96;\n    color: #ffe4ff; }\n\n.pop-faery {\n  background-color: #9c46e3;\n  color: #ffc5ff; }\n  .pop-faery:hover {\n    background-color: #ffc5ff;\n    color: #822cc9; }\n  .pop-faery:active {\n    background-color: #822cc9;\n    color: #ffc5ff; }\n\n.scrollable-window {\n  background-color: rgba(51, 23, 13, 0.2);\n  height: 100px;\n  overflow: auto;\n  bottom: 0;\n  font-family: verdana, sans-serif;\n  font-size: 11px;\n  line-height: 15px; }\n  .scrollable-window li:first-letter {\n    text-transform: uppercase; }\n\n@media (min-width: 321px) {\n  h1 {\n    font-size: 24px; }\n  .main-controls,\n  .scrollable-window {\n    left: initial; }\n  .main-controls {\n    width: 314px; }\n  .scrollable-window {\n    width: 320px; } }\n", ""]);
 	
 	// exports
 

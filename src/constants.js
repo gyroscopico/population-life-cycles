@@ -165,7 +165,7 @@ export const SCROLLABLE_WINDOW_HEIGHT = 114;
 export const HEXAGON_LINE_WIDTH = 1;
 
 // World tiles.
-export const TILE_SIZE = 30;
+export const TILE_SIZE = 44;
 export const TILE_COLOR = COLOR.RED_L;
 
 // Canvas.
@@ -173,6 +173,11 @@ export const CANVAS_REFS = {
   WORLD: 'canvasWorld',
   CORPSES: 'canvasCorpses',
   MOBS: 'canvasMobs',
+};
+
+// Lists of things to track, like mates.
+export const LIST = {
+  MAX: 6,
 };
 
 // Vectors relative from current tile to a range

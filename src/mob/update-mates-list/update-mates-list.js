@@ -1,13 +1,17 @@
 import * as C from '../../constants';
 
+// Returns the index of the mob id in the list if found,
+// or returns false if not found.
 const isAlreadyListed = (input) => {
   const {
     id,
     list,
   } = input;
 
-  return list.filter(member => member.id === id).length > 0;
-}
+  const index = list.findIndex(member => member.id === id);
+
+  return index !== -1 ? index : false;
+};
 
 export const updateMatesList = (input) => {
   const {
@@ -24,7 +28,7 @@ export const updateMatesList = (input) => {
     .filter(mob => mob.mature)
     .map((mob) => {
       const oppositeGender = mob.gender === C.MALE ? C.FEMALE : C.MALE;
-      const matesInRange = mob.getTilesInRange(world)
+      const mateTilesInRange = mob.getTilesInRange(world)
         .filter(tile =>
           // Include tiles where there is a mob.
           tile.isBlocked &&
@@ -38,30 +42,33 @@ export const updateMatesList = (input) => {
           tile.mobId !== mob.id
         );
 
-      if (matesInRange.length > 0) {
-        for (let i = 0, max = matesInRange.length; i < max; i = i + 1) {
-          const mate = matesInRange[i];
+      if (mateTilesInRange.length > 0) {
+        for (let i = 0, max = mateTilesInRange.length; i < max; i += 1) {
+          const mateTile = mateTilesInRange[i];
           const listed = isAlreadyListed({
-            id: mate.id,
+            id: mateTile.mobId,
             list: mob.matesList,
           });
 
           if (listed) {
-            const mateToUpdate = mob.matesList.filter(listedMate => listedMate.id === mate.id);
-            // todo: only update the location of an already listed mate.
+            mob.matesList[listed].x = mateTile.x;
+            mob.matesList[listed].y = mateTile.y;
+            mob.matesList[listed].coordinateX = mateTile.coordinateX;
+            mob.matesList[listed].coordinateY = mateTile.coordinateY;
           }
 
           if (!listed) {
             mob.matesList.push({
-              id: mate.mobId,
-              x: mate.x,
-              y: mate.y,
-              coordinateX: mate.coordinateX,
-              coordinateY: mate.coordinateY,
+              id: mateTile.mobId,
+              x: mateTile.x,
+              y: mateTile.y,
+              coordinateX: mateTile.coordinateX,
+              coordinateY: mateTile.coordinateY,
             });
+
+            mob.matesList = mob.matesList.splice(-C.LIST.MAX);
           }
         }
-
       }
 
       return mob;
