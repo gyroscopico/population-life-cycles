@@ -21530,6 +21530,8 @@
 	
 	var _updateMatesList = __webpack_require__(211);
 	
+	var _removeDeadMobsFromMatesList = __webpack_require__(217);
+	
 	__webpack_require__(213);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -21638,9 +21640,13 @@
 	      // Age all mobs by 1 year, returns both the mobs and the corpses.
 	      var ageingResult = (0, _ageMobs.ageMobs)(this.contextMobs, this.state.mobs, this.state.corpses, this.state.world, C.AGE_INCREMENT);
 	
+	      var removalResult = (0, _removeDeadMobsFromMatesList.removeDeadMobsFromMatesList)({
+	        mobs: ageingResult.mobs
+	      });
+	
 	      // Update state for all mobs, world and corpses.
 	      this.setState({
-	        mobs: ageingResult.mobs,
+	        mobs: removalResult.mobs,
 	        corpses: ageingResult.corpses,
 	        world: ageingResult.world
 	      });
@@ -22238,7 +22244,7 @@
 	
 	var _getTilesCircle = __webpack_require__(186);
 	
-	var _getTilesArea = __webpack_require__(187);
+	var _getTilesArea = __webpack_require__(188);
 	
 	var _pickMobsNextTile = __webpack_require__(189);
 	
@@ -22608,7 +22614,7 @@
 	
 	var C = _interopRequireWildcard(_constants);
 	
-	var _getTilesFromVectors = __webpack_require__(188);
+	var _getTilesFromVectors = __webpack_require__(187);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -22624,6 +22630,7 @@
 	  // with a range of 2 there are 12 possible tiles.
 	  // note: this is not an area of hexagons and does not
 	  // include smaller concentric circles of tiles.
+	  // center.coordinateY % 2 indicates if y is even or odd.
 	
 	  input.vectors = center.coordinateY % 2 === 0 ? C.CIRCLE_VECTORS.EVEN_RANGES[range] : C.CIRCLE_VECTORS.ODD_RANGES[range];
 	
@@ -22632,37 +22639,6 @@
 
 /***/ },
 /* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getTilesArea = undefined;
-	
-	var _constants = __webpack_require__(179);
-	
-	var C = _interopRequireWildcard(_constants);
-	
-	var _getTilesFromVectors = __webpack_require__(188);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var getTilesArea = exports.getTilesArea = function getTilesArea(input) {
-	  // Note: world is also included in input but only needed
-	  // later on in getTilesFromVectors.
-	  var center = input.center,
-	      range = input.range;
-	
-	
-	  input.vectors = center.coordinateY % 2 === 0 ? C.AREA_VECTORS.EVEN_RANGES[range] : C.AREA_VECTORS.ODD_RANGES[range];
-	
-	  return (0, _getTilesFromVectors.getTilesFromVectors)(input);
-	};
-
-/***/ },
-/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22706,6 +22682,38 @@
 	  }
 	
 	  return tiles;
+	};
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getTilesArea = undefined;
+	
+	var _constants = __webpack_require__(179);
+	
+	var C = _interopRequireWildcard(_constants);
+	
+	var _getTilesFromVectors = __webpack_require__(187);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var getTilesArea = exports.getTilesArea = function getTilesArea(input) {
+	  // Note: world is also included in input but only needed
+	  // later on in getTilesFromVectors.
+	  var center = input.center,
+	      range = input.range;
+	
+	  // center.coordinateY % 2 indicates if y is even or odd.
+	
+	  input.vectors = center.coordinateY % 2 === 0 ? C.AREA_VECTORS.EVEN_RANGES[range] : C.AREA_VECTORS.ODD_RANGES[range];
+	
+	  return (0, _getTilesFromVectors.getTilesFromVectors)(input);
 	};
 
 /***/ },
@@ -24305,6 +24313,25 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 217 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var removeDeadMobsFromMatesList = exports.removeDeadMobsFromMatesList = function removeDeadMobsFromMatesList(input) {
+	  var mobs = input.mobs;
+	
+	  // todo: implement.
+	
+	  return {
+	    mobs: mobs
+	  };
+	};
 
 /***/ }
 /******/ ]);

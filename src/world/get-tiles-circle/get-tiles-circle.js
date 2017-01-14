@@ -16,6 +16,7 @@ export const getTilesCircle = (input) => {
   // with a range of 2 there are 12 possible tiles.
   // note: this is not an area of hexagons and does not
   // include smaller concentric circles of tiles.
+  // center.coordinateY % 2 indicates if y is even or odd.
   input.vectors = center.coordinateY % 2 === 0 ?
     C.CIRCLE_VECTORS.EVEN_RANGES[range] :
     C.CIRCLE_VECTORS.ODD_RANGES[range];

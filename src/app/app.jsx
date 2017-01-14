@@ -4,12 +4,14 @@ import * as C from '../constants';
 import { popMobs } from '../mob/pop-mobs/pop-mobs';
 import { ageMobs } from '../mob/age-mobs/age-mobs';
 import { updateCanvasWorld } from '../update-canvas-world/update-canvas-world';
-import { updateCanvasCorpses }
-  from '../update-canvas-corpses/update-canvas-corpses';
+import { updateCanvasCorpses } from
+  '../update-canvas-corpses/update-canvas-corpses';
 import { updateCanvasMobs } from '../update-canvas-mobs/update-canvas-mobs';
 import World from '../world/world';
 import GameCanvas from '../game-canvas/game-canvas';
 import { updateMatesList } from '../mob/update-mates-list/update-mates-list';
+import { removeDeadMobsFromMatesList } from
+  '../mob/remove-dead-mobs-from-mates-list/remove-dead-mobs-from-mates-list';
 import './app.scss';
 
 // Main starting point of the game.
@@ -97,9 +99,13 @@ export default class App extends Component {
       C.AGE_INCREMENT,
     );
 
+    const removalResult = removeDeadMobsFromMatesList({
+      mobs: ageingResult.mobs,
+    });
+
     // Update state for all mobs, world and corpses.
     this.setState({
-      mobs: ageingResult.mobs,
+      mobs: removalResult.mobs,
       corpses: ageingResult.corpses,
       world: ageingResult.world,
     });
