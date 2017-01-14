@@ -1,23 +1,20 @@
-import { getTilesCircle } from '../get-tiles-circle/get-tiles-circle';
+import * as C from '../../constants';
+import { getTilesFromVectors } from
+  '../get-tiles-from-vectors/get-tiles-from-vectors';
 
-export const getTilesArea = input => {
+export const getTilesArea = (input) => {
+  // Note: world is also included in input but only needed
+  // later on in getTilesFromVectors.
   const {
-    world,
     center,
     range,
   } = input;
 
-  let tilesInRange = [];
+  const startYIsEven = center.coordinateY % 2 === 0;
 
-  for (let r = 1; r <= range; r++) {
-    const tilesCircle = getTilesCircle({
-      world,
-      center,
-      range: r,
-    });
+  input.vectors = startYIsEven ?
+    C.AREA_VECTORS.EVEN_RANGES[range] :
+    C.AREA_VECTORS.ODD_RANGES[range];
 
-    tilesInRange = tilesInRange.concat(tilesCircle);
-  }
-
-  return tilesInRange;
+  return getTilesFromVectors(input);
 };

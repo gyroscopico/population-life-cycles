@@ -170,11 +170,11 @@ export const LIST = {
 // Number of mobs to pop with pop buttons.
 export const MOBS_PER_POP = 1;
 
-// Vectors relative from current tile to a range
+// Circle vectors relative from current tile to a range
 // of concentric tiles around central one.
 // Each mob position.coordinateX and .coordinateY
 // are that central position.
-export const VECTORS = {
+export const CIRCLE_VECTORS = {
   // Central tile Y coordinate is even (0, 2, 4...).
   EVEN_RANGES: [
     // Range is 0, i.e. no movement.
@@ -333,5 +333,36 @@ export const VECTORS = {
       [-2, -4],
       [-1, -4],
     ],
+  ],
+};
+
+// Area Vectors, based on Circle Vectors, to calculate
+// all tiles from a central one on a given range.
+export const AREA_VECTORS = {
+  EVEN_RANGES: [
+    CIRCLE_VECTORS.EVEN_RANGES[0],
+    CIRCLE_VECTORS.EVEN_RANGES[1],
+    CIRCLE_VECTORS.EVEN_RANGES[1]
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[2]),
+    CIRCLE_VECTORS.EVEN_RANGES[1]
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[2])
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[3]),
+    CIRCLE_VECTORS.EVEN_RANGES[1]
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[2])
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[3])
+      .concat(CIRCLE_VECTORS.EVEN_RANGES[4]),
+  ],
+  ODD_RANGES: [
+    CIRCLE_VECTORS.ODD_RANGES[0],
+    CIRCLE_VECTORS.ODD_RANGES[1],
+    CIRCLE_VECTORS.ODD_RANGES[1]
+      .concat(CIRCLE_VECTORS.ODD_RANGES[2]),
+    CIRCLE_VECTORS.ODD_RANGES[1]
+      .concat(CIRCLE_VECTORS.ODD_RANGES[2])
+      .concat(CIRCLE_VECTORS.ODD_RANGES[3]),
+    CIRCLE_VECTORS.ODD_RANGES[1]
+      .concat(CIRCLE_VECTORS.ODD_RANGES[2])
+      .concat(CIRCLE_VECTORS.ODD_RANGES[3])
+      .concat(CIRCLE_VECTORS.ODD_RANGES[4]),
   ],
 };

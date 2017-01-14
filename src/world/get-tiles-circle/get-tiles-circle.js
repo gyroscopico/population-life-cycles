@@ -25,12 +25,12 @@ export const getTilesCircle = (input) => {
   for (let i = 0, max = range * 6; i < max; i += 1) {
     y = center.coordinateY +
         (startYIsEven ?
-          C.VECTORS.EVEN_RANGES[range][i][0] :
-          C.VECTORS.ODD_RANGES[range][i][0]);
+          C.CIRCLE_VECTORS.EVEN_RANGES[range][i][0] :
+          C.CIRCLE_VECTORS.ODD_RANGES[range][i][0]);
     x = center.coordinateX +
         (startYIsEven ?
-          C.VECTORS.EVEN_RANGES[range][i][1] :
-          C.VECTORS.ODD_RANGES[range][i][1]);
+          C.CIRCLE_VECTORS.EVEN_RANGES[range][i][1] :
+          C.CIRCLE_VECTORS.ODD_RANGES[range][i][1]);
 
     if (y > 0 && y < maxY && x > 0 && x < maxX) {
       tilesInRange.push(world.tiles[y][x]);
