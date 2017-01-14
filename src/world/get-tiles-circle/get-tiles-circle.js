@@ -3,7 +3,7 @@ import * as C from '../../constants';
 // Return all the tiles forming a circle
 // all on the same range distance from center.
 // @input.range: maximum range is 4.
-export const getTilesCircle = input => {
+export const getTilesCircle = (input) => {
   const {
     world,
     center,
@@ -22,7 +22,7 @@ export const getTilesCircle = input => {
   // with a range of 2 there are 12 possible tiles.
   // note: this is not an area of hexagons and does not
   // include smaller concentric circles of tiles.
-  for (let i = 0, max = range * 6; i < max; i++) {
+  for (let i = 0, max = range * 6; i < max; i += 1) {
     y = center.coordinateY +
         (startYIsEven ?
           C.VECTORS.EVEN_RANGES[range][i][0] :
@@ -32,9 +32,7 @@ export const getTilesCircle = input => {
           C.VECTORS.EVEN_RANGES[range][i][1] :
           C.VECTORS.ODD_RANGES[range][i][1]);
 
-    if (y < 0 || y > maxY || x < 0 || x > maxX) {
-      continue;
-    } else {
+    if (y > 0 && y < maxY && x > 0 && x < maxX) {
       tilesInRange.push(world.tiles[y][x]);
     }
   }
