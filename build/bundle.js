@@ -21530,9 +21530,9 @@
 	
 	var _updateMatesList = __webpack_require__(211);
 	
-	var _removeDeadMobsFromMatesList = __webpack_require__(217);
+	var _removeDeadMobsFromMatesList = __webpack_require__(213);
 	
-	__webpack_require__(213);
+	__webpack_require__(214);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23968,15 +23968,34 @@
 
 /***/ },
 /* 213 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var removeDeadMobsFromMatesList = exports.removeDeadMobsFromMatesList = function removeDeadMobsFromMatesList(input) {
+	  var mobs = input.mobs;
+	
+	  // todo: implement.
+	
+	  return {
+	    mobs: mobs
+	  };
+	};
+
+/***/ },
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(214);
+	var content = __webpack_require__(215);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(216)(content, {});
+	var update = __webpack_require__(217)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23993,10 +24012,10 @@
 	}
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(215)();
+	exports = module.exports = __webpack_require__(216)();
 	// imports
 	
 	
@@ -24007,7 +24026,7 @@
 
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports) {
 
 	/*
@@ -24063,7 +24082,7 @@
 
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24313,25 +24332,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 217 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var removeDeadMobsFromMatesList = exports.removeDeadMobsFromMatesList = function removeDeadMobsFromMatesList(input) {
-	  var mobs = input.mobs;
-	
-	  // todo: implement.
-	
-	  return {
-	    mobs: mobs
-	  };
-	};
 
 /***/ }
 /******/ ]);
