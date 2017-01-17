@@ -21530,9 +21530,9 @@
 	
 	var _updateMatesList = __webpack_require__(211);
 	
-	var _removeDeadMobsFromMatesList = __webpack_require__(217);
+	var _removeDeadMobsFromMatesList = __webpack_require__(213);
 	
-	__webpack_require__(213);
+	__webpack_require__(214);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -23968,15 +23968,70 @@
 
 /***/ },
 /* 213 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Update the mobs matesList to remove the ones that are no longer alive.
+	// Always returns the mobs, whether they were updated or not.
+	var removeDeadMobsFromMatesList = exports.removeDeadMobsFromMatesList = function removeDeadMobsFromMatesList(input) {
+	  var mobs = input.mobs;
+	
+	  // Is there no mob to update?
+	
+	  if (!mobs || mobs.length === 0) {
+	    return {
+	      mobs: mobs
+	    };
+	  }
+	
+	  // Select only the mobs with a mates list that isn't empty.
+	  var mobsWithMatesList = mobs.filter(function (mob) {
+	    return mob.matesList.length > 0;
+	  });
+	  var max = mobsWithMatesList.length;
+	
+	  // Is there no matesList to tidy up?
+	  if (max === 0) {
+	    return {
+	      mobs: mobs
+	    };
+	  }
+	
+	  // IDs of all the mobs currently alive.
+	  var mobIds = mobs.map(function (mob) {
+	    return mob.id;
+	  });
+	
+	  // For each mob with a matesList, only keep the mobs that can
+	  // be found in the list of mobs still alive.
+	  for (var i = 0; i < max; i += 1) {
+	    mobsWithMatesList[i].matesList = mobsWithMatesList[i].matesList
+	    // Note: I prefer mobIds.inlcludes(mate.id) but IE doesn't support it.
+	    .filter(function (mate) {
+	      return mobIds.indexOf(mate.id) !== -1;
+	    });
+	  }
+	
+	  return {
+	    mobs: mobs
+	  };
+	};
+
+/***/ },
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(214);
+	var content = __webpack_require__(215);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(216)(content, {});
+	var update = __webpack_require__(217)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23993,10 +24048,10 @@
 	}
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(215)();
+	exports = module.exports = __webpack_require__(216)();
 	// imports
 	
 	
@@ -24007,7 +24062,7 @@
 
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports) {
 
 	/*
@@ -24063,7 +24118,7 @@
 
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24313,61 +24368,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 217 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// Update the mobs matesList to remove the ones that are no longer alive.
-	// Always returns the mobs, whether they were updated or not.
-	var removeDeadMobsFromMatesList = exports.removeDeadMobsFromMatesList = function removeDeadMobsFromMatesList(input) {
-	  var mobs = input.mobs;
-	
-	  // Is there no mob to update?
-	
-	  if (!mobs || mobs.length === 0) {
-	    return {
-	      mobs: mobs
-	    };
-	  }
-	
-	  // Select only the mobs with a mates list that isn't empty.
-	  var mobsWithMatesList = mobs.filter(function (mob) {
-	    return mob.matesList.length > 0;
-	  });
-	  var max = mobsWithMatesList.length;
-	
-	  // Is there no matesList to tidy up?
-	  if (max === 0) {
-	    return {
-	      mobs: mobs
-	    };
-	  }
-	
-	  // IDs of all the mobs currently alive.
-	  var mobIds = mobs.map(function (mob) {
-	    return mob.id;
-	  });
-	
-	  // For each mob with a matesList, only keep the mobs that can
-	  // be found in the list of mobs still alive.
-	  for (var i = 0; i < max; i += 1) {
-	    mobsWithMatesList[i].matesList = mobsWithMatesList[i].matesList
-	    // Note: I prefer mobIds.inlcludes(mate.id) but IE doesn't support it.
-	    .filter(function (mate) {
-	      return mobIds.indexOf(mate.id) !== -1;
-	    });
-	  }
-	
-	  return {
-	    mobs: mobs
-	  };
-	};
 
 /***/ }
 /******/ ]);
