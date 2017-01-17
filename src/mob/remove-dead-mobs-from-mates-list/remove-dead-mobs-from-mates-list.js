@@ -30,7 +30,8 @@ export const removeDeadMobsFromMatesList = (input) => {
   // be found in the list of mobs still alive.
   for (let i = 0; i < max; i += 1) {
     mobsWithMatesList[i].matesList = mobsWithMatesList[i].matesList
-      .filter(mate => mobIds.includes(mate.id));
+      // Note: I prefer mobIds.inlcludes(mate.id) but IE doesn't support it.
+      .filter(mate => mobIds.indexOf(mate.id) !== -1);
   }
 
   return {

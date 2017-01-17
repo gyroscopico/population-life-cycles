@@ -24357,8 +24357,10 @@
 	  // For each mob with a matesList, only keep the mobs that can
 	  // be found in the list of mobs still alive.
 	  for (var i = 0; i < max; i += 1) {
-	    mobsWithMatesList[i].matesList = mobsWithMatesList[i].matesList.filter(function (mate) {
-	      return mobIds.includes(mate.id);
+	    mobsWithMatesList[i].matesList = mobsWithMatesList[i].matesList
+	    // Note: I prefer mobIds.inlcludes(mate.id) but IE doesn't support it.
+	    .filter(function (mate) {
+	      return mobIds.indexOf(mate.id) !== -1;
 	    });
 	  }
 	
